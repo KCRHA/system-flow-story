@@ -1,0 +1,27 @@
+<!--
+  Paste this block into the KCRHA website page (in a custom HTML block,
+  whatever your CMS turns out to be). It embeds the published GitHub Pages
+  site and auto-resizes the iframe to match content height, so there's no
+  internal scrollbar or awkward fixed height.
+
+  Replace YOUR-ORG and YOUR-REPO below with your actual GitHub username/org
+  and repo name once you've created and published it.
+-->
+
+<iframe
+  id="kcrha-flow-embed"
+  src="https://YOUR-ORG.github.io/YOUR-REPO/"
+  style="width:100%; border:none; display:block;"
+  title="How People Move Through King County's Homelessness Response System"
+></iframe>
+
+<script>
+  window.addEventListener('message', function (event) {
+    if (event.data && typeof event.data.kcrhaEmbedHeight === 'number') {
+      var iframe = document.getElementById('kcrha-flow-embed');
+      if (iframe) {
+        iframe.style.height = event.data.kcrhaEmbedHeight + 'px';
+      }
+    }
+  });
+</script>

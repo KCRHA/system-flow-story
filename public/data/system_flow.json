@@ -1,0 +1,43 @@
+[
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "outreach", "target_stage": "coord_entry", "value": 410},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "coord_entry", "target_stage": "emergency_shelter", "value": 280},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "coord_entry", "target_stage": "rapid_rehouse", "value": 70},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "emergency_shelter", "target_stage": "transitional", "value": 60},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "emergency_shelter", "target_stage": "exit_other", "value": 90},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "rapid_rehouse", "target_stage": "exit_housed", "value": 95},
+  {"region": "South King County", "quarter": "2026-Q1", "source_stage": "transitional", "target_stage": "exit_housed", "value": 20},
+
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "outreach", "target_stage": "coord_entry", "value": 430},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "coord_entry", "target_stage": "emergency_shelter", "value": 300},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "coord_entry", "target_stage": "rapid_rehouse", "value": 75},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "emergency_shelter", "target_stage": "transitional", "value": 65},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "emergency_shelter", "target_stage": "exit_other", "value": 85},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "rapid_rehouse", "target_stage": "exit_housed", "value": 105},
+  {"region": "South King County", "quarter": "2026-Q2", "source_stage": "transitional", "target_stage": "exit_housed", "value": 25},
+
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "outreach", "target_stage": "coord_entry", "value": 720},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "coord_entry", "target_stage": "emergency_shelter", "value": 480},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "coord_entry", "target_stage": "perm_housing", "value": 110},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "emergency_shelter", "target_stage": "transitional", "value": 100},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "emergency_shelter", "target_stage": "exit_other", "value": 150},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "perm_housing", "target_stage": "exit_housed", "value": 95},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "transitional", "target_stage": "exit_housed", "value": 40},
+  {"region": "Seattle", "quarter": "2026-Q1", "source_stage": "exit_housed", "target_stage": "returned", "value": 18},
+
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "outreach", "target_stage": "coord_entry", "value": 760},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "coord_entry", "target_stage": "emergency_shelter", "value": 500},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "coord_entry", "target_stage": "perm_housing", "value": 120},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "emergency_shelter", "target_stage": "transitional", "value": 110},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "emergency_shelter", "target_stage": "exit_other", "value": 140},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "perm_housing", "target_stage": "exit_housed", "value": 105},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "transitional", "target_stage": "exit_housed", "value": 45},
+  {"region": "Seattle", "quarter": "2026-Q2", "source_stage": "exit_housed", "target_stage": "returned", "value": 22},
+
+  {"region": "East King County", "quarter": "2026-Q1", "source_stage": "outreach", "target_stage": "coord_entry", "value": 180},
+  {"region": "East King County", "quarter": "2026-Q1", "source_stage": "coord_entry", "target_stage": "rapid_rehouse", "value": 80},
+  {"region": "East King County", "quarter": "2026-Q1", "source_stage": "rapid_rehouse", "target_stage": "exit_housed", "value": 60},
+
+  {"region": "East King County", "quarter": "2026-Q2", "source_stage": "outreach", "target_stage": "coord_entry", "value": 195},
+  {"region": "East King County", "quarter": "2026-Q2", "source_stage": "coord_entry", "target_stage": "rapid_rehouse", "value": 85},
+  {"region": "East King County", "quarter": "2026-Q2", "source_stage": "rapid_rehouse", "target_stage": "exit_housed", "value": 68}
+]
