@@ -1,0 +1,63 @@
+:root {
+  /* Color: warm grey paper (not cream), ink with a blue undertone, 
+     slate-teal as the primary "flow" color, warm clay reserved 
+     ONLY for the positive end-state (exits to housing) */
+  --color-paper: #F0EDE6;
+  --color-paper-raised: #FAF8F4;
+  --color-ink: #20262A;
+  --color-ink-soft: #4A5258;
+  --color-line: #D8D2C5;
+
+  --color-flow-primary: #3D5A6C;   /* steady-state pathways */
+  --color-flow-muted: #8C9A93;     /* returns / recurrence */
+  --color-flow-success: #B8763E;   /* exits to permanent housing */
+
+  /* Type: serif display for an editorial register (matches the brief),
+     Inter for body/UI/data labels so numbers stay legible at small sizes */
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --type-scale-hero: clamp(2rem, 5vw, 3.5rem);
+  --type-scale-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --type-scale-body: 1.0625rem;
+  --type-scale-caption: 0.8125rem;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--type-scale-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0;
+}
+
+a {
+  color: var(--color-flow-primary);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

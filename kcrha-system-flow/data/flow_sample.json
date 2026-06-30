@@ -1,0 +1,30 @@
+{
+  "_comment": "PLACEHOLDER DATA. Replace with your quarterly aggregated output. Keep cell sizes large enough to avoid re-identification before this file is committed to a public repo.",
+  "_schema": "nodes: {id, label}. links: {source, target, value} where source/target are node ids.",
+  "as_of": "2026-Q2 (placeholder)",
+  "nodes": [
+    { "id": "outreach",        "label": "Street Outreach" },
+    { "id": "coord_entry",     "label": "Coordinated Entry" },
+    { "id": "emergency_shelter","label": "Emergency Shelter" },
+    { "id": "transitional",    "label": "Transitional Housing" },
+    { "id": "rapid_rehouse",   "label": "Rapid Re-Housing" },
+    { "id": "perm_housing",    "label": "Permanent Supportive Housing" },
+    { "id": "exit_housed",     "label": "Exited to Permanent Housing" },
+    { "id": "exit_other",      "label": "Exited, Destination Unknown" },
+    { "id": "returned",        "label": "Returned to System" }
+  ],
+  "links": [
+    { "source": "outreach",         "target": "coord_entry",      "value": 1400 },
+    { "source": "coord_entry",      "target": "emergency_shelter","value": 950 },
+    { "source": "coord_entry",      "target": "rapid_rehouse",    "value": 260 },
+    { "source": "coord_entry",      "target": "perm_housing",     "value": 190 },
+    { "source": "emergency_shelter","target": "transitional",     "value": 220 },
+    { "source": "emergency_shelter","target": "rapid_rehouse",    "value": 180 },
+    { "source": "emergency_shelter","target": "exit_other",       "value": 310 },
+    { "source": "transitional",     "target": "perm_housing",     "value": 90 },
+    { "source": "transitional",     "target": "exit_housed",      "value": 70 },
+    { "source": "rapid_rehouse",    "target": "exit_housed",      "value": 340 },
+    { "source": "perm_housing",     "target": "exit_housed",      "value": 210 },
+    { "source": "exit_housed",      "target": "returned",         "value": 45 }
+  ]
+}
