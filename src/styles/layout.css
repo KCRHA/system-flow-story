@@ -1,0 +1,386 @@
+.hero {
+  padding: 4rem 1.5rem 3rem;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  margin-bottom: 0.5rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+.section {
+  padding: 2rem 1.5rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-top: 1px solid var(--gray-light);
+}
+
+/* The last section's last Scrolly step needs enough page height *below*
+   it to be scrolled up to scrollama's trigger line (threshold, ~60% down
+   the viewport) — with only the default 4rem bottom padding, the page
+   can run out of scroll room a bit short of that, permanently stranding
+   the final step (verified: on a 1000px-tall viewport this was ~60px
+   short). Extra bottom padding only on the last section fixes it without
+   adding padding everywhere sections already have plenty of room below. */
+.section:last-of-type {
+  padding-bottom: 30vh;
+}
+
+.section-heading {
+  margin-bottom: 0.25rem;
+}
+
+.section-subhead {
+  color: var(--text-gray);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  gap: 0.25rem;
+}
+
+.filter-bar select {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 4px;
+  color: var(--text-dark);
+  background: #fff;
+}
+
+.kpi-row-month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--text-navy);
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.kpi-month-nav {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.kpi-month-nav button {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.kpi-month-nav button:disabled {
+  color: var(--gray-mid);
+  cursor: not-allowed;
+}
+
+.kpi-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* The "actively homeless" row: one card, deliberately the largest/loudest
+   number on the page — auto-fit already stretches a lone grid item to
+   fill the row's full width, so only the enlarged typography is needed
+   here. */
+.kpi-row-hero .kpi-card {
+  padding: 1.5rem 1.75rem;
+}
+
+.kpi-row-hero .kpi-label {
+  font-size: 1rem;
+}
+
+.kpi-row-hero .kpi-value {
+  font-size: 3rem;
+}
+
+.kpi-card {
+  border: 1px solid var(--gray-light);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+}
+
+.kpi-card .kpi-label {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  margin-bottom: 0.35rem;
+}
+
+.kpi-card .kpi-value {
+  font-family: var(--font-headline);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-navy);
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.kpi-direction {
+  font-size: 1rem;
+}
+.kpi-direction.good {
+  color: var(--color-teal);
+}
+.kpi-direction.bad {
+  color: var(--chart-5);
+}
+.kpi-direction.neutral {
+  color: var(--gray-mid);
+}
+
+.scrolly {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(320px, 1.4fr);
+  gap: 2rem;
+}
+
+.scrolly-steps {
+  display: flex;
+  flex-direction: column;
+  /* Just enough scroll distance between steps for scrollama's trigger
+     offset to separate them cleanly — this is what was making the whole
+     section (a CSS grid row sized to the taller of its two columns) so
+     tall, well past what the now-auto-fit graphic actually needs. */
+  gap: 15vh;
+  padding: 6vh 0;
+}
+
+.scrolly-step p {
+  background: var(--bg-suppressed);
+  border-left: 3px solid var(--gray-light);
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  transition: border-color 0.2s, opacity 0.2s;
+  opacity: 0.55;
+}
+
+.scrolly-step.is-active p {
+  border-left-color: var(--color-teal);
+  opacity: 1;
+}
+
+.scrolly-sticky {
+  position: sticky;
+  top: 10vh;
+  /* No max-height/overflow: the sticky box's height should always just be
+     whatever the chart inside it actually needs — a cap here means a
+     taller chart (e.g. Resource Access's 6-row sparkline) gets clipped
+     and forced into an internal scrollbar instead of the section simply
+     being as tall as its content. align-self:start keeps it from being
+     grid-stretched to match the (much taller) steps column next to it. */
+  align-self: start;
+  display: flex;
+  align-items: center;
+}
+
+.scrolly-graphic {
+  width: 100%;
+  max-height: 100%;
+}
+
+/* Wraps multiple charts inside one Scrolly section's sticky pane (e.g.
+   Length + Return-Cohort, or the three Capacity charts) so they render
+   stacked and always visible together, instead of the old
+   swap-on-step behavior. */
+.scrolly-graphic-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.suppressed-note {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 780px) {
+  .scrolly {
+    grid-template-columns: 1fr;
+  }
+  .scrolly-sticky {
+    position: relative;
+    top: 0;
+    height: auto;
+    padding: 1rem 0 2rem;
+  }
+  .scrolly-steps {
+    gap: 1.5rem;
+    padding: 0;
+  }
+}
+
+.flow-scrubber-wrap {
+  position: relative;
+  /* Taller than the sticky child on purpose: CSS sticky positioning itself
+     (not JS) is what keeps the section visually pinned across this whole
+     30vh buffer, giving useScrollJack's wheel trap a forgiving window to
+     engage in before a fast scroll gesture could carry the page past a
+     single-pixel pin point — while staying short enough that someone who
+     doesn't want to step through every month can scroll past it with a
+     deliberate continued scroll instead of getting stuck. Shrunk from an
+     earlier 140vh/100vh (40vh buffer) specifically to make bypassing it
+     easier/faster for anyone who doesn't want to scrub through months. */
+  height: 115vh;
+}
+
+.flow-scrubber-sticky {
+  position: sticky;
+  top: 0;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.flow-scrubber-month {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--text-navy);
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0.25rem 0;
+}
+
+.flow-scrubber-hint {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  font-style: italic;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-dark);
+}
+
+.chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Tiny idle wobble for flow-scrubber dots, layered on top of their real
+   cx/cy via a CSS transform so it never fights D3's own position tweens.
+   --fx/--fy/--float-dur/--float-delay are randomized per-dot in JS. */
+@keyframes flow-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(calc(var(--fx, 1) * 1px), calc(var(--fy, 1) * -0.8px));
+  }
+  50% {
+    transform: translate(calc(var(--fx, 1) * -0.9px), calc(var(--fy, 1) * 0.7px));
+  }
+  75% {
+    transform: translate(calc(var(--fx, 1) * 0.7px), calc(var(--fy, 1) * 0.9px));
+  }
+}
+
+.flow-float {
+  animation: flow-float var(--float-dur, 3s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-float {
+    animation: none;
+  }
+}
+
+.flow-scrubber-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.flow-scrubber-controls button {
+  font-family: var(--font-body);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.flow-scrubber-controls button:disabled {
+  color: var(--gray-mid);
+  cursor: not-allowed;
+}
+
+.flow-scrubber-controls input[type="range"] {
+  flex: 1;
+  max-width: 320px;
+}
+
+@media (max-width: 780px) {
+  .flow-scrubber-wrap {
+    height: auto;
+  }
+  .flow-scrubber-sticky {
+    position: static;
+    height: auto;
+    padding: 1rem 0 2rem;
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "exit_month": "2023-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 150,
+    "n_returned": 20,
+    "pct_returned": 0.14,
+    "window_complete": true,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2023-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 155,
+    "n_returned": 25,
+    "pct_returned": 0.15,
+    "window_complete": true,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2024-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 160,
+    "n_returned": 25,
+    "pct_returned": 0.16,
+    "window_complete": true,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2024-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 165,
+    "n_returned": 30,
+    "pct_returned": 0.17,
+    "window_complete": true,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2025-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 170,
+    "n_returned": 30,
+    "pct_returned": null,
+    "window_complete": false,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2025-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 175,
+    "n_returned": 35,
+    "pct_returned": null,
+    "window_complete": false,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 180,
+    "n_returned": 35,
+    "pct_returned": null,
+    "window_complete": false,
+    "suppression_marker": null
+  },
+  {
+    "exit_month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n_exited": 185,
+    "n_returned": 40,
+    "pct_returned": null,
+    "window_complete": false,
+    "suppression_marker": null
+  }
+]

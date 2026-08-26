@@ -1,0 +1,74 @@
+[
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4200,
+    "median_days": 210,
+    "p25_days": 90,
+    "p75_days": 420,
+    "mean_days": 265.4,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4220,
+    "median_days": 207,
+    "p25_days": 89,
+    "p75_days": 416,
+    "mean_days": 263.4,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4240,
+    "median_days": 204,
+    "p25_days": 88,
+    "p75_days": 412,
+    "mean_days": 261.4,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4260,
+    "median_days": 201,
+    "p25_days": 87,
+    "p75_days": 408,
+    "mean_days": 259.4,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4280,
+    "median_days": 198,
+    "p25_days": 86,
+    "p75_days": 404,
+    "mean_days": 257.4,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "n": 4300,
+    "median_days": 195,
+    "p25_days": 85,
+    "p75_days": 400,
+    "mean_days": 255.39999999999998,
+    "suppression_marker": null
+  }
+]

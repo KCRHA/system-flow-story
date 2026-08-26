@@ -1,0 +1,706 @@
+[
+  {
+    "quarter": "2021-01-01",
+    "project_type": "es",
+    "units_in_system": 3573.0,
+    "throughput_hh_per_unit": 0.7360761265,
+    "pct_utilization": 0.7933171108,
+    "beds_in_system": 4658.0
+  },
+  {
+    "quarter": "2021-01-01",
+    "project_type": "ph",
+    "units_in_system": 5846.0,
+    "throughput_hh_per_unit": 0.0482381115,
+    "pct_utilization": 0.8841243344,
+    "beds_in_system": 7983.0
+  },
+  {
+    "quarter": "2021-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2021-01-01",
+    "project_type": "th",
+    "units_in_system": 737.0,
+    "throughput_hh_per_unit": 0.2415196744,
+    "pct_utilization": 0.7898327057,
+    "beds_in_system": 1577.0
+  },
+  {
+    "quarter": "2021-04-01",
+    "project_type": "es",
+    "units_in_system": 3779.0,
+    "throughput_hh_per_unit": 0.6319132046,
+    "pct_utilization": 0.7716080865,
+    "beds_in_system": 4905.0
+  },
+  {
+    "quarter": "2021-04-01",
+    "project_type": "ph",
+    "units_in_system": 5874.0,
+    "throughput_hh_per_unit": 0.0372829418,
+    "pct_utilization": 0.878929781,
+    "beds_in_system": 7983.0
+  },
+  {
+    "quarter": "2021-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2021-04-01",
+    "project_type": "th",
+    "units_in_system": 721.0,
+    "throughput_hh_per_unit": 0.2884882108,
+    "pct_utilization": 0.7963814734,
+    "beds_in_system": 1495.0
+  },
+  {
+    "quarter": "2021-07-01",
+    "project_type": "es",
+    "units_in_system": 3749.0,
+    "throughput_hh_per_unit": 0.5945585489,
+    "pct_utilization": 0.8175489754,
+    "beds_in_system": 4865.0
+  },
+  {
+    "quarter": "2021-07-01",
+    "project_type": "ph",
+    "units_in_system": 6442.0,
+    "throughput_hh_per_unit": 0.079012729,
+    "pct_utilization": 0.8328775011,
+    "beds_in_system": 9215.0
+  },
+  {
+    "quarter": "2021-07-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2021-07-01",
+    "project_type": "th",
+    "units_in_system": 720.0,
+    "throughput_hh_per_unit": 0.2263888889,
+    "pct_utilization": 0.802807971,
+    "beds_in_system": 1493.0
+  },
+  {
+    "quarter": "2021-10-01",
+    "project_type": "es",
+    "units_in_system": 4059.0,
+    "throughput_hh_per_unit": 0.6075388027,
+    "pct_utilization": 0.7967895933,
+    "beds_in_system": 5250.0
+  },
+  {
+    "quarter": "2021-10-01",
+    "project_type": "ph",
+    "units_in_system": 7006.0,
+    "throughput_hh_per_unit": 0.139737368,
+    "pct_utilization": 0.7442096226,
+    "beds_in_system": 10564.0
+  },
+  {
+    "quarter": "2021-10-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2021-10-01",
+    "project_type": "th",
+    "units_in_system": 720.0,
+    "throughput_hh_per_unit": 0.2111111111,
+    "pct_utilization": 0.8081456359,
+    "beds_in_system": 1493.0
+  },
+  {
+    "quarter": "2022-01-01",
+    "project_type": "es",
+    "units_in_system": 3906.0,
+    "throughput_hh_per_unit": 0.5972862263,
+    "pct_utilization": 0.7950870665,
+    "beds_in_system": 5117.0
+  },
+  {
+    "quarter": "2022-01-01",
+    "project_type": "ph",
+    "units_in_system": 7329.0,
+    "throughput_hh_per_unit": 0.0762723427,
+    "pct_utilization": 0.7559125753,
+    "beds_in_system": 11124.0
+  },
+  {
+    "quarter": "2022-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2022-01-01",
+    "project_type": "th",
+    "units_in_system": 722.0,
+    "throughput_hh_per_unit": 0.2174515235,
+    "pct_utilization": 0.8041455361,
+    "beds_in_system": 1581.0
+  },
+  {
+    "quarter": "2022-04-01",
+    "project_type": "es",
+    "units_in_system": 3956.0,
+    "throughput_hh_per_unit": 0.6380182002,
+    "pct_utilization": 0.7727295074,
+    "beds_in_system": 5177.0
+  },
+  {
+    "quarter": "2022-04-01",
+    "project_type": "ph",
+    "units_in_system": 7410.0,
+    "throughput_hh_per_unit": 0.0728744939,
+    "pct_utilization": 0.7958829699,
+    "beds_in_system": 11122.0
+  },
+  {
+    "quarter": "2022-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2022-04-01",
+    "project_type": "th",
+    "units_in_system": 701.0,
+    "throughput_hh_per_unit": 0.245363766,
+    "pct_utilization": 0.8095426554,
+    "beds_in_system": 1564.0
+  },
+  {
+    "quarter": "2022-07-01",
+    "project_type": "es",
+    "units_in_system": 3718.0,
+    "throughput_hh_per_unit": 0.6928456159,
+    "pct_utilization": 0.8113777573,
+    "beds_in_system": 4877.0
+  },
+  {
+    "quarter": "2022-07-01",
+    "project_type": "ph",
+    "units_in_system": 7427.0,
+    "throughput_hh_per_unit": 0.0502221624,
+    "pct_utilization": 0.8104194522,
+    "beds_in_system": 11056.0
+  },
+  {
+    "quarter": "2022-07-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2022-07-01",
+    "project_type": "th",
+    "units_in_system": 721.0,
+    "throughput_hh_per_unit": 0.2704576976,
+    "pct_utilization": 0.7690954383,
+    "beds_in_system": 1616.0
+  },
+  {
+    "quarter": "2022-10-01",
+    "project_type": "es",
+    "units_in_system": 3694.0,
+    "throughput_hh_per_unit": 0.6413102328,
+    "pct_utilization": 0.8529309173,
+    "beds_in_system": 4968.0
+  },
+  {
+    "quarter": "2022-10-01",
+    "project_type": "ph",
+    "units_in_system": 7464.0,
+    "throughput_hh_per_unit": 0.049437299,
+    "pct_utilization": 0.823021991,
+    "beds_in_system": 10970.0
+  },
+  {
+    "quarter": "2022-10-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2022-10-01",
+    "project_type": "th",
+    "units_in_system": 697.0,
+    "throughput_hh_per_unit": 0.2037302726,
+    "pct_utilization": 0.7635050839,
+    "beds_in_system": 1544.0
+  },
+  {
+    "quarter": "2023-01-01",
+    "project_type": "es",
+    "units_in_system": 3720.0,
+    "throughput_hh_per_unit": 0.6978494624,
+    "pct_utilization": 0.8749009878,
+    "beds_in_system": 4960.0
+  },
+  {
+    "quarter": "2023-01-01",
+    "project_type": "ph",
+    "units_in_system": 7426.0,
+    "throughput_hh_per_unit": 0.0479396714,
+    "pct_utilization": 0.8212212347,
+    "beds_in_system": 10858.0
+  },
+  {
+    "quarter": "2023-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2023-01-01",
+    "project_type": "th",
+    "units_in_system": 663.0,
+    "throughput_hh_per_unit": 0.2368024133,
+    "pct_utilization": 0.7998484211,
+    "beds_in_system": 1494.0
+  },
+  {
+    "quarter": "2023-04-01",
+    "project_type": "es",
+    "units_in_system": 3739.0,
+    "throughput_hh_per_unit": 0.6116608719,
+    "pct_utilization": 0.8721480921,
+    "beds_in_system": 4977.0
+  },
+  {
+    "quarter": "2023-04-01",
+    "project_type": "ph",
+    "units_in_system": 7489.0,
+    "throughput_hh_per_unit": 0.0479369742,
+    "pct_utilization": 0.8168936976,
+    "beds_in_system": 10918.0
+  },
+  {
+    "quarter": "2023-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2023-04-01",
+    "project_type": "th",
+    "units_in_system": 679.0,
+    "throughput_hh_per_unit": 0.2798232695,
+    "pct_utilization": 0.7826393096,
+    "beds_in_system": 1492.0
+  },
+  {
+    "quarter": "2023-07-01",
+    "project_type": "es",
+    "units_in_system": 3663.0,
+    "throughput_hh_per_unit": 0.6000546001,
+    "pct_utilization": 0.8787048628,
+    "beds_in_system": 4909.0
+  },
+  {
+    "quarter": "2023-07-01",
+    "project_type": "ph",
+    "units_in_system": 7623.0,
+    "throughput_hh_per_unit": 0.0484061393,
+    "pct_utilization": 0.8031377919,
+    "beds_in_system": 10983.0
+  },
+  {
+    "quarter": "2023-07-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2023-07-01",
+    "project_type": "th",
+    "units_in_system": 680.0,
+    "throughput_hh_per_unit": 0.2529411765,
+    "pct_utilization": 0.7917359335,
+    "beds_in_system": 1493.0
+  },
+  {
+    "quarter": "2023-10-01",
+    "project_type": "es",
+    "units_in_system": 3742.0,
+    "throughput_hh_per_unit": 0.6234633886,
+    "pct_utilization": 0.8663029254,
+    "beds_in_system": 4992.0
+  },
+  {
+    "quarter": "2023-10-01",
+    "project_type": "ph",
+    "units_in_system": 7767.0,
+    "throughput_hh_per_unit": 0.0755761555,
+    "pct_utilization": 0.8048684922,
+    "beds_in_system": 11084.0
+  },
+  {
+    "quarter": "2023-10-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2023-10-01",
+    "project_type": "th",
+    "units_in_system": 672.0,
+    "throughput_hh_per_unit": 0.1860119048,
+    "pct_utilization": 0.8060623706,
+    "beds_in_system": 1486.0
+  },
+  {
+    "quarter": "2024-01-01",
+    "project_type": "es",
+    "units_in_system": 3940.0,
+    "throughput_hh_per_unit": 0.6360406091,
+    "pct_utilization": 0.8319280112,
+    "beds_in_system": 5192.0
+  },
+  {
+    "quarter": "2024-01-01",
+    "project_type": "ph",
+    "units_in_system": 6782.0,
+    "throughput_hh_per_unit": 0.0744618107,
+    "pct_utilization": 0.9039754278,
+    "beds_in_system": 8320.0
+  },
+  {
+    "quarter": "2024-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2024-01-01",
+    "project_type": "th",
+    "units_in_system": 709.0,
+    "throughput_hh_per_unit": 0.2143864598,
+    "pct_utilization": 0.7687770224,
+    "beds_in_system": 1586.0
+  },
+  {
+    "quarter": "2024-04-01",
+    "project_type": "es",
+    "units_in_system": 3846.0,
+    "throughput_hh_per_unit": 0.5200208008,
+    "pct_utilization": 0.8518971527,
+    "beds_in_system": 5098.0
+  },
+  {
+    "quarter": "2024-04-01",
+    "project_type": "ph",
+    "units_in_system": 6984.0,
+    "throughput_hh_per_unit": 0.0737399771,
+    "pct_utilization": 0.8978415808,
+    "beds_in_system": 8483.0
+  },
+  {
+    "quarter": "2024-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2024-04-01",
+    "project_type": "th",
+    "units_in_system": 683.0,
+    "throughput_hh_per_unit": 0.2327964861,
+    "pct_utilization": 0.7787702098,
+    "beds_in_system": 1457.0
+  },
+  {
+    "quarter": "2024-07-01",
+    "project_type": "es",
+    "units_in_system": 3747.0,
+    "throughput_hh_per_unit": 0.5914064585,
+    "pct_utilization": 0.8550314024,
+    "beds_in_system": 4932.0
+  },
+  {
+    "quarter": "2024-07-01",
+    "project_type": "ph",
+    "units_in_system": 6998.0,
+    "throughput_hh_per_unit": 0.0648756788,
+    "pct_utilization": 0.9304833684,
+    "beds_in_system": 8509.0
+  },
+  {
+    "quarter": "2024-07-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2024-07-01",
+    "project_type": "th",
+    "units_in_system": 678.0,
+    "throughput_hh_per_unit": 0.2522123894,
+    "pct_utilization": 0.7628852629,
+    "beds_in_system": 1452.0
+  },
+  {
+    "quarter": "2024-10-01",
+    "project_type": "es",
+    "units_in_system": 3852.0,
+    "throughput_hh_per_unit": 0.5521806854,
+    "pct_utilization": 0.8499288152,
+    "beds_in_system": 5057.0
+  },
+  {
+    "quarter": "2024-10-01",
+    "project_type": "ph",
+    "units_in_system": 6961.0,
+    "throughput_hh_per_unit": 0.0456830915,
+    "pct_utilization": 0.939182901,
+    "beds_in_system": 8454.0
+  },
+  {
+    "quarter": "2024-10-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2024-10-01",
+    "project_type": "th",
+    "units_in_system": 687.0,
+    "throughput_hh_per_unit": 0.229985444,
+    "pct_utilization": 0.8223234624,
+    "beds_in_system": 1463.0
+  },
+  {
+    "quarter": "2025-01-01",
+    "project_type": "es",
+    "units_in_system": 3935.0,
+    "throughput_hh_per_unit": 0.6343074968,
+    "pct_utilization": 0.8342293907,
+    "beds_in_system": 5151.0
+  },
+  {
+    "quarter": "2025-01-01",
+    "project_type": "ph",
+    "units_in_system": 6890.0,
+    "throughput_hh_per_unit": 0.0464441219,
+    "pct_utilization": 0.9541385433,
+    "beds_in_system": 8265.0
+  },
+  {
+    "quarter": "2025-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2025-01-01",
+    "project_type": "th",
+    "units_in_system": 688.0,
+    "throughput_hh_per_unit": 0.148255814,
+    "pct_utilization": 0.8221410327,
+    "beds_in_system": 1426.0
+  },
+  {
+    "quarter": "2025-04-01",
+    "project_type": "es",
+    "units_in_system": 3801.0,
+    "throughput_hh_per_unit": 0.5264404104,
+    "pct_utilization": 0.853611002,
+    "beds_in_system": 5040.0
+  },
+  {
+    "quarter": "2025-04-01",
+    "project_type": "ph",
+    "units_in_system": 6931.0,
+    "throughput_hh_per_unit": 0.0405424903,
+    "pct_utilization": 0.9551553981,
+    "beds_in_system": 8315.0
+  },
+  {
+    "quarter": "2025-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2025-04-01",
+    "project_type": "th",
+    "units_in_system": 683.0,
+    "throughput_hh_per_unit": 0.1844802343,
+    "pct_utilization": 0.8016977818,
+    "beds_in_system": 1426.0
+  },
+  {
+    "quarter": "2025-07-01",
+    "project_type": "es",
+    "units_in_system": 3844.0,
+    "throughput_hh_per_unit": 0.53433923,
+    "pct_utilization": 0.8401881014,
+    "beds_in_system": 4971.0
+  },
+  {
+    "quarter": "2025-07-01",
+    "project_type": "ph",
+    "units_in_system": 7027.0,
+    "throughput_hh_per_unit": 0.0472463356,
+    "pct_utilization": 0.9411015897,
+    "beds_in_system": 8436.0
+  },
+  {
+    "quarter": "2025-07-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2025-07-01",
+    "project_type": "th",
+    "units_in_system": 680.0,
+    "throughput_hh_per_unit": 0.1676470588,
+    "pct_utilization": 0.8092204986,
+    "beds_in_system": 1423.0
+  },
+  {
+    "quarter": "2025-10-01",
+    "project_type": "es",
+    "units_in_system": 3814.0,
+    "throughput_hh_per_unit": 0.6612480336,
+    "pct_utilization": 0.8495688178,
+    "beds_in_system": 4719.0
+  },
+  {
+    "quarter": "2025-10-01",
+    "project_type": "ph",
+    "units_in_system": 7179.0,
+    "throughput_hh_per_unit": 0.0601755119,
+    "pct_utilization": 0.9352988578,
+    "beds_in_system": 8587.0
+  },
+  {
+    "quarter": "2025-10-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2025-10-01",
+    "project_type": "th",
+    "units_in_system": 680.0,
+    "throughput_hh_per_unit": 0.1691176471,
+    "pct_utilization": 0.7801341102,
+    "beds_in_system": 1423.0
+  },
+  {
+    "quarter": "2026-01-01",
+    "project_type": "es",
+    "units_in_system": 3965.0,
+    "throughput_hh_per_unit": 0.7296343001,
+    "pct_utilization": 0.8584292538,
+    "beds_in_system": 5012.0
+  },
+  {
+    "quarter": "2026-01-01",
+    "project_type": "ph",
+    "units_in_system": 7445.0,
+    "throughput_hh_per_unit": 0.0472800537,
+    "pct_utilization": 0.9158050714,
+    "beds_in_system": 8811.0
+  },
+  {
+    "quarter": "2026-01-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2026-01-01",
+    "project_type": "th",
+    "units_in_system": 652.0,
+    "throughput_hh_per_unit": 0.1503067485,
+    "pct_utilization": 0.8128507871,
+    "beds_in_system": 1327.0
+  },
+  {
+    "quarter": "2026-04-01",
+    "project_type": "es",
+    "units_in_system": 3990.0,
+    "throughput_hh_per_unit": 0.5701754386,
+    "pct_utilization": 0.8534748845,
+    "beds_in_system": 5009.0
+  },
+  {
+    "quarter": "2026-04-01",
+    "project_type": "ph",
+    "units_in_system": 7597.0,
+    "throughput_hh_per_unit": 0.0431749375,
+    "pct_utilization": 0.9047937772,
+    "beds_in_system": 9043.0
+  },
+  {
+    "quarter": "2026-04-01",
+    "project_type": "rrh",
+    "units_in_system": 0.0,
+    "throughput_hh_per_unit": null,
+    "pct_utilization": null,
+    "beds_in_system": 0.0
+  },
+  {
+    "quarter": "2026-04-01",
+    "project_type": "th",
+    "units_in_system": 652.0,
+    "throughput_hh_per_unit": 0.1564417178,
+    "pct_utilization": 0.7973437605,
+    "beds_in_system": 1327.0
+  }
+]

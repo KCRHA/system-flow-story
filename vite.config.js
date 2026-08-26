@@ -1,13 +1,9 @@
-import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// IMPORTANT: base must match your GitHub repo name for GitHub Pages
-// e.g. if your repo is github.com/kcrha/system-flow-story, base is '/system-flow-story/'
-// If you set up a custom domain instead, change base back to '/'
+// Base path matches the GitHub Pages project-page URL (repo name).
+// Update if the deploy target changes (e.g. a custom domain uses "/").
 export default defineConfig({
-  plugins: [svelte()],
-  base: '/system-flow-story/',
-  build: {
-    outDir: 'dist'
-  }
+  plugins: [react()],
+  base: "/system-flow-story/",
 });

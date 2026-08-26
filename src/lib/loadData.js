@@ -1,28 +1,43 @@
-/**
- * Loads a long-format dataset from /public/data. All datasets share this
- * shape: an array of row objects, each tagged with dimension columns
- * (region, program_type, quarter, etc.) plus whatever value/category
- * columns the chart type needs. See README.md "Adding a new chart".
- *
- * Files live in /public/data so Vite copies them verbatim to the build
- * output regardless of how many there are or what they're named —
- * unlike importing them, which requires Vite to know every filename
- * ahead of time.
- */
-export async function loadDataset(filename) {
-  const url = `${import.meta.env.BASE_URL}data/${filename}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to load dataset: ${filename} (${res.status})`);
-  }
+const BASE = import.meta.env.BASE_URL;
+
+async function fetchJson(path) {
+  const res = await fetch(`${BASE}data/${path}`);
+  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
   return res.json();
 }
 
-/**
- * Returns the distinct values present for a given column across a dataset —
- * used to auto-populate filter dropdown options from the data itself, so
- * you never have to hand-maintain a list of "which regions exist."
- */
-export function distinctValues(rows, column) {
-  return Array.from(new Set(rows.map((r) => r[column]))).sort();
+export async function loadDashboardData() {
+  const [flow, length, returnCohorts, capacity, capacityQuarterly, capacityYearly] = await Promise.all([
+    fetchJson("dashboard_flow_monthly.json"),
+    fetchJson("dashboard_length_monthly.json"),
+    fetchJson("dashboard_return_cohorts.json"),
+    fetchJson("dashboard_capacity_monthly.json"),
+    fetchJson("dashboard_capacity_quarterly.json"),
+    fetchJson("dashboard_capacity_yearly.json"),
+  ]);
+  return { flow, length, returnCohorts, capacity, capacityQuarterly, capacityYearly };
+}
+
+export function filterRows(rows, { populationSegment, dimension, category, month, flowType, projectType }) {
+  return rows.filter((row) => {
+    if (populationSegment && row.population_segment !== populationSegment) return false;
+    if (dimension && row.dimension !== dimension) return false;
+    if (category && row.category !== category) return false;
+    if (month && row.month !== month) return false;
+    if (flowType && row.flow_type !== flowType) return false;
+    if (projectType && row.project_type !== projectType) return false;
+    return true;
+  });
+}
+
+export function distinctValues(rows, key) {
+  return [...new Set(rows.map((row) => row[key]))];
+}
+
+// Suppressed cells carry a "*" (primary) or "**" (secondary/complementary)
+// marker instead of a count. Never treat a suppressed cell as 0 — 0 is a
+// real, reportable value; suppressed means "we withheld this number."
+export function resolveCell(row, countKey = "count") {
+  const marker = row?.suppression_marker ?? null;
+  return { value: marker ? null : row?.[countKey] ?? 0, marker };
 }

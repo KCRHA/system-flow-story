@@ -1,27 +1,17 @@
 <!--
-  Paste this block into the KCRHA website page (in a custom HTML block,
-  whatever your CMS turns out to be). It embeds the published GitHub Pages
-  site and auto-resizes the iframe to match content height, so there's no
-  internal scrollbar or awkward fixed height.
+  KCRHA System Flow Dashboard — website embed snippet.
 
-  Replace YOUR-ORG and YOUR-REPO below with your actual GitHub username/org
-  and repo name once you've created and published it.
+  Paste this directly into the page TEMPLATE (not a CMS content-editor
+  block — see README's "Embedding on the KCRHA website" section for why).
+  It mounts the dashboard into a Shadow DOM root on the div below, so its
+  styles are isolated from the site's theme in both directions, while the
+  site's own page scroll drives all of the dashboard's scroll-triggered
+  interactivity directly — no iframe, no cross-frame messaging needed.
+
+  BEFORE SHIPPING TO PRODUCTION:
+  Replace DASHBOARD_SCRIPT_URL below with the real hosted URL of
+  dist-embed/kcrha-system-flow-dashboard.js (built via `npm run
+  build:embed`).
 -->
-
-<iframe
-  id="kcrha-flow-embed"
-  src="https://YOUR-ORG.github.io/YOUR-REPO/"
-  style="width:100%; border:none; display:block;"
-  title="How People Move Through King County's Homelessness Response System"
-></iframe>
-
-<script>
-  window.addEventListener('message', function (event) {
-    if (event.data && typeof event.data.kcrhaEmbedHeight === 'number') {
-      var iframe = document.getElementById('kcrha-flow-embed');
-      if (iframe) {
-        iframe.style.height = event.data.kcrhaEmbedHeight + 'px';
-      }
-    }
-  });
-</script>
+<div data-kcrha-system-flow-dashboard></div>
+<script src="DASHBOARD_SCRIPT_URL" defer></script>

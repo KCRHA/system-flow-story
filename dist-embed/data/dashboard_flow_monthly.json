@@ -1,0 +1,1703 @@
+[
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 210,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 60,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 140,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4200,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1800,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2100,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 300,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2600,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1600,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 180,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 260,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 12,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 900,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 108,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 90,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1900,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 228,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 190,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 500,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 60,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 50,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 400,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 48,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 40,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2200,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 264,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 220,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 350,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 42,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-01-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 35,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 212,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 61,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 141,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4242,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1818,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2121,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 303,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2626,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1616,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 182,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 263,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 12,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 909,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 109,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 91,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1919,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 230,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 192,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 505,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 61,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 51,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 404,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 48,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 40,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2222,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 267,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 222,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 354,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 42,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-02-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 35,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 214,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 61,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 143,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4284,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1836,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2142,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 306,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2652,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1632,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 184,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 265,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 12,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 918,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 110,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 92,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1938,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 233,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 194,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 510,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 61,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 51,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 408,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 49,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 41,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2244,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 269,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 224,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 357,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 43,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-03-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 36,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 216,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 62,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 144,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4326,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1854,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2163,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 309,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2678,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1648,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 185,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 268,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 12,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 927,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 111,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 93,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1957,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 235,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 196,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 515,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 62,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 52,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 412,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 49,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 41,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2266,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 272,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 227,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 361,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 43,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-04-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 36,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 218,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 62,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 146,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4368,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1872,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2184,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 312,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2704,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1664,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 187,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 270,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 12,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 936,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 112,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 94,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1976,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 237,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 198,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 520,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 62,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 52,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 416,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 50,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 42,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2288,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 275,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 229,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 364,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 44,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-05-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 36,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "newly_homeless",
+    "count": 221,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_housed",
+    "count": 63,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "return_from_inactive",
+    "count": 147,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_total",
+    "count": 4410,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "unsheltered",
+    "count": 1890,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "sheltered",
+    "count": 2205,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "temporarily_housed",
+    "count": 315,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_ce_engaged",
+    "count": 2730,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "active_not_ce_engaged",
+    "count": 1680,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "permanently_housed",
+    "count": 189,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "inactive",
+    "count": 273,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "deceased",
+    "count": 13,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_engaged",
+    "count": 945,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_newly_enrolled",
+    "count": 113,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_outreach_exited",
+    "count": 95,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_engaged",
+    "count": 1995,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_newly_enrolled",
+    "count": 239,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_emergency_shelter_exited",
+    "count": 200,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_engaged",
+    "count": 525,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_newly_enrolled",
+    "count": 63,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_transitional_housing_exited",
+    "count": 53,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_engaged",
+    "count": 420,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_newly_enrolled",
+    "count": 50,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_rapid_rehousing_exited",
+    "count": 42,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_engaged",
+    "count": 2310,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_newly_enrolled",
+    "count": 277,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_psh_exited",
+    "count": 231,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_engaged",
+    "count": 368,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_newly_enrolled",
+    "count": 44,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "overall",
+    "category": "Overall",
+    "flow_type": "resource_prevention_exited",
+    "count": 37,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "White",
+    "flow_type": "newly_homeless",
+    "count": 90,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Black/African American",
+    "flow_type": "newly_homeless",
+    "count": 75,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Hispanic/Latina/o",
+    "flow_type": "newly_homeless",
+    "count": 35,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Multiracial",
+    "flow_type": "newly_homeless",
+    "count": 25,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Middle Eastern/North African",
+    "flow_type": "newly_homeless",
+    "count": 20,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Unknown",
+    "flow_type": "newly_homeless",
+    "count": 18,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Native Hawaiian/Pacific Islander",
+    "flow_type": "newly_homeless",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "Asian",
+    "flow_type": "newly_homeless",
+    "count": 30,
+    "suppression_marker": null
+  },
+  {
+    "month": "2026-06-01",
+    "population_segment": "all_population",
+    "dimension": "race_ethnicity",
+    "category": "American Indian/Alaska Native",
+    "flow_type": "newly_homeless",
+    "count": null,
+    "suppression_marker": "*"
+  }
+]

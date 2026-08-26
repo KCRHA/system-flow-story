@@ -1,0 +1,194 @@
+[
+  {
+    "month": "2026-01-01",
+    "project_type": "ph",
+    "units_in_system": 3800,
+    "throughput_hh_per_unit": 0.06,
+    "pct_utilization": 0.94,
+    "beds_in_system": 4100
+  },
+  {
+    "month": "2026-01-01",
+    "project_type": "th",
+    "units_in_system": 900,
+    "throughput_hh_per_unit": 0.11,
+    "pct_utilization": 0.88,
+    "beds_in_system": 1400
+  },
+  {
+    "month": "2026-01-01",
+    "project_type": "es",
+    "units_in_system": 2600,
+    "throughput_hh_per_unit": 0.32,
+    "pct_utilization": 0.91,
+    "beds_in_system": 3200
+  },
+  {
+    "month": "2026-01-01",
+    "project_type": "rrh",
+    "units_in_system": 1500,
+    "throughput_hh_per_unit": 0.09,
+    "pct_utilization": 0.85,
+    "beds_in_system": 1500
+  },
+  {
+    "month": "2026-02-01",
+    "project_type": "ph",
+    "units_in_system": 3805,
+    "throughput_hh_per_unit": 0.061,
+    "pct_utilization": 0.942,
+    "beds_in_system": 4105
+  },
+  {
+    "month": "2026-02-01",
+    "project_type": "th",
+    "units_in_system": 905,
+    "throughput_hh_per_unit": 0.111,
+    "pct_utilization": 0.882,
+    "beds_in_system": 1405
+  },
+  {
+    "month": "2026-02-01",
+    "project_type": "es",
+    "units_in_system": 2605,
+    "throughput_hh_per_unit": 0.321,
+    "pct_utilization": 0.912,
+    "beds_in_system": 3205
+  },
+  {
+    "month": "2026-02-01",
+    "project_type": "rrh",
+    "units_in_system": 1505,
+    "throughput_hh_per_unit": 0.091,
+    "pct_utilization": 0.852,
+    "beds_in_system": 1505
+  },
+  {
+    "month": "2026-03-01",
+    "project_type": "ph",
+    "units_in_system": 3810,
+    "throughput_hh_per_unit": 0.062,
+    "pct_utilization": 0.944,
+    "beds_in_system": 4110
+  },
+  {
+    "month": "2026-03-01",
+    "project_type": "th",
+    "units_in_system": 910,
+    "throughput_hh_per_unit": 0.112,
+    "pct_utilization": 0.884,
+    "beds_in_system": 1410
+  },
+  {
+    "month": "2026-03-01",
+    "project_type": "es",
+    "units_in_system": 2610,
+    "throughput_hh_per_unit": 0.322,
+    "pct_utilization": 0.914,
+    "beds_in_system": 3210
+  },
+  {
+    "month": "2026-03-01",
+    "project_type": "rrh",
+    "units_in_system": 1510,
+    "throughput_hh_per_unit": 0.092,
+    "pct_utilization": 0.854,
+    "beds_in_system": 1510
+  },
+  {
+    "month": "2026-04-01",
+    "project_type": "ph",
+    "units_in_system": 3815,
+    "throughput_hh_per_unit": 0.063,
+    "pct_utilization": 0.946,
+    "beds_in_system": 4115
+  },
+  {
+    "month": "2026-04-01",
+    "project_type": "th",
+    "units_in_system": 915,
+    "throughput_hh_per_unit": 0.113,
+    "pct_utilization": 0.886,
+    "beds_in_system": 1415
+  },
+  {
+    "month": "2026-04-01",
+    "project_type": "es",
+    "units_in_system": 2615,
+    "throughput_hh_per_unit": 0.323,
+    "pct_utilization": 0.916,
+    "beds_in_system": 3215
+  },
+  {
+    "month": "2026-04-01",
+    "project_type": "rrh",
+    "units_in_system": 1515,
+    "throughput_hh_per_unit": 0.093,
+    "pct_utilization": 0.856,
+    "beds_in_system": 1515
+  },
+  {
+    "month": "2026-05-01",
+    "project_type": "ph",
+    "units_in_system": 3820,
+    "throughput_hh_per_unit": 0.064,
+    "pct_utilization": 0.948,
+    "beds_in_system": 4120
+  },
+  {
+    "month": "2026-05-01",
+    "project_type": "th",
+    "units_in_system": 920,
+    "throughput_hh_per_unit": 0.114,
+    "pct_utilization": 0.888,
+    "beds_in_system": 1420
+  },
+  {
+    "month": "2026-05-01",
+    "project_type": "es",
+    "units_in_system": 2620,
+    "throughput_hh_per_unit": 0.324,
+    "pct_utilization": 0.918,
+    "beds_in_system": 3220
+  },
+  {
+    "month": "2026-05-01",
+    "project_type": "rrh",
+    "units_in_system": 1520,
+    "throughput_hh_per_unit": 0.094,
+    "pct_utilization": 0.858,
+    "beds_in_system": 1520
+  },
+  {
+    "month": "2026-06-01",
+    "project_type": "ph",
+    "units_in_system": 3825,
+    "throughput_hh_per_unit": 0.065,
+    "pct_utilization": 0.95,
+    "beds_in_system": 4125
+  },
+  {
+    "month": "2026-06-01",
+    "project_type": "th",
+    "units_in_system": 925,
+    "throughput_hh_per_unit": 0.115,
+    "pct_utilization": 0.89,
+    "beds_in_system": 1425
+  },
+  {
+    "month": "2026-06-01",
+    "project_type": "es",
+    "units_in_system": 2625,
+    "throughput_hh_per_unit": 0.325,
+    "pct_utilization": 0.92,
+    "beds_in_system": 3225
+  },
+  {
+    "month": "2026-06-01",
+    "project_type": "rrh",
+    "units_in_system": 1525,
+    "throughput_hh_per_unit": 0.095,
+    "pct_utilization": 0.86,
+    "beds_in_system": 1525
+  }
+]

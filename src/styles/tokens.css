@@ -1,0 +1,94 @@
+/* :host (not just :root) so these custom properties still cascade to
+   content when this stylesheet is injected inside a shadow root — :root
+   only ever matches the top-level document's <html>, never anything
+   inside a shadow tree, regardless of where the <style> tag itself lives. */
+:root,
+:host {
+  /* KCRHA 2025 Brand Style Guide — primary/accent colors */
+  --color-navy: #172b69;
+  --color-teal: #1b8477;
+  --color-light-green: #a5c04d;
+  --color-yellow: #ffd600;
+
+  /* Approved charts & graphs palette, priority-ordered (use in this order) */
+  --chart-1: #172b69;
+  --chart-2: #1b8477;
+  --chart-3: #a5c04d;
+  --chart-4: #ffd600;
+  --chart-5: #f67951;
+  --chart-6: #6e7fb4;
+  --chart-7: #74c2b9;
+  --chart-8: #d0df9c;
+  --chart-9: #ffa486;
+  --chart-10: #ffea80;
+  --chart-11: #bec7e1;
+  --chart-12: #c2e7e2;
+
+  /* Text-approved colors only — never light-green/yellow as text */
+  --text-navy: #172b69;
+  --text-gray: #a6a6a6;
+  --text-dark: #404040;
+
+  /* Supplemental grays — borders, backgrounds, negative space */
+  --gray-light: #d8d8d8;
+  --gray-mid: #a6a6a6;
+  --gray-dark: #404040;
+
+  --font-headline: "Avenir Next LT Pro", "Avenir Next", sans-serif;
+  --font-body: "Arial Nova", Arial, sans-serif;
+
+  --bg-page: #ffffff;
+  --bg-suppressed: #f5f5f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Shadow-DOM embed equivalent of the html/body/#root reset above — the
+   shadow host element stands in for <body> as far as base inherited
+   styling goes, since html/body/#root selectors can't match anything
+   inside a shadow tree. */
+:host {
+  display: block;
+  background: var(--bg-page);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+h3,
+h4 {
+  font-weight: 600;
+}
+
+a {
+  color: var(--color-teal);
+}
+
+.suppressed-cell {
+  color: var(--gray-mid);
+  font-style: italic;
+}

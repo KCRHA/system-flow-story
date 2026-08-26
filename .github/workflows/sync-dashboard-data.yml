@@ -1,0 +1,50 @@
+name: Sync Dashboard Data
+
+on:
+  schedule:
+    - cron: "0 13 * * 3" # Wednesday, matching the existing weekly pipeline cadence
+  workflow_dispatch: {} # manual trigger from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-dashboard-data
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # pyodbc needs the Microsoft ODBC driver installed on the runner —
+      # not bundled with the Python package.
+      - name: Install ODBC Driver 18 for SQL Server
+        run: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update
+          ACCEPT_EULA=Y sudo apt-get install -y msodbcsql18 unixodbc-dev
+
+      - name: Install pipeline dependencies
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Export dashboard_* tables
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        run: python -m pipeline.export
+
+      - name: Commit refreshed JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/dashboard_flow_monthly.json public/data/dashboard_length_monthly.json public/data/dashboard_return_cohorts.json public/data/dashboard_capacity_monthly.json public/data/dashboard_capacity_quarterly.json public/data/dashboard_capacity_yearly.json
+          git diff --staged --quiet && echo "no data changes" || git commit -m "chore: refresh dashboard data [skip ci]"
+          git push
