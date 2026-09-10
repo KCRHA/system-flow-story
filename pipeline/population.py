@@ -16,7 +16,10 @@ different columns for the same underlying concepts:
   which already computes its own household-level YYA/chronic fields
   directly — confirmed against All_Program_Enrollments_2026_01_22.ipynb's
   final columns_to_select). Also requires VeteranStatus joined in from
-  Client_Demographics on PersonalID.
+  Client_Demographics on PersonalID. Its YYA branch additionally restricts
+  to the individual's own age tier (see below) — YYA itself is a
+  household-level flag, so used alone it would also count non-HoH children
+  who happen to belong to a YYA household.
 """
 import pandas as pd
 
@@ -29,16 +32,21 @@ def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataF
     if pop_label == "Veteran":
         return df[df["VeteranStatus"] == "Yes"]
     if pop_label == "Youth and Young Adults":
-        # AgedOutOfYYA arrives as whatever raw type the SQL driver returned
-        # (pyodbc doesn't guarantee pandas Timestamp) — coerce both sides
-        # explicitly rather than relying on the caller having already
-        # normalized every column that might end up compared here.
+        # AgedOutOfYYA/FlagYYA/FlagHeadOfHousehold all arrive as whatever raw
+        # type the SQL driver returned (pyodbc doesn't guarantee pandas
+        # Timestamp/int64 — episode_systemwide's FlagYYA and
+        # FlagHeadOfHousehold in particular come back as the strings "0"/"1",
+        # not ints) — coerce explicitly rather than relying on the caller
+        # having already normalized every column that might end up compared
+        # here.
         aged_out_of_yya = pd.to_datetime(df["AgedOutOfYYA"], errors="coerce")
         month_ts = pd.Timestamp(month_start)
         aged_out_before = aged_out_of_yya.notna() & (aged_out_of_yya < month_ts)
-        yya_flag = (df["FlagYYA"] == 1) & ~aged_out_before
+        flag_yya = pd.to_numeric(df["FlagYYA"], errors="coerce")
+        flag_hoh = pd.to_numeric(df["FlagHeadOfHousehold"], errors="coerce")
+        yya_flag = (flag_yya == 1) & ~aged_out_before
         age_tier = (df["EpisodeAgeTier"] == "18 to 24") | (
-            (df["EpisodeAgeTier"] == "Under 18") & (df["FlagHeadOfHousehold"] == 1)
+            (df["EpisodeAgeTier"] == "Under 18") & (flag_hoh == 1)
         )
         return df[yya_flag & age_tier]
     return df  # "All"
@@ -52,5 +60,16 @@ def filter_population_enrollment(df: pd.DataFrame, pop_label: str) -> pd.DataFra
     if pop_label == "Veteran":
         return df[df["VeteranStatus"] == "Yes"]
     if pop_label == "Youth and Young Adults":
-        return df[df["YYA"] == "Yes"]
+        # YYA alone is a household-level attribute — enrollments for a
+        # non-HoH child in an otherwise-YYA household would satisfy it, so
+        # apply the same individual-level age-tier restriction as
+        # filter_population's episode-level YYA branch. Note
+        # All_Program_Enrollments' age-tier column uses "0 to 17" for this
+        # bucket where episode_systemwide's EpisodeAgeTier uses "Under 18" —
+        # confirmed against the two tables' actual distinct values, not
+        # assumed to match.
+        age_tier = (df["AgeTierAtEnrollment"] == "18 to 24") | (
+            (df["AgeTierAtEnrollment"] == "0 to 17") & (df["HeadOfHousehold"] == "Yes")
+        )
+        return df[(df["YYA"] == "Yes") & age_tier]
     return df  # "All"
