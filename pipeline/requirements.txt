@@ -3,4 +3,10 @@ numpy
 pyodbc
 azure-identity
 azure-keyvault-secrets
+azure-storage-blob
+looker-sdk
+matplotlib
+requests
+seaborn
+smartsheet-python-sdk
 git+https://github.com/KCRHA/DataHubDevelopment.git

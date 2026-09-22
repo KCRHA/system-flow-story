@@ -97,7 +97,7 @@ export default function CapacityUtilizationChart({ series, width = 720 }) {
         .attr("fill", "var(--chart-2)")
         .on("mouseenter", (event, pt) => {
           tooltip.show(
-            `<div style="font-weight:600">${PROJECT_TYPE_LABELS[d.project_type] || d.project_type} — ${quarterLabel(pt.date)}</div>` +
+            `<div style="font-weight:600">${PROJECT_TYPE_LABELS[d.project_type] || d.project_type}, ${quarterLabel(pt.date)}</div>` +
               `<div>${(pt.value * 100).toFixed(0)}% utilization</div>`,
             event
           );

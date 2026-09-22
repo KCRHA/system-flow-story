@@ -19,7 +19,7 @@ const TOOLTIP_STYLE = {
   opacity: "0",
   transition: "opacity 0.1s",
   maxWidth: "240px",
-  whiteSpace: "nowrap",
+  whiteSpace: "normal",
 };
 
 // Creates a fresh tooltip appended to `container` and returns handlers to

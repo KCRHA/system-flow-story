@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
+import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 
-const RETURNED_COLOR = "var(--chart-9)";
+const RETURNED_COLOR = "var(--chart-3)";
 const REMAINED_HOUSED_COLOR = "var(--chart-2)";
 // Below this segment height, a centered label wouldn't fit inside the
 // segment (and white text would clip past its edges) — float it just
@@ -95,11 +96,15 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
 
     bars
       .on("mouseenter", (event, d) => {
+        const suppressedMessage =
+          d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
+            ? "Population too small to safely display for this combination"
+            : "Data suppressed (small cell)";
         tooltip.show(
           d.suppression_marker
-            ? `<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div><div>Data suppressed (small cell)</div>`
+            ? `<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div><div>${suppressedMessage}</div>`
             : `<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div>` +
-                `<div>${d.n_exited.toLocaleString()} exited, ${d.n_returned.toLocaleString()} returned (${(d.pct_returned * 100).toFixed(1)}%)</div>`,
+                `<div>${d.n_exited.toLocaleString()} exited, ${d.n_returned.toLocaleString()} returned (${Math.round(d.pct_returned * 100)}%)</div>`,
           event
         );
       })
@@ -163,9 +168,9 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       .attr("x", (d) => x(d.exit_quarter) + bandCenter)
       .attr("y", innerH - 8)
       .attr("text-anchor", "middle")
-      .attr("font-size", 13)
+      .attr("font-size", (d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? 10 : 13))
       .attr("fill", "var(--gray-mid)")
-      .text((d) => d.suppression_marker);
+      .text((d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : d.suppression_marker));
   }, [rows, width, height]);
 
   return (

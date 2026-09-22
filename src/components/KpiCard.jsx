@@ -10,13 +10,25 @@
 // color-coding a rise or fall in deaths as "good"/"bad" isn't appropriate.
 // `marker` ("*"/"**") means this cell was suppressed — show it instead of a
 // number, never fall back to displaying 0.
-export default function KpiCard({ label, value, marker, trendDirection, goodDirection }) {
+// `percent` (e.g. "12.3%"), when given, renders parenthetically right after
+// the value — the caller (OutflowSection's percentOfExperienced) is
+// responsible for withholding it whenever either side of the ratio is
+// suppressed or the denominator is zero, so a marker never needs to be
+// duplicated here.
+export default function KpiCard({ label, value, marker, percent, trendDirection, goodDirection }) {
   const tone = !trendDirection ? null : goodDirection == null ? "neutral" : trendDirection === goodDirection ? "good" : "bad";
   return (
     <div className="kpi-card">
       <div className="kpi-label">{label}</div>
       <div className="kpi-value">
-        {marker ? <span className="suppressed-cell" title="Data suppressed (small cell)">{marker}</span> : value}
+        {marker ? (
+          <span className="suppressed-cell" title="Data suppressed (small cell)">{marker}</span>
+        ) : (
+          <>
+            {value}
+            {percent && <span className="kpi-percent">({percent})</span>}
+          </>
+        )}
         {!marker && tone && (
           <span className={`kpi-direction ${tone}`}>{trendDirection === "up" ? "▲" : "▼"}</span>
         )}

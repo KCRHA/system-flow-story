@@ -134,7 +134,31 @@ Sourced from Azure Synapse (`rha-bnl-prod.sql.azuresynapse.net` / `rhabnl`) via 
 
 Every source table and column name above (`episode_systemwide`, `episode_ce`, `client_demographics`, `all_program_enrollments`, `program_performance_metrics`, `program_attributes`) was confirmed directly against the actual `DataHubDevelopment` notebook code, not the old methodology deck.
 
-Run locally: `az login` (select production), then `python -m pipeline.export`. In CI, `.github/workflows/sync-dashboard-data.yml` runs this on a weekly schedule, authenticating via `AZURE_CLIENT_ID`/`AZURE_CLIENT_SECRET`/`AZURE_TENANT_ID` repo secrets instead of an interactive login.
+### Running the pipeline locally
+
+```bash
+az login                              # select the production subscription
+python3 -m venv pipeline/.venv
+source pipeline/.venv/bin/activate
+pip install -r pipeline/requirements.txt
+python3 -m pipeline.export
+```
+
+`pyodbc` also needs the Microsoft ODBC Driver for SQL Server installed at the
+OS level (the Python package alone isn't enough) — a one-time install, before
+the first run:
+
+```bash
+brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+brew install msodbcsql18 mssql-tools18
+```
+
+Re-run `python3 -m pipeline.export` any time to refresh
+`public/data/dashboard_*.json` from live Synapse data (`az login` again first
+if your session has expired). In CI, `.github/workflows/sync-dashboard-data.yml`
+runs the same export on a weekly schedule (or manual dispatch from the
+Actions tab), authenticating via `AZURE_CLIENT_ID`/`AZURE_CLIENT_SECRET`/`AZURE_TENANT_ID`
+repo secrets instead of an interactive login.
 
 ## KPI direction indicators
 

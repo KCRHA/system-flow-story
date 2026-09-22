@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
+import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 
 const monthFormat = d3.utcFormat("%b %Y");
 
@@ -76,14 +77,15 @@ export default function LengthChart({ rows, width = 720, height = 380 }) {
       .attr("x", (d) => x(d.date))
       .attr("y", innerH / 2)
       .attr("text-anchor", "middle")
-      .attr("font-size", 13)
+      .attr("font-size", (d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? 10 : 13))
       .attr("fill", "var(--gray-mid)")
-      .text((d) => d.suppression_marker)
+      .text((d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : d.suppression_marker))
       .on("mouseenter", (event, d) => {
-        tooltip.show(
-          `<div style="font-weight:600">${monthFormat(d.date)}</div><div>Data suppressed (small cell)</div>`,
-          event
-        );
+        const message =
+          d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
+            ? "Population too small to safely display for this combination"
+            : "Data suppressed (small cell)";
+        tooltip.show(`<div style="font-weight:600">${monthFormat(d.date)}</div><div>${message}</div>`, event);
       })
       .on("mousemove", (event) => tooltip.move(event))
       .on("mouseleave", () => tooltip.hide());

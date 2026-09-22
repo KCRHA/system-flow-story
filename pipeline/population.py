@@ -6,9 +6,12 @@ different columns for the same underlying concepts:
 - `filter_population` (episode-level: dashboard_flow_monthly's inflow/
   outflow/active rows, dashboard_length_monthly, dashboard_return_cohorts).
   Ported from BFZ_Monthly_Report_2026_04_03.ipynb's filter_population(),
-  trimmed to the five segments this dashboard needs (the source notebook
-  also has "Families" and "Chronic Veteran" variants this dashboard doesn't
-  use). Requires `VeteranStatus` joined in from Client_Demographics on
+  trimmed to the segments this dashboard needs (the source notebook also
+  has a "Chronic Veteran" variant this dashboard doesn't use; its own
+  "Families" branch — `EpisodeMaxCountChildren/Adults >= 1` — was left out
+  in favor of the HouseholdType-based definition below, not because it's
+  wrong, just a different valid lever over the same underlying data).
+  Requires `VeteranStatus` joined in from Client_Demographics on
   PersonalID first — episode_systemwide itself has no veteran column.
 
 - `filter_population_enrollment` (enrollment-level: the resource_* flow
@@ -31,6 +34,19 @@ def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataF
         return df[df["EpisodeChronicStatus"] == "Yes"]
     if pop_label == "Veteran":
         return df[df["VeteranStatus"] == "Yes"]
+    if pop_label == "Family":
+        # EpisodeHouseholdType, not HouseholdCategory: HouseholdCategory
+        # forces every household into exactly one bucket ("Family with
+        # Children" beats "Youth and Young Adults" in its own priority
+        # order — see All_Program_Enrollments_2026_01_22.ipynb), so a
+        # household with both a young parent and a child would silently
+        # disappear from the YYA segment if either segment were defined
+        # from it. EpisodeHouseholdType has no such exclusivity — a
+        # household can freely be both "Household with Children and
+        # Adults" here and also match the Youth and Young Adults branch
+        # below, same as any other pair of segments (e.g. chronic
+        # veteran) is already free to overlap.
+        return df[df["EpisodeHouseholdType"] == "Household with Children and Adults"]
     if pop_label == "Youth and Young Adults":
         # AgedOutOfYYA/FlagYYA/FlagHeadOfHousehold all arrive as whatever raw
         # type the SQL driver returned (pyodbc doesn't guarantee pandas
@@ -59,6 +75,12 @@ def filter_population_enrollment(df: pd.DataFrame, pop_label: str) -> pd.DataFra
         return df[df["IndividualChronicallyHomelessAtEnrollmentStart"] == "Yes"]
     if pop_label == "Veteran":
         return df[df["VeteranStatus"] == "Yes"]
+    if pop_label == "Family":
+        # Same reasoning as filter_population's Family branch: HouseholdType
+        # (not HouseholdCategory), so this stays free to overlap with YYA
+        # rather than losing shared households to whichever segment
+        # HouseholdCategory's own priority order happens to favor.
+        return df[df["HouseholdType"] == "Household with Children and Adults"]
     if pop_label == "Youth and Young Adults":
         # YYA alone is a household-level attribute — enrollments for a
         # non-HoH child in an otherwise-YYA household would satisfy it, so

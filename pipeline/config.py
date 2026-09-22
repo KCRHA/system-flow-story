@@ -36,31 +36,71 @@ RETURN_WINDOW_DAYS = 182
 # --- Population segments (dashboard_flow_monthly.population_segment) ---
 # Maps dashboard segment names -> the filter_population() label used in
 # DataHubDevelopment/Systemwide/BFZ_Monthly_Report notebooks.
+#
+# "family" is deliberately defined from the raw HouseholdType/
+# EpisodeHouseholdType value ("Household with Children and Adults"), not
+# from HouseholdCategory — HouseholdCategory forces every household into
+# exactly one bucket (Family with Children wins over Youth and Young
+# Adults in its own priority order), which would silently undercount YYA
+# families if used here. A household with both a young parent and a
+# child is legitimately both "family" and "YYA" at once, the same way
+# every other segment already overlaps (e.g. a chronic veteran) — see
+# population.py's Family branch.
 POPULATION_SEGMENTS = {
     "all_population": "All",
     "yya": "Youth and Young Adults",
     "chronic": "Chronic",
     "single_adults": "Single Adults",
     "veterans": "Veteran",
+    "family": "Family",
 }
 
 # --- Disaggregation dimensions (dashboard_flow_monthly.dimension) ---
-DIMENSIONS = ["overall", "race_ethnicity", "gender", "household_type"]
+# "gender_identity"/"gender_alignment" are rollups computed from
+# Client_Demographics's GenderExpanded column (see demographics.py) — not
+# native columns like EpisodeHouseholdType. They replace a prior plain
+# "gender" dimension (the raw single-select/summary Gender column), which
+# was never actually surfaced anywhere in the frontend.
+#
+# The 8 "race_*" dimensions replace a prior single "race_ethnicity"
+# dimension (the plain RaceAndEthnicity summary column, which collapsed
+# anyone selecting 2+ races into one generic "Multiracial" bucket). Each is
+# its own independent binary ("Included"/"Not Included") dimension, derived
+# straight from the 7 raw RaceAndEthnicity_* flags plus one Multiracial
+# flag — see demographics.py's compute_race_rollups. Deliberately NOT one
+# dimension with 8 overlapping categories: a person can be "Included" in
+# more than one of these at once (e.g. Black AND Hispanic/Latina/o), which
+# the rest of this pipeline's suppression logic assumes never happens
+# within a single dimension (categories must partition the population —
+# see suppression.py). Eight independent binary dimensions each keep that
+# partition property on their own (Included + Not Included = everyone),
+# so no suppression changes were needed to add them.
+RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_white", "race_hl", "race_mena", "race_multiracial"]
+
+DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type"]
 
 # episode_systemwide column carrying each dimension's category value
 DIMENSION_COLUMNS = {
-    "race_ethnicity": "RaceAndEthnicity",  # summary rollup, not *Expanded
-    "gender": "Gender",  # summary rollup, not *Expanded
+    "race_aian": "RaceIncludes_AIAN",  # derived — see demographics.py
+    "race_asian": "RaceIncludes_Asian",
+    "race_black": "RaceIncludes_Black",
+    "race_nhpi": "RaceIncludes_NHPI",
+    "race_white": "RaceIncludes_White",
+    "race_hl": "RaceIncludes_HL",
+    "race_mena": "RaceIncludes_MENA",
+    "race_multiracial": "RaceMultiracial",
+    "gender_identity": "GenderIdentity",  # derived — see demographics.py
+    "gender_alignment": "GenderAlignment",  # derived — see demographics.py
     "household_type": "EpisodeHouseholdType",
 }
 
 # All_Program_Enrollments' equivalent columns (confirmed against
-# All_Program_Enrollments_2026_01_22.ipynb's final columns_to_select —
-# RaceAndEthnicity/Gender aren't native to that table and must be joined in
-# from Client_Demographics on PersonalID first; HouseholdType is native).
+# All_Program_Enrollments_2026_01_22.ipynb's final columns_to_select — none
+# of the race_*/gender_* derived columns are native to that table and must
+# be joined in from Client_Demographics on PersonalID first; HouseholdType
+# is native).
 ENROLLMENT_DIMENSION_COLUMNS = {
-    "race_ethnicity": "RaceAndEthnicity",
-    "gender": "Gender",
+    **DIMENSION_COLUMNS,
     "household_type": "HouseholdType",
 }
 
@@ -151,3 +191,13 @@ def get_export_window(today: date | None = None) -> tuple[date, date]:
     else:
         end = date(today.year, today.month - 1, 1)
     return start, end
+
+
+def month_before(d: date) -> date:
+    """The 1st of the calendar month immediately before `d`'s own month —
+    used to pull one extra lookback month of episode_systemwide ahead of
+    the export window's start, so build_flow_rows/build_flow_yearly_rows
+    can resolve a true prior_month for the window's first published
+    month/year (see export.py's episodes_with_lookback). Never itself
+    published; window_start still gates what actually gets emitted."""
+    return date(d.year - 1, 12, 1) if d.month == 1 else date(d.year, d.month - 1, 1)

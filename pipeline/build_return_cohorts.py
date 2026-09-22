@@ -36,7 +36,8 @@ def build_return_cohort_rows(episodes_in_window: pd.DataFrame, all_episodes: pd.
       the export window, past what that window alone would contain.
     as_of: "today" for window_complete purposes (a cohort's window is only
       complete once RETURN_WINDOW_DAYS have fully elapsed since exit_quarter
-      started).
+      ended — the latest possible exit date in the quarter — so every exit
+      in the quarter has had the full window to show a return).
     """
     # EpisodeOutflowType is a per-*episode* label stamped on every monthly
     # row an episode spans (see Episode_Systemwide notebook's
@@ -65,11 +66,12 @@ def build_return_cohort_rows(episodes_in_window: pd.DataFrame, all_episodes: pd.
 
     for exit_quarter in exit_quarters:
         quarter_df = exits[exits["exit_quarter"] == exit_quarter]
-        # Anchored to the quarter's start (not end), same convention the
-        # monthly version used (anchored to month start) — a few weeks of
-        # imprecision for exits late in the quarter, consistent with the
-        # existing convention rather than a new one.
-        window_complete = (pd.Timestamp(as_of) - pd.Timestamp(exit_quarter)).days >= RETURN_WINDOW_DAYS
+        # Anchored to the quarter's end, since that's the latest date any
+        # exit in this quarter could have happened — anchoring to the start
+        # (as the old monthly version did) would call a quarter complete up
+        # to ~3 months before its late exits actually clear the window.
+        quarter_end = pd.Period(exit_quarter, freq="Q").end_time.normalize()
+        window_complete = (pd.Timestamp(as_of) - quarter_end).days >= RETURN_WINDOW_DAYS
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(quarter_df, pop_label, exit_quarter)

@@ -8,8 +8,8 @@ const PROJECT_TYPE_LABELS = { ph: "Permanent Housing", th: "Transitional Housing
 // depending on what the program is for. Split into two labeled groups so
 // the framing is explicit rather than implied by raw bar length.
 const GROUPS = [
-  { key: "stability", title: "Stability-Focused — lower is better", types: ["ph"], color: "var(--chart-6)" },
-  { key: "transitional", title: "Transitional — higher is better", types: ["th", "es", "rrh"], color: "var(--chart-2)" },
+  { key: "stability", title: "Stability-Focused: lower is better", types: ["ph"], color: "var(--chart-6)" },
+  { key: "transitional", title: "Transitional: higher is better", types: ["th", "es", "rrh"], color: "var(--chart-2)" },
 ];
 
 const GROUP_HEADER_H = 20;
