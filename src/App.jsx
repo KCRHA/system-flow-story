@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadDashboardData, filterRows, distinctValues } from "./lib/loadData.js";
+import { DEMOGRAPHIC_TYPES } from "./components/FilterBar.jsx";
 import { yearsIn } from "./lib/sankeyData.js";
 import LengthSection from "./components/sections/LengthSection.jsx";
 import OutflowSection from "./components/sections/OutflowSection.jsx";
@@ -24,6 +25,21 @@ const RACE_ETHNICITY_CATEGORY_DIMENSIONS = {
   Multiracial: "race_multiracial",
 };
 
+// Hidden from every demographic type's category dropdown for now — a
+// deliberate, revisitable choice (not a data error) to keep "we don't know"
+// buckets out of the filter until there's a considered way to present them.
+// Covers GenderIdentity/GenderAlignment's "Unknown" (see demographics.py)
+// and age_category's "Undefined" (EpisodeAgeTier/AgeTierAtEnrollment rows
+// with no usable birth date — see build_flow.py).
+const HIDDEN_CATEGORIES = new Set(["Unknown", "Undefined"]);
+
+// Age tiers read youngest-to-oldest, not alphabetically — a plain .sort()
+// puts "Under 18" last (after "65+"), since alphabetical sort treats digits
+// before "U". Any category not in this list (there shouldn't be any once
+// HIDDEN_CATEGORIES is filtered out) is dropped rather than silently
+// inserted in an arbitrary spot.
+const AGE_CATEGORY_ORDER = ["Under 18", "18 to 24", "25 to 34", "35 to 44", "45 to 54", "55 to 64", "65+"];
+
 function resolveDemographicScope(demographicType, demographicCategory) {
   if (demographicType === "race_ethnicity") {
     return { dimension: RACE_ETHNICITY_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
@@ -36,7 +52,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const [populationSegment, setPopulationSegment] = useState("all_population");
   const [selectedYear, setSelectedYear] = useState(null);
-  const [demographicType, setDemographicType] = useState("overall");
+  const [selectedDemographicType, setSelectedDemographicType] = useState("overall");
   const [selectedDemographicCategory, setSelectedDemographicCategory] = useState("Overall");
 
   useEffect(() => {
@@ -56,6 +72,21 @@ export default function App() {
   // spans a different range of years).
   const year = years.includes(selectedYear) ? selectedYear : years[0] ?? null;
 
+  // age_category isn't offered for the YYA population segment — everyone in
+  // it already falls in the same one or two age tiers by definition, so
+  // breaking it down further is meaningless (see FilterBar.jsx's own
+  // comment on DEMOGRAPHIC_TYPES).
+  const demographicTypeOptions = useMemo(
+    () => (populationSegment === "yya" ? DEMOGRAPHIC_TYPES.filter((opt) => opt.value !== "age_category") : DEMOGRAPHIC_TYPES),
+    [populationSegment]
+  );
+  // Same fallback pattern as `year` above — lands back on "All" whenever
+  // the current selection isn't valid for the freshly chosen population
+  // (i.e. Age Category was selected, then the population switched to YYA).
+  const demographicType = demographicTypeOptions.some((opt) => opt.value === selectedDemographicType)
+    ? selectedDemographicType
+    : "overall";
+
   // Every category dashboard_flow_monthly carries for the selected
   // demographic type — data-derived, not hardcoded, so it always matches
   // what the export actually contains (see distinctValues/filterRows,
@@ -67,7 +98,13 @@ export default function App() {
   const demographicCategories = useMemo(() => {
     if (!data || demographicType === "overall") return ["Overall"];
     if (demographicType === "race_ethnicity") return Object.keys(RACE_ETHNICITY_CATEGORY_DIMENSIONS);
-    return distinctValues(filterRows(data.flow, { dimension: demographicType }), "category").sort();
+    const categories = distinctValues(filterRows(data.flow, { dimension: demographicType }), "category").filter(
+      (category) => !HIDDEN_CATEGORIES.has(category)
+    );
+    if (demographicType === "age_category") {
+      return AGE_CATEGORY_ORDER.filter((category) => categories.includes(category));
+    }
+    return categories.sort();
   }, [data, demographicType]);
   // Same fallback pattern as `year` above — lands on the first available
   // category whenever the current selection isn't valid for the freshly
@@ -98,13 +135,15 @@ export default function App() {
       <OutflowSection
         flowYearlyRows={data.flowYearly}
         flowQuarterlyRows={data.flowQuarterly}
+        flowMonthlyRows={data.flow}
         populationSegment={populationSegment}
         onPopulationChange={setPopulationSegment}
         years={years}
         year={year}
         onYearChange={setSelectedYear}
         demographicType={demographicType}
-        onDemographicTypeChange={setDemographicType}
+        onDemographicTypeChange={setSelectedDemographicType}
+        demographicTypeOptions={demographicTypeOptions}
         demographicCategory={demographicCategory}
         onDemographicCategoryChange={setSelectedDemographicCategory}
         demographicCategoryOptions={demographicCategories}

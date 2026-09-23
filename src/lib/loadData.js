@@ -15,9 +15,14 @@ export const INSUFFICIENT_POPULATION_MARKER = "insufficient_population";
 // pipeline/suppression.py. Primary ("*") means this cell's own true count
 // is small; secondary ("**") means an otherwise-showable cell was hidden
 // too, to keep a nearby primary-suppressed cell from being back-calculated
-// — see FlowSankeyChart, which renders the two differently (primary stays
-// a small fixed sliver; secondary expands to fill whatever's left of its
-// node's own true total).
+// — see FlowSankeyChart, which renders a node's secondary-suppressed links
+// (if any are present at that node) expanded to fill whatever's left of
+// its true total, with primary-suppressed links staying at a small fixed
+// sliver; when a node has primary-suppressed links but no secondary ones,
+// the primary links themselves take on that expanding role instead, so a
+// visual gap doesn't reappear just because that particular node didn't
+// need secondary suppression.
+export const PRIMARY_SUPPRESSION_MARKER = "*";
 export const SECONDARY_SUPPRESSION_MARKER = "**";
 
 async function fetchJson(path) {

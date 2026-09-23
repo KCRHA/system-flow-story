@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { sankey } from "d3-sankey";
 import { FLOW_COLORS } from "../../lib/flowColors.js";
 import { INFLOW_BUCKET_KEYS, OUTFLOW_BUCKET_KEYS } from "../../lib/sankeyData.js";
-import { SECONDARY_SUPPRESSION_MARKER } from "../../lib/loadData.js";
+import { PRIMARY_SUPPRESSION_MARKER, SECONDARY_SUPPRESSION_MARKER } from "../../lib/loadData.js";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
 
 export const ACTIVE_COLOR = "var(--chart-2)";
@@ -85,32 +85,70 @@ function buildGraph({ startActive, endActive, inflow, outflow, pairs }, outflowK
     }
   }
 
-  // A secondary-suppressed ("**") link's rendered width, at ONE of its two
-  // ends: that node's own true total, minus everything else already
-  // accounted for at that node (visible links at their true value, primary
-  // links at their small fixed nominal), split evenly across however many
-  // secondary links share that same node. Computed independently per end
-  // (a link's source node and target node can each have a different amount
-  // left over) — the rendered ribbon (see taperedLinkPath) tapers between
-  // the two rather than forcing one uniform width that's only correct on
-  // one side. Safe to do (doesn't reveal a suppressed cell's real value):
-  // apply_crosstab_secondary_suppression guarantees any node with a
-  // primary-suppressed link also has at least one secondary-suppressed
-  // link, so "what's left" is always divided among 2+ genuinely unknown
-  // cells, never assigned outright to a single one.
-  function secondaryWidthAt(nodeId) {
+  // Which nodes have at least one secondary-suppressed link touching them —
+  // determines, per node, whether the secondary links or (if none are
+  // present) the primary links are the ones that expand to fill leftover
+  // space; whichever kind ISN'T expanding at a given node stays at the
+  // small fixed nominal.
+  const nodesWithSecondary = new Set();
+  for (const l of candidateLinks) {
+    if (l.cell.marker === SECONDARY_SUPPRESSION_MARKER) {
+      nodesWithSecondary.add(l.source);
+      nodesWithSecondary.add(l.target);
+    }
+  }
+
+  // Whether `cell`'s link expands to fill leftover space at this
+  // particular end (`nodeId`) rather than sitting at the flat nominal.
+  // Secondary-suppressed links always do. Primary-suppressed links only
+  // do when their node has NO secondary-suppressed link of its own to do
+  // that job instead — otherwise every primary link there stays small,
+  // per the deliberate "keep primary suppression small, let secondary
+  // suppression expand" split.
+  function isExpandingAt(nodeId, cell) {
+    if (cell.marker === SECONDARY_SUPPRESSION_MARKER) return true;
+    if (cell.marker === PRIMARY_SUPPRESSION_MARKER) return !nodesWithSecondary.has(nodeId);
+    return false;
+  }
+
+  // The rendered width, at ONE of a link's two ends, for whichever links
+  // are "expanding" at that node (see isExpandingAt): that node's own true
+  // total, minus everything else already accounted for (visible links at
+  // their true value, non-expanding primary links at their small fixed
+  // nominal), split evenly across however many links are expanding there.
+  // Computed independently per end (a link's source node and target node
+  // can each have a different amount left over, and even a different
+  // reason for expanding) — the rendered ribbon (see taperedLinkPath)
+  // tapers between the two rather than forcing one uniform width that's
+  // only correct on one side.
+  //
+  // Safe to do (doesn't reveal a suppressed cell's real value) in both
+  // cases: apply_crosstab_secondary_suppression guarantees any node with a
+  // primary-suppressed link also has at least one OTHER suppressed link
+  // (primary or secondary) to share the unknown remainder with, so "what's
+  // left" is always divided among 2+ genuinely unknown cells, never
+  // assigned outright to a single one. For the primary-only case
+  // specifically: secondary suppression is only skipped when those
+  // primary-suppressed cells' true values aren't all tied at the 1-or-10
+  // extreme (see suppression.py's rule (b)) — exactly the case where
+  // knowing their sum still doesn't pin down the individual split, so
+  // splitting that already-computable sum evenly for display doesn't
+  // expose anything beyond what the visible total and siblings already do.
+  function expandingWidthAt(nodeId) {
     const linksAtNode = candidateLinks.filter((l) => l.source === nodeId || l.target === nodeId);
-    const secondaryLinks = linksAtNode.filter((l) => l.cell.marker === SECONDARY_SUPPRESSION_MARKER);
-    if (secondaryLinks.length === 0) return SUPPRESSED_NOMINAL;
-    const accountedFor = linksAtNode.reduce((sum, l) => (l.cell.marker === SECONDARY_SUPPRESSION_MARKER ? sum : sum + magnitude(l.cell)), 0);
+    const expandingLinks = linksAtNode.filter((l) => isExpandingAt(nodeId, l.cell));
+    if (expandingLinks.length === 0) return SUPPRESSED_NOMINAL;
+    const accountedFor = linksAtNode.reduce(
+      (sum, l) => (isExpandingAt(nodeId, l.cell) ? sum : sum + magnitude(l.cell)),
+      0
+    );
     const remaining = Math.max(0, (fixedValueById.get(nodeId) ?? 0) - accountedFor);
-    return remaining / secondaryLinks.length;
+    return remaining / expandingLinks.length;
   }
 
   const links = candidateLinks.map((l) => {
-    const isSecondary = l.cell.marker === SECONDARY_SUPPRESSION_MARKER;
-    const sourceWidth = isSecondary ? secondaryWidthAt(l.source) : magnitude(l.cell);
-    const targetWidth = isSecondary ? secondaryWidthAt(l.target) : magnitude(l.cell);
+    const sourceWidth = isExpandingAt(l.source, l.cell) ? expandingWidthAt(l.source) : magnitude(l.cell);
+    const targetWidth = isExpandingAt(l.target, l.cell) ? expandingWidthAt(l.target) : magnitude(l.cell);
     return {
       source: l.source,
       target: l.target,
@@ -119,9 +157,9 @@ function buildGraph({ startActive, endActive, inflow, outflow, pairs }, outflowK
       targetWidth,
       // Feeds d3-sankey's own link-stacking order/position within a node
       // (see computeLinkBreadths) — the two ends' widths only ever differ
-      // for a tapered secondary link, so their average is a reasonable
-      // single stand-in for layout purposes; the actual rendered shape
-      // uses sourceWidth/targetWidth directly, not this.
+      // for a tapered link, so their average is a reasonable single
+      // stand-in for layout purposes; the actual rendered shape uses
+      // sourceWidth/targetWidth directly, not this.
       value: (sourceWidth + targetWidth) / 2,
     };
   });

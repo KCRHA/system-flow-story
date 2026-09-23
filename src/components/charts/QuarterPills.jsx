@@ -9,12 +9,16 @@ function quarterAbbrev(quarter) {
 
 /** `quarters`: ascending "YYYY-MM-DD" quarter-start strings for the
  * currently selected year (see quartersInYear — already excludes any
- * quarter still in progress). `selected`: one of `quarters`, or null for
- * "Full Year". */
-export default function QuarterPills({ quarters, selected, onSelect }) {
+ * quarter still in progress). `selected`: one of `quarters`, or null when
+ * no quarter is active. `fullYearActive`: whether "Full Year" itself is
+ * the active period — distinct from `selected == null`, since a sibling
+ * MonthPills row can also leave `selected` null while a month is active
+ * (see OutflowSection's mutual-exclusivity handling); defaults to
+ * `selected == null` for callers with no month row to worry about. */
+export default function QuarterPills({ quarters, selected, onSelect, fullYearActive = selected == null }) {
   return (
     <div className="month-pills">
-      <button type="button" className={`month-pill${selected == null ? " is-active" : ""}`} onClick={() => onSelect(null)}>
+      <button type="button" className={`month-pill${fullYearActive ? " is-active" : ""}`} onClick={() => onSelect(null)}>
         Full Year
       </button>
       {quarters.map((quarter) => (

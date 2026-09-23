@@ -29,6 +29,13 @@ function cellForQuarter(quarterlyRows, quarter, flowType) {
   );
 }
 
+function cellForMonth(monthlyRows, month, flowType) {
+  return resolveCell(
+    monthlyRows.find((r) => r.month === month && r.flow_type === flowType),
+    "count"
+  );
+}
+
 /** Every calendar year present in `rows` (already scoped to one population
  * segment/dimension/category), most recent first. */
 export function yearsIn(rows) {
@@ -47,6 +54,13 @@ export function quartersInYear(quarterlyRows, year) {
   return [...new Set(quarterlyRows.filter((r) => r.quarter.slice(0, 4) === String(year)).map((r) => r.quarter))].sort();
 }
 
+/** Every month present in `monthlyRows` (already scoped to one population
+ * segment/dimension/category) for calendar year `year`, sorted ascending —
+ * same convention as quartersInYear, one level more granular. */
+export function monthsInYear(monthlyRows, year) {
+  return [...new Set(monthlyRows.filter((r) => r.month.slice(0, 4) === String(year)).map((r) => r.month))].sort();
+}
+
 // Every number here comes straight from the pipeline's indiv_* flow_types
 // (build_flow.py's _partition_by_individual) — each of the four inflow
 // buckets (already active / newly homeless / return from housed / return
@@ -58,16 +72,24 @@ export function quartersInYear(quarterlyRows, year) {
 // this is a partition of individuals, not a count of episode-entry
 // events. That partitioning has to happen with the whole period's
 // episodes in view at once (to find each person's single earliest
-// inflow / latest outflow event), which isn't something a monthly cell —
-// or a sum of them — can reconstruct client-side; that's why a full-year
-// or full-quarter period reads from dashboard_flow_yearly.json/
-// dashboard_flow_quarterly.json's own dedicated computation rather than
-// summing dashboard_flow_monthly's per-month figures.
-export function buildFlowPeriod(yearlyRows, quarterlyRows, { year, quarter }) {
-  const source = quarter ? quarterlyRows.filter((r) => r.quarter === quarter) : yearlyRows.filter((r) => r.year === year);
+// inflow / latest outflow event) — but build_flow.py runs it at every
+// granularity (month, quarter, year) independently, so a single-month
+// period reads straight from dashboard_flow_monthly.json's own indiv_*
+// rows rather than needing to be reconstructed client-side.
+export function buildFlowPeriod(yearlyRows, quarterlyRows, monthlyRows, { year, quarter, month }) {
+  const source = month
+    ? monthlyRows.filter((r) => r.month === month)
+    : quarter
+      ? quarterlyRows.filter((r) => r.quarter === quarter)
+      : yearlyRows.filter((r) => r.year === year);
   if (!source.length) return null;
 
-  const get = (flowType) => (quarter ? cellForQuarter(quarterlyRows, quarter, flowType) : cellForYear(yearlyRows, year, flowType));
+  const get = (flowType) =>
+    month
+      ? cellForMonth(monthlyRows, month, flowType)
+      : quarter
+        ? cellForQuarter(quarterlyRows, quarter, flowType)
+        : cellForYear(yearlyRows, year, flowType);
 
   // Per-person (inflow bucket, outflow bucket) pairing — e.g. "of the
   // people newly homeless this period, how many were still active vs.
@@ -83,7 +105,7 @@ export function buildFlowPeriod(yearlyRows, quarterlyRows, { year, quarter }) {
   }
 
   return {
-    period: [quarter ?? String(year)],
+    period: [month ?? quarter ?? String(year)],
     startActive: get("indiv_already_active"),
     endActive: get("indiv_still_active"),
     experiencedHomelessness: get("experienced_homelessness"),

@@ -77,7 +77,21 @@ POPULATION_SEGMENTS = {
 # so no suppression changes were needed to add them.
 RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_white", "race_hl", "race_mena", "race_multiracial"]
 
-DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type"]
+# "age_category" is native to both source tables (EpisodeAgeTier /
+# AgeTierAtEnrollment -- see the Episode_Systemwide notebook's
+# age-at-episode-start computation and population.py's YYA branch, which
+# already reads these same columns), not a derived rollup, though
+# AgeTierAtEnrollment's raw label vocabulary differs from EpisodeAgeTier's
+# for the same buckets and is normalized onto it in build_flow.py's
+# build_resource_access_rows before use. Like household_type, it's
+# episode-scoped rather than a true person-level constant (age tier can
+# differ between two of a person's own episodes over the export window) --
+# see build_flow.py's EPISODE_SCOPED_CATEGORY_DIMENSIONS, which resolves
+# both dimensions' categories fresh per period rather than from a single
+# whole-window snapshot, for the same reason. Not offered as a frontend
+# filter for the YYA population segment (see FilterBar.jsx): everyone
+# there already falls in the same one or two tiers by definition.
+DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type", "age_category"]
 
 # episode_systemwide column carrying each dimension's category value
 DIMENSION_COLUMNS = {
@@ -92,16 +106,25 @@ DIMENSION_COLUMNS = {
     "gender_identity": "GenderIdentity",  # derived — see demographics.py
     "gender_alignment": "GenderAlignment",  # derived — see demographics.py
     "household_type": "EpisodeHouseholdType",
+    "age_category": "EpisodeAgeTier",
 }
 
 # All_Program_Enrollments' equivalent columns (confirmed against
 # All_Program_Enrollments_2026_01_22.ipynb's final columns_to_select — none
 # of the race_*/gender_* derived columns are native to that table and must
 # be joined in from Client_Demographics on PersonalID first; HouseholdType
-# is native).
+# is native, just under a different name than its episode_systemwide
+# counterpart. "age_category" points at "AgeCategory" — a normalized copy
+# of the native AgeTierAtEnrollment column build_resource_access_rows adds,
+# not the raw column itself — because AgeTierAtEnrollment's own label
+# vocabulary doesn't match EpisodeAgeTier's for the same buckets (see
+# build_resource_access_rows' own comment); the raw column has to stay
+# untouched since filter_population_enrollment's YYA branch depends on its
+# literal values.
 ENROLLMENT_DIMENSION_COLUMNS = {
     **DIMENSION_COLUMNS,
     "household_type": "HouseholdType",
+    "age_category": "AgeCategory",
 }
 
 # --- Inflow / outflow / active flow_type values (dashboard_flow_monthly) ---

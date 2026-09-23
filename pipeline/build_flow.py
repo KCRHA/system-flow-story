@@ -278,20 +278,55 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
 
 
 # Dimensions _partition_counts_by_category can break indiv_*/indiv_flow_*
-# out by category. Deliberately excludes "household_type": unlike
-# race_ethnicity/gender_identity/gender_alignment (client_demographics
-# columns, genuinely constant for a person regardless of which episode
-# they're in), EpisodeHouseholdType is itself episode-scoped — a person's
-# household composition can differ between two of their own episodes. The
-# static one-category-per-person snapshot this function relies on (see
-# person_category in build_flow_rows/build_flow_yearly_rows) would
-# misrepresent that for anyone whose household type actually changed, so
-# household_type is left out of this specific breakdown rather than
-# reported inaccurately. household_type's own non-partition flow_types
-# (active_total etc., via _count_by_category) are unaffected — those
-# already read each row's own EpisodeHouseholdType directly, not a static
-# snapshot.
-PARTITION_CATEGORY_DIMENSIONS = [d for d in DIMENSIONS if d not in ("overall", "household_type")]
+# out by category.
+PARTITION_CATEGORY_DIMENSIONS = [d for d in DIMENSIONS if d != "overall"]
+
+# "household_type" and "age_category", unlike race_ethnicity/gender_identity/
+# gender_alignment (client_demographics columns, genuinely constant for a
+# person regardless of which episode they're in), are themselves
+# episode-scoped: EpisodeHouseholdType/EpisodeAgeTier can differ between two
+# of a person's own episodes (a household's composition can change; a
+# person's age tier only increases, but can still cross tiers across a
+# multi-year export window). A single person_category snapshot taken once
+# across the WHOLE window — safe for every other PARTITION_CATEGORY_DIMENSIONS
+# entry, since those really are constant — would misattribute anyone whose
+# value actually changed to whichever value happened to survive
+# drop_duplicates, regardless of which period is actually being built. See
+# _person_category_for_period below, which build_flow_rows/
+# build_flow_yearly_rows/build_flow_quarterly_rows use for these two
+# instead, resolving each person's category fresh from just the period
+# being built rather than a single global snapshot.
+EPISODE_SCOPED_CATEGORY_DIMENSIONS = ["household_type", "age_category"]
+
+
+def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.Series:
+    """PersonalID -> category, scoped to just `period_df` (this month's, or
+    this year's/quarter's, own episode rows) — see
+    EPISODE_SCOPED_CATEGORY_DIMENSIONS above for why these two dimensions
+    can't reuse a single whole-window snapshot the way the others do.
+    `period_df` must be unfiltered by population (not `pop_df`) so it still
+    covers, e.g., someone who ages out of YYA and so drops out of the
+    population-filtered rows for their last month in it (see
+    _partition_by_individual's own aged-out handling) — every PersonalID
+    that can end up in an inflow/outflow bucket or experienced_homelessness
+    count for this period has at least one row here by construction (they
+    can only reach those buckets via a row inside this same period, or via
+    prior_month for already_active, which the caller folds in already since
+    already_active_ids is intersected with period_ids first).
+
+    Picks each person's LATEST row within the period when they have more
+    than one (age only increases, so this is also the most current value;
+    for household_type this is an arbitrary-but-consistent tiebreak, same
+    as any other groupby-based pick elsewhere in this module)."""
+    category_col = DIMENSION_COLUMNS[dimension]
+    ordered = period_df.sort_values("TimePeriodStartDate")
+    return ordered.drop_duplicates("PersonalID", keep="last").set_index("PersonalID")[category_col]
+
+
+# The subset of PARTITION_CATEGORY_DIMENSIONS that really is safe to
+# snapshot once across the whole window (see EPISODE_SCOPED_CATEGORY_DIMENSIONS
+# above for the two that aren't).
+_CONSTANT_CATEGORY_DIMENSIONS = [d for d in PARTITION_CATEGORY_DIMENSIONS if d not in EPISODE_SCOPED_CATEGORY_DIMENSIONS]
 
 
 def _partition_counts_by_category(partition: dict, cat_series: pd.Series, categories: list) -> tuple[dict, dict]:
@@ -379,14 +414,24 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
     # partition out by category below. Built once from the full episodes
     # frame (not per-month) since these columns are constant for a given
     # person regardless of which of their episodes/months it's read from.
+    # EPISODE_SCOPED_CATEGORY_DIMENSIONS are deliberately left out of this
+    # one-time snapshot — resolved fresh per month below instead (see
+    # _person_category_for_period).
     person_category = {
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
-        for dimension in PARTITION_CATEGORY_DIMENSIONS
+        for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
 
     for month in months:
         prior_month = all_months[month_index[month] - 1] if month_index[month] > 0 else None
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
+        # This month's own category lookup, constant dimensions plus this
+        # month's freshly-resolved episode-scoped ones — see
+        # EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        period_category = {
+            **person_category,
+            **{dim: _person_category_for_period(month_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+        }
         ce_active_ids = set(
             episode_ce.loc[
                 (episode_ce["CEEntryDate"] <= month)
@@ -477,7 +522,7 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
             # dashboard do.
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, person_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     _emit(rows, month, segment_key, dimension, f"indiv_{key}", counts)
                 for (inflow_key, outflow_key), counts in pair_counts.items():
@@ -549,9 +594,12 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
     all_categories = {
         dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in DIMENSIONS
     }
+    # EPISODE_SCOPED_CATEGORY_DIMENSIONS deliberately left out of this
+    # one-time snapshot — resolved fresh per year below instead (see
+    # _person_category_for_period).
     person_category = {
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
-        for dimension in PARTITION_CATEGORY_DIMENSIONS
+        for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
 
     rows: list = []
@@ -559,6 +607,11 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
         months = sorted(year_df["TimePeriodStartDate"].unique())
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
+        # This year's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        period_category = {
+            **person_category,
+            **{dim: _person_category_for_period(year_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+        }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
@@ -590,7 +643,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
                 counts = (
-                    person_category[dimension]
+                    period_category[dimension]
                     .reindex(list(person_ids))
                     .value_counts()
                     .reindex(categories, fill_value=0)
@@ -616,7 +669,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
             # demographic slice.
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, person_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
@@ -659,9 +712,12 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
     all_categories = {
         dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in DIMENSIONS
     }
+    # EPISODE_SCOPED_CATEGORY_DIMENSIONS deliberately left out of this
+    # one-time snapshot — resolved fresh per quarter below instead (see
+    # _person_category_for_period).
     person_category = {
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
-        for dimension in PARTITION_CATEGORY_DIMENSIONS
+        for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
 
     rows: list = []
@@ -671,6 +727,11 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
             continue
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
+        # This quarter's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        period_category = {
+            **person_category,
+            **{dim: _person_category_for_period(quarter_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+        }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
@@ -696,7 +757,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
                 counts = (
-                    person_category[dimension]
+                    period_category[dimension]
                     .reindex(list(person_ids))
                     .value_counts()
                     .reindex(categories, fill_value=0)
@@ -717,7 +778,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
 
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, person_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
@@ -774,6 +835,27 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     )
     enrollments["_bucket"] = enrollments["ProjectTypeCode"].apply(_resource_type_bucket)
     enrollments = enrollments.dropna(subset=["_bucket"])
+
+    # AgeTierAtEnrollment uses a different label vocabulary than
+    # episode_systemwide's EpisodeAgeTier for the same buckets — confirmed
+    # against the two tables' actual distinct values, not assumed: "0 to 17"
+    # where EpisodeAgeTier says "Under 18", "65 or Above" where it says
+    # "65+", plus an enrollment-only "Below 0" bucket for negative/bad ages
+    # that EpisodeAgeTier's own age-at-episode-start computation already
+    # folds into "Under 18" (age_at_start < 18 catches negative ages too —
+    # see Episode_Systemwide notebook). Normalized into a NEW column (not
+    # overwritten in place) so dashboard_flow_monthly's age_category
+    # dimension — which mixes these enrollment-driven resource_* rows with
+    # episode-driven rows under one dimension — carries a single clean
+    # category set instead of two overlapping ones (this bit the frontend's
+    # category dropdown directly: it showed both "65+" and "65 or Above" as
+    # separate options for what's really one bucket). Raw AgeTierAtEnrollment
+    # itself must stay untouched: filter_population_enrollment's YYA branch
+    # compares against its literal "0 to 17" value, and normalizing it away
+    # in place would silently break that population filter.
+    enrollments["AgeCategory"] = enrollments["AgeTierAtEnrollment"].replace(
+        {"0 to 17": "Under 18", "65 or Above": "65+", "Below 0": "Under 18"}
+    )
 
     from .config import ENROLLMENT_DIMENSION_COLUMNS
 

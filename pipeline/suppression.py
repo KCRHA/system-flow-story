@@ -118,6 +118,39 @@ def _needs_secondary(primary_suppressed_true_counts: pd.Series) -> bool:
     return len(unique_vals) == 1 and unique_vals[0] in (1, 10)
 
 
+def suppress_small_secondary_count(
+    df: pd.DataFrame, count_col: str, marker_col: str, extra_cols: list[str] = ()
+) -> pd.DataFrame:
+    """Row-local primary suppression for a derived count that's independently
+    small-cell-risky from whatever the table's own `suppression_marker`
+    already protects — e.g. dashboard_return_cohorts' n_returned, which can
+    be small even when n_exited (the row's main suppression key) is well
+    above threshold: plenty of people can exit to permanent housing in a
+    quarter while only a handful of them return.
+
+    No complementary/secondary suppression needed here, unlike the rest of
+    this module — that machinery exists because a suppressed value could
+    otherwise be back-computed from a visible sibling category or group
+    total published elsewhere. `count_col` has no such sibling: nothing
+    else in the export publishes "the complement of n_returned" (e.g. a
+    separate remained-housed count), so nulling it directly removes the
+    only place that number appears. A single below-threshold nonzero value
+    is marked and blanked; `extra_cols` (e.g. a percentage derived from it)
+    are blanked alongside it.
+
+    Uses its own `marker_col`, separate from the table's `suppression_marker`
+    — a row can have a perfectly safe-to-show n_exited while still needing
+    this, so it shouldn't be forced to hide the whole row the way a
+    `suppression_marker` hit does.
+    """
+    df = df.copy()
+    df[marker_col] = None
+    at_risk = df[count_col].notna() & (df[count_col] > 0) & (df[count_col] < SUPPRESSION_THRESHOLD)
+    df.loc[at_risk, marker_col] = PRIMARY_SUPPRESSION_MARKER
+    df.loc[at_risk, [count_col, *extra_cols]] = None
+    return df
+
+
 def _pick_secondary(df: pd.DataFrame, group: pd.DataFrame, count_col: str) -> None:
     """Shared by apply_full_suppression_pipeline and
     apply_crosstab_secondary_suppression: given a group that

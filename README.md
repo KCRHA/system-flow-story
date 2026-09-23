@@ -6,7 +6,7 @@ system capacity — built as a static React/Vite/D3/Scrollama site, mounted
 directly into the main KCRHA site's own page via a Shadow DOM embed script
 (not an iframe — see "Embedding on the KCRHA website" below).
 
-The frontend never talks to a database directly. It only reads four static
+The frontend never talks to a database directly. It only reads static
 JSON files in `public/data/`, refreshed on a schedule by the pipeline in
 `pipeline/`. This keeps the publicly-hosted site from ever exposing raw
 person-level data, and keeps small-cell suppression enforceable at build
@@ -21,14 +21,32 @@ One row per `(month, population_segment, dimension, category, flow_type)`.
 | column | notes |
 |---|---|
 | `month` | first of month |
-| `population_segment` | `all_population`, `yya`, `chronic`, `single_adults`, `veterans` |
-| `dimension` | `overall`, `race_ethnicity`, `gender`, `household_type` |
+| `population_segment` | `all_population`, `yya`, `chronic`, `single_adults`, `veterans`, `family` — segments are allowed to overlap (e.g. a chronic veteran, or a YYA household that's also a family); each is its own independent filter over the same people, not a mutually-exclusive bucket |
+| `dimension` | `overall` · `race_aian`, `race_asian`, `race_black`, `race_nhpi`, `race_white`, `race_hl`, `race_mena`, `race_multiracial` · `gender_identity`, `gender_alignment` · `household_type` · `age_category` — see below |
 | `category` | value within that dimension; `Overall` when `dimension = overall` |
 | `flow_type` | see enum below |
+| `inflow_bucket` / `outflow_bucket` | only present on `indiv_flow_*` rows (see below) — the two bucket keys that flow_type encodes, broken into their own columns so the suppression pipeline can group "every cell sharing this row" / "every cell sharing this column" without parsing the flow_type string |
 | `count` | **null when `suppression_marker` is set** |
-| `suppression_marker` | `null` (not suppressed), `"*"` (primary — this cell's own count fell below 11), or `"**"` (secondary/complementary — suppressed to prevent a `"*"` neighbor in the same group from being recovered by arithmetic; see Suppression, below) |
+| `suppression_marker` | `null` (not suppressed), `"*"` (primary — this cell's own count fell below 11), `"**"` (secondary/complementary — suppressed to prevent a `"*"` neighbor in the same group from being recovered by arithmetic), or `"insufficient_population"` (this whole (month, population_segment, dimension, category) scope was blanked because the group had nothing left to hide a suppressed cell behind — see Suppression, below) |
 
-`flow_type` values: `newly_homeless`, `return_from_housed`, `return_from_inactive` (inflow) · `active_total`, `unsheltered`, `sheltered`, `temporarily_housed`, `active_ce_engaged`, `active_not_ce_engaged` (active/status) · `resource_{type}_engaged` / `_newly_enrolled` / `_exited` for `type` in `outreach`, `emergency_shelter`, `transitional_housing`, `rapid_rehousing`, `psh`, `prevention` (resource access) · `permanently_housed`, `inactive`, `deceased` (outflow).
+The 8 `race_*` dimensions are each their own independent binary dimension (`Included` / `Not Included`), not 8 categories of one `race_ethnicity` dimension — a person can be `Included` in more than one at once (e.g. Black AND Hispanic/Latina/o), which a single overlapping dimension can't represent cleanly. The frontend's "Race / Ethnicity" filter is a virtual demographic type layered on top of these 8 (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), not a dimension that exists in the exported data itself. `age_category` isn't offered as a frontend filter for the `yya` population segment — everyone there already falls in the same one or two age tiers by definition.
+
+`household_type` and `age_category` are episode-scoped (a person's household composition, or age tier at episode start, can differ between two of their own episodes), unlike the other dimensions, which are person-level constants from `client_demographics`. That distinction matters for one thing: the `indiv_*`/`indiv_flow_*` flow_types below (which rely on a single static category per person) are never broken out by these two dimensions — they're only ever emitted under `overall` and the remaining (person-level) dimensions.
+
+`flow_type` values:
+- **Inflow** (per-episode events): `newly_homeless`, `return_from_housed`, `return_from_inactive`
+- **Outflow** (per-episode events): `permanently_housed`, `inactive`, `deceased`
+- **Active / status**: `active_total`, `unsheltered`, `sheltered`, `temporarily_housed`, `active_ce_engaged`, `active_not_ce_engaged`
+- **Resource access**: `resource_{type}_engaged` / `_newly_enrolled` / `_exited` for `type` in `outreach`, `emergency_shelter`, `transitional_housing`, `rapid_rehousing`, `psh`, `prevention`
+- **Distinct-person total**: `experienced_homelessness` — everyone who touched the system at all that month, including someone who arrived and exited within the same month (unlike `active_total`, which is "active as of month end")
+- **Individual partition** (`indiv_*`): every person who experienced homelessness that month is assigned to exactly one inflow bucket and exactly one outflow bucket — `indiv_already_active`, `indiv_newly_homeless`, `indiv_return_from_housed`, `indiv_return_from_inactive` (inflow buckets, sum to `experienced_homelessness`) and `indiv_still_active`, `indiv_aged_out`, `indiv_permanently_housed`, `indiv_inactive`, `indiv_deceased` (outflow buckets, also sum to `experienced_homelessness`). Unlike the per-episode inflow/outflow counts above (which the same person can contribute to more than once in a month), this is a true one-bucket-per-person partition — built for the sankey and KPI cards, which represent individuals, not episodes. `indiv_aged_out` is always 0 outside the `yya` segment; it captures someone dropping out of YYA tracking mid-episode with no HMIS inflow/outflow event of its own.
+- **Individual cross-tab** (`indiv_flow_{inflow_bucket}_to_{outflow_bucket}`): the per-person pairing of the two buckets above (all 4 × 5 = 20 combinations) — e.g. "of the people newly homeless this month, how many were still active vs. permanently housed by month's end." Powers the sankey's actual links. These rows also carry `inflow_bucket`/`outflow_bucket` columns (see the table above).
+
+### `dashboard_flow_yearly.json` / `dashboard_flow_quarterly.json`
+
+Same shape as `dashboard_flow_monthly.json` (`year`/`quarter` in place of `month`; `quarter` is that quarter's start date, e.g. Q3 2026 → `2026-07-01`, matching `dashboard_return_cohorts`' `exit_quarter` convention), but carrying only `experienced_homelessness` and the `indiv_*`/`indiv_flow_*` rows — not the per-episode inflow/outflow/active/resource-access flow_types, which the frontend already gets from summing `dashboard_flow_monthly` client-side where that's valid.
+
+These exist because `experienced_homelessness` and the `indiv_*`/`indiv_flow_*` partition **can't** be reconstructed by summing monthly cells: a person with more than one distinct episode in the same year (newly homeless in February, exits to housing, returns from housed in October) would be double-counted if each month's partition were just added together. Both builders instead union/partition over the whole period's episodes at once, the same way the monthly builder does for a single month. `dashboard_flow_quarterly.json` powers `OutflowSection`'s quarter-drill-down pills; a quarter whose three calendar months aren't all complete is omitted entirely rather than emitted as a partial quarter.
 
 ### `dashboard_length_monthly.json`
 
@@ -109,26 +127,69 @@ would additionally guard against here.
    suppressed cell just as well arithmetically but there's no privacy
    reason to ever hide one; a zero is only picked if it's the only visible
    category left.
-3. **Validation gate** (`suppression.validate()`) — the pipeline exits
-   non-zero if any exported row needed secondary suppression but didn't get
-   it, or has a marker with a non-null count. This is a hard gate: the
-   exported JSON is publicly fetchable and permanent once committed (a later
-   commit can't erase what an earlier one exposed via git history), so a
-   violation must fail the build, not just log a warning.
+3. **Cross-tab secondary suppression** (`apply_crosstab_secondary_suppression`)
+   — the `indiv_flow_*` cross-tab cells (see the flow_type enum above) aren't
+   a dimension/category breakdown, so pass 2's grouping never sees them as
+   siblings of each other. But every cell sharing an `inflow_bucket` ("row")
+   sums to that bucket's own published `indiv_*` total, and same for every
+   cell sharing an `outflow_bucket` ("column") — the same sibling-group risk
+   as rule 2 above, just keyed by `inflow_bucket`/`outflow_bucket` instead of
+   `dimension`/`category`. Resolves both axes jointly within each period
+   (not as two independent passes), so a rare category claimed as one row's
+   secondary pick doesn't leave its own column with nothing left to hide
+   behind.
+4. **Race cross-dimension suppression** (`apply_race_crossdim_suppression`)
+   — the 8 `race_*` dimensions are deliberately not mutually exclusive (see
+   the data contract above), so two individually-safe, above-threshold
+   "Included" counts from two different race dimensions, plus the scope's
+   own published `overall` total, can jointly lower-bound the population
+   Included in *both* via inclusion-exclusion (`count_A + count_B - total`)
+   — a number nobody decided to publish, which can land under the
+   suppression threshold even though every contributing cell looks safe on
+   its own. When that happens, both categories of one of the two violating
+   dimensions are suppressed together for that scope (suppressing only the
+   `Included` cell would hand the value right back via its own `Not
+   Included` sibling and the known total).
+5. **Insufficient-population fallback** (`apply_insufficient_population_fallback`)
+   — a small population segment crossed with a low-cardinality dimension
+   (e.g. `gender_alignment`'s 3 categories) can leave a group needing
+   secondary suppression with no visible sibling cell left to hide behind at
+   all. There's no partial fix for that, so instead of one more cell, the
+   *entire* `(month, population_segment, dimension, category)` scope —
+   every flow_type in it, not just the one that triggered the check — is
+   blanked together and marked `"insufficient_population"`. The frontend
+   shows a dedicated "population too small to display" message for this
+   marker rather than routing it through the ordinary `"*"`/`"**"` display.
+6. **Validation gate** (`suppression.validate()` / `validate_crosstab()`) —
+   the pipeline exits non-zero if any exported row needed secondary
+   suppression but didn't get it, or has a marker with a non-null count.
+   This is a hard gate: the exported JSON is publicly fetchable and
+   permanent once committed (a later commit can't erase what an earlier one
+   exposed via git history), so a violation must fail the build, not just
+   log a warning.
 
 **Frontend rendering**: a suppressed cell always shows its marker (`*` or
 `**`) in place of the number — never 0, never blank. 0 is a real, reportable
-value; a marker means "we withheld this number."
+value; a marker means "we withheld this number." The sankey (`FlowSankeyChart.jsx`)
+renders this visually too: at a given node, whichever suppressed links are
+doing the "protecting" (secondary links, or primary links when that node has
+no secondary link of its own) expand to fill whatever's left of the node's
+true total, while any other suppressed links at that node stay a small fixed
+sliver — so a visual gap never reappears just because a particular node's
+protection happened to come from primary suppression alone.
 
 ## Pipeline (`pipeline/`)
 
 Sourced from Azure Synapse (`rha-bnl-prod.sql.azuresynapse.net` / `rhabnl`) via `team_custom_modules.remote_connections.RemoteDataConn` (from [DataHubDevelopment](https://github.com/KCRHA/DataHubDevelopment)) — Entra ID auth, no passwords in code.
 
 - `config.py` — thresholds, population-segment/dimension enums, the rolling export window (last 5 completed calendar years + completed months of the current year, recomputed every run), the HUD `ProjectTypeCode` → `ph`/`th`/`es`/`rrh` rollup.
-- `population.py` — population-segment filters, ported from `BFZ_Monthly_Report`'s `filter_population()`.
-- `build_flow.py`, `build_length.py`, `build_return_cohorts.py` — built from `episode_systemwide` + `episode_ce`, joined to `client_demographics` (`PersonalID` → `RaceAndEthnicity`/`Gender`/`VeteranStatus`; none of these are native to `episode_systemwide`).
+- `connection.py` — thin wrapper around `team_custom_modules.remote_connections.RemoteDataConn` for Synapse access, so pipeline scripts never import the vendored module directly.
+- `demographics.py` — derives the person-level `race_*`/`gender_identity`/`gender_alignment` rollup columns from `client_demographic`'s raw multi-select flags (`RaceAndEthnicity_*`, `GenderExpanded`), since none of those distinctions survive in the plain summary columns HMIS otherwise exposes.
+- `population.py` — population-segment filters (`all_population`, `yya`, `chronic`, `single_adults`, `veterans`, `family`), ported from `BFZ_Monthly_Report`'s `filter_population()`; a separate enrollment-level variant covers the `resource_*` flow types below, since `all_program_enrollments` carries different column names for the same concepts.
+- `build_flow.py` — `build_flow_rows`/`build_flow_yearly_rows`/`build_flow_quarterly_rows`, built from `episode_systemwide` + `episode_ce`, joined to `client_demographics`. Also builds the `indiv_*`/`indiv_flow_*` individual-partition rows that power the sankey and KPI cards.
+- `build_length.py`, `build_return_cohorts.py` — same source tables as above.
 - `build_flow.build_resource_access_rows()` (the `resource_*` flow types) — built from `all_program_enrollments` (one row per enrollment span, `ProjectStartDate`..`ProjectExitDate`, `ProjectTypeCode`), also joined to `client_demographics`. This table has no monthly grain of its own, so engaged/newly-enrolled/exited are derived by checking each month in the export window against every enrollment's date span.
-- `build_capacity.py` — built from `program_performance_metrics` (`TimePeriod = 'Month'`) + `program_attributes`.
+- `build_capacity.py` — built from `program_performance_metrics` (`TimePeriod = 'Month'` / `'Quarter'` / `'Year'`) + `program_attributes`.
 - `suppression.py` — see above.
 - `export.py` — orchestrates the above and writes `public/data/dashboard_*.json`.
 
@@ -177,6 +238,8 @@ The Plan phrases the returns metric as 6/12/24-month windows; this dashboard app
 ## Frontend
 
 React + Vite + D3 (`d3-sankey` for the entries→active→exits alluvial) + Scrollama for scroll-triggered step transitions. Brand styling (`src/styles/tokens.css`) follows the KCRHA 2025 Brand Style Guide: Avenir Next LT Pro for headlines, Arial Nova for body text, and the approved priority-ordered charts & graphs palette.
+
+The demographic filter (`FilterBar.jsx`) offers "All", "Race / Ethnicity", "Gender Identity", "Gender Alignment", and "Age Category" (`household_type` exists in the export but isn't offered as a filter). "Race / Ethnicity" is the one option that isn't a 1-to-1 stand-in for a single pipeline dimension — it's a virtual demographic type that maps the picked category label to the matching `race_*` dimension with `category = "Included"` (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), since there's no single overlap-free `race_ethnicity` dimension in the data. "Age Category" is hidden when the `yya` population segment is selected, since everyone there already falls in the same one or two age tiers.
 
 ```
 npm install

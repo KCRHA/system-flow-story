@@ -33,6 +33,7 @@ from .suppression import (
     apply_full_suppression_pipeline,
     apply_insufficient_population_fallback,
     apply_race_crossdim_suppression,
+    suppress_small_secondary_count,
     validate,
     validate_crosstab,
 )
@@ -252,6 +253,13 @@ def main():
     return_df = return_df.rename(columns={"count": "n_exited"})
     return_df.loc[return_df["suppression_marker"].notna(), "n_returned"] = None
     return_df.loc[return_df["suppression_marker"].notna(), "pct_returned"] = None
+    # n_exited being above threshold doesn't mean n_returned is — a cohort
+    # can have plenty of exits but only a handful who returned. Suppressed
+    # independently, row-local (see suppress_small_secondary_count) so a
+    # well-populated row isn't hidden entirely just because this one
+    # derived count is small; the frontend shows the exited total with the
+    # return split marked as withheld instead.
+    return_df = suppress_small_secondary_count(return_df, count_col="n_returned", marker_col="return_suppression_marker", extra_cols=["pct_returned"])
 
     # --- dashboard_capacity_monthly / _quarterly / _yearly (no
     # suppression: aggregate inventory data, not person-level) ---

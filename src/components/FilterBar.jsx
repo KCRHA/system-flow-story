@@ -10,11 +10,18 @@ const POPULATION_SEGMENTS = [
 // household_type is intentionally left out here — the user asked to start
 // this filter with these three demographic types only, even though
 // household_type exists as a full dimension in the exported data.
-const DEMOGRAPHIC_TYPES = [
+//
+// age_category isn't offered for the YYA population segment (see App.jsx's
+// demographicTypeOptions) — every person in that segment already falls in
+// the same one or two age tiers by definition, so breaking it down further
+// would be meaningless (mostly one 100% category and a lot of suppressed
+// near-zero ones).
+export const DEMOGRAPHIC_TYPES = [
   { value: "overall", label: "All" },
   { value: "race_ethnicity", label: "Race / Ethnicity" },
   { value: "gender_identity", label: "Gender Identity" },
   { value: "gender_alignment", label: "Gender Alignment" },
+  { value: "age_category", label: "Age Category" },
 ];
 
 export function PopulationSegmentSelect({ value, onChange }) {
@@ -32,12 +39,12 @@ export function PopulationSegmentSelect({ value, onChange }) {
   );
 }
 
-export function DemographicTypeSelect({ value, onChange }) {
+export function DemographicTypeSelect({ value, onChange, options = DEMOGRAPHIC_TYPES }) {
   return (
     <label>
       Demographic
       <select value={value} onChange={(e) => onChange(e.target.value)}>
-        {DEMOGRAPHIC_TYPES.map((opt) => (
+        {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>

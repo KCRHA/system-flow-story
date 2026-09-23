@@ -5,6 +5,13 @@ import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 
 const RETURNED_COLOR = "var(--chart-3)";
 const REMAINED_HOUSED_COLOR = "var(--chart-2)";
+// A cohort can have plenty of exits (n_exited, this row's own suppression
+// key) while still having a too-small-to-publish number of returns —
+// return_suppression_marker covers that independently of suppression_marker
+// (see pipeline/suppression.py's suppress_small_secondary_count). The bar
+// still shows the true exited total, just as one undifferentiated segment
+// instead of the returned/remained split.
+const UNKNOWN_SPLIT_COLOR = "var(--gray-mid)";
 // Below this segment height, a centered label wouldn't fit inside the
 // segment (and white text would clip past its edges) — float it just
 // outside the segment, in the segment's own color, instead.
@@ -71,6 +78,11 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
 
     g.append("g").call(d3.axisLeft(y).ticks(5)).attr("font-size", 11);
 
+    // suppression_marker hides the whole cohort (n_exited itself was too
+    // small). return_suppression_marker only hides the split — n_exited is
+    // still real and shown, just not broken into returned/remained.
+    const isReturnSuppressed = (d) => !d.suppression_marker && !!d.return_suppression_marker;
+
     const bars = g
       .selectAll("g.cohort-bar")
       .data(parsed)
@@ -82,31 +94,43 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
     bars
       .append("rect")
       .attr("width", x.bandwidth())
-      .attr("y", (d) => (d.suppression_marker ? innerH : y(d.n_exited)))
-      .attr("height", (d) => (d.suppression_marker ? 0 : y(d.n_returned) - y(d.n_exited)))
+      .attr("y", (d) => (d.suppression_marker || isReturnSuppressed(d) ? innerH : y(d.n_exited)))
+      .attr("height", (d) => (d.suppression_marker || isReturnSuppressed(d) ? 0 : y(d.n_returned) - y(d.n_exited)))
       .attr("fill", REMAINED_HOUSED_COLOR);
 
     // "Returned" segment: from the axis up to n_returned.
     bars
       .append("rect")
       .attr("width", x.bandwidth())
-      .attr("y", (d) => (d.suppression_marker ? innerH : y(d.n_returned)))
-      .attr("height", (d) => (d.suppression_marker ? 0 : innerH - y(d.n_returned)))
+      .attr("y", (d) => (d.suppression_marker || isReturnSuppressed(d) ? innerH : y(d.n_returned)))
+      .attr("height", (d) => (d.suppression_marker || isReturnSuppressed(d) ? 0 : innerH - y(d.n_returned)))
       .attr("fill", RETURNED_COLOR);
+
+    // Return-suppressed cohorts still show their true exited total — just
+    // as one undifferentiated bar, since the returned/remained split isn't
+    // safe to publish.
+    bars
+      .append("rect")
+      .attr("width", x.bandwidth())
+      .attr("y", (d) => (isReturnSuppressed(d) ? y(d.n_exited) : innerH))
+      .attr("height", (d) => (isReturnSuppressed(d) ? innerH - y(d.n_exited) : 0))
+      .attr("fill", UNKNOWN_SPLIT_COLOR);
 
     bars
       .on("mouseenter", (event, d) => {
-        const suppressedMessage =
-          d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
-            ? "Population too small to safely display for this combination"
-            : "Data suppressed (small cell)";
-        tooltip.show(
-          d.suppression_marker
-            ? `<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div><div>${suppressedMessage}</div>`
-            : `<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div>` +
-                `<div>${d.n_exited.toLocaleString()} exited, ${d.n_returned.toLocaleString()} returned (${Math.round(d.pct_returned * 100)}%)</div>`,
-          event
-        );
+        let body;
+        if (d.suppression_marker) {
+          const suppressedMessage =
+            d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
+              ? "Population too small to safely display for this combination"
+              : "Data suppressed (small cell)";
+          body = `<div>${suppressedMessage}</div>`;
+        } else if (isReturnSuppressed(d)) {
+          body = `<div>${d.n_exited.toLocaleString()} exited</div><div>Return count suppressed (fewer than 11 people)</div>`;
+        } else {
+          body = `<div>${d.n_exited.toLocaleString()} exited, ${d.n_returned.toLocaleString()} returned (${Math.round(d.pct_returned * 100)}%)</div>`;
+        }
+        tooltip.show(`<div style="font-weight:600">${quarterLabel(d.exit_quarter)}</div>${body}`, event);
       })
       .on("mousemove", (event) => tooltip.move(event))
       .on("mouseleave", () => tooltip.hide());
@@ -171,6 +195,20 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       .attr("font-size", (d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? 10 : 13))
       .attr("fill", "var(--gray-mid)")
       .text((d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : d.suppression_marker));
+
+    // A return-suppressed cohort still has a real bar (n_exited) — label
+    // just above it instead of over the axis, so it doesn't read as "0
+    // exited" or get confused with the fully-suppressed case above.
+    g.selectAll("text.return-suppression-mark")
+      .data(parsed.filter(isReturnSuppressed))
+      .join("text")
+      .attr("class", "return-suppression-mark")
+      .attr("x", (d) => x(d.exit_quarter) + bandCenter)
+      .attr("y", (d) => y(d.n_exited) - 6)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 10)
+      .attr("fill", "var(--gray-mid)")
+      .text("split suppressed");
   }, [rows, width, height]);
 
   return (
@@ -179,7 +217,10 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       <p className="suppressed-note">
         Bar height is the number of people who exited to permanent housing that quarter, split into the{" "}
         <span style={{ color: REMAINED_HOUSED_COLOR }}>share who remained housed</span> and the{" "}
-        <span style={{ color: RETURNED_COLOR }}>share who returned to homelessness</span> within 6 months.
+        <span style={{ color: RETURNED_COLOR }}>share who returned to homelessness</span> within 6 months. When too
+        few people returned to safely show that split, the bar (in{" "}
+        <span style={{ color: UNKNOWN_SPLIT_COLOR }}>gray</span>) still shows the true number who exited, marked
+        "split suppressed."
       </p>
     </div>
   );
