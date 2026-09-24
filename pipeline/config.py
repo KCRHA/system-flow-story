@@ -91,6 +91,18 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 # whole-window snapshot, for the same reason. Not offered as a frontend
 # filter for the YYA population segment (see FilterBar.jsx): everyone
 # there already falls in the same one or two tiers by definition.
+#
+# "unsheltered_in_period" (see DIMENSION_COLUMNS' own comment) is
+# deliberately NOT included in this shared list, even though it's a real
+# dimension in dashboard_flow_monthly/yearly/quarterly — build_length.py,
+# build_return_cohorts.py, and build_flow.py's own build_resource_access_rows
+# all iterate this exact list and expect every entry to already be a
+# standing column on their own source dataframe (episode_systemwide /
+# All_Program_Enrollments), which "unsheltered_in_period" isn't and can't
+# be (it's an OR across whichever period is currently being built, not a
+# fixed per-row value) and has no All_Program_Enrollments equivalent at
+# all. build_flow.py adds it on top of this list locally instead — see its
+# own FLOW_DIMENSIONS.
 DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type", "age_category"]
 
 # episode_systemwide column carrying each dimension's category value
@@ -107,6 +119,15 @@ DIMENSION_COLUMNS = {
     "gender_alignment": "GenderAlignment",  # derived — see demographics.py
     "household_type": "EpisodeHouseholdType",
     "age_category": "EpisodeAgeTier",
+    # Not a native or Client_Demographics-sourced column like the rest of
+    # this map — "Included"/"Not Included" on whether any of a person's
+    # episode_systemwide rows within the period being built (month/quarter/
+    # year) had LastShelterStatusInTimeframe == "Unsheltered". Computed
+    # fresh per period in build_flow.py's _unsheltered_in_period_category,
+    # never as a standing column on episode_systemwide itself, so only
+    # build_flow.py's own FLOW_DIMENSIONS (not this DIMENSIONS list) actually
+    # iterates over it — see FLOW_DIMENSIONS' own comment for why.
+    "unsheltered_in_period": "UnshelteredInPeriod",
 }
 
 # All_Program_Enrollments' equivalent columns (confirmed against

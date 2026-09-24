@@ -43,9 +43,9 @@
     "year": 2022,
     "project_type": "es",
     "enrolled": 9802,
-    "exited": 9822,
+    "exited": 9821,
     "active": 13224,
-    "pct_exited": 0.7427404719,
+    "pct_exited": 0.7426648518,
     "units_in_system": 4323.0,
     "households_per_unit": 3.0589868147
   },
@@ -84,18 +84,18 @@
     "project_type": "es",
     "enrolled": 9414,
     "exited": 9361,
-    "active": 12816,
-    "pct_exited": 0.7304151061,
+    "active": 12817,
+    "pct_exited": 0.7303581181,
     "units_in_system": 4042.0,
-    "households_per_unit": 3.1707075705
+    "households_per_unit": 3.1709549728
   },
   {
     "year": 2023,
     "project_type": "ph",
     "enrolled": 1671,
-    "exited": 2204,
+    "exited": 2205,
     "active": 8340,
-    "pct_exited": 0.2642685851,
+    "pct_exited": 0.2643884892,
     "units_in_system": 7941.0,
     "households_per_unit": 1.050245561
   },
@@ -122,22 +122,22 @@
   {
     "year": 2024,
     "project_type": "es",
-    "enrolled": 8849,
+    "enrolled": 8850,
     "exited": 8829,
-    "active": 12304,
-    "pct_exited": 0.7175715215,
+    "active": 12306,
+    "pct_exited": 0.7174549,
     "units_in_system": 4029.0,
-    "households_per_unit": 3.0538595185
+    "households_per_unit": 3.0543559196
   },
   {
     "year": 2024,
     "project_type": "ph",
     "enrolled": 1793,
-    "exited": 1288,
-    "active": 7929,
-    "pct_exited": 0.1624416698,
+    "exited": 1290,
+    "active": 7928,
+    "pct_exited": 0.1627144299,
     "units_in_system": 7085.0,
-    "households_per_unit": 1.1191249118
+    "households_per_unit": 1.1189837685
   },
   {
     "year": 2024,
@@ -162,22 +162,22 @@
   {
     "year": 2025,
     "project_type": "es",
-    "enrolled": 9076,
+    "enrolled": 9077,
     "exited": 8750,
-    "active": 12551,
-    "pct_exited": 0.6971556051,
+    "active": 12554,
+    "pct_exited": 0.6969890075,
     "units_in_system": 4064.0,
-    "households_per_unit": 3.0883366142
+    "households_per_unit": 3.0890748031
   },
   {
     "year": 2025,
     "project_type": "ph",
     "enrolled": 1366,
-    "exited": 1283,
-    "active": 8007,
-    "pct_exited": 0.1602347946,
+    "exited": 1287,
+    "active": 8004,
+    "pct_exited": 0.1607946027,
     "units_in_system": 7254.0,
-    "households_per_unit": 1.1038047974
+    "households_per_unit": 1.1033912324
   },
   {
     "year": 2025,
@@ -193,50 +193,50 @@
     "year": 2025,
     "project_type": "th",
     "enrolled": 458,
-    "exited": 499,
+    "exited": 501,
     "active": 1024,
-    "pct_exited": 0.4873046875,
+    "pct_exited": 0.4892578125,
     "units_in_system": 743.0,
     "households_per_unit": 1.3781965007
   },
   {
     "year": 2026,
     "project_type": "es",
-    "enrolled": 6834,
-    "exited": 6609,
-    "active": 10635,
-    "pct_exited": 0.621438646,
-    "units_in_system": 4099.0,
-    "households_per_unit": 2.5945352525
+    "enrolled": 6971,
+    "exited": 6802,
+    "active": 10775,
+    "pct_exited": 0.6312761021,
+    "units_in_system": 4122.0,
+    "households_per_unit": 2.6140223193
   },
   {
     "year": 2026,
     "project_type": "ph",
-    "enrolled": 973,
-    "exited": 697,
-    "active": 7697,
-    "pct_exited": 0.0905547616,
-    "units_in_system": 7611.0,
-    "households_per_unit": 1.011299435
+    "enrolled": 1005,
+    "exited": 725,
+    "active": 7722,
+    "pct_exited": 0.0938875939,
+    "units_in_system": 7619.0,
+    "households_per_unit": 1.0135188345
   },
   {
     "year": 2026,
     "project_type": "rrh",
-    "enrolled": 1073,
-    "exited": 1046,
-    "active": 2989,
-    "pct_exited": 0.349949816,
+    "enrolled": 1106,
+    "exited": 1105,
+    "active": 3022,
+    "pct_exited": 0.3656518862,
     "units_in_system": 0.0,
     "households_per_unit": null
   },
   {
     "year": 2026,
     "project_type": "th",
-    "enrolled": 279,
-    "exited": 308,
-    "active": 804,
-    "pct_exited": 0.3830845771,
+    "enrolled": 286,
+    "exited": 328,
+    "active": 809,
+    "pct_exited": 0.4054388133,
     "units_in_system": 653.0,
-    "households_per_unit": 1.2312404288
+    "households_per_unit": 1.2388973966
   }
 ]

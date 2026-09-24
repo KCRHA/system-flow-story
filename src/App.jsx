@@ -25,6 +25,17 @@ const RACE_ETHNICITY_CATEGORY_DIMENSIONS = {
   Multiracial: "race_multiracial",
 };
 
+// unsheltered_in_period's real categories are "Included"/"Not Included" —
+// the same generic Included/Not Included convention every other binary
+// dimension in the pipeline uses (see config.py's RACE_DIMENSIONS), not a
+// label written for display. Same fix as RACE_ETHNICITY_CATEGORY_DIMENSIONS
+// above: show a real label in the dropdown, translate it back to the
+// dimension's actual category value in resolveDemographicScope.
+const UNSHELTERED_CATEGORY_LABELS = {
+  "Unsheltered this period": "Included",
+  "Not unsheltered this period": "Not Included",
+};
+
 // Hidden from every demographic type's category dropdown for now — a
 // deliberate, revisitable choice (not a data error) to keep "we don't know"
 // buckets out of the filter until there's a considered way to present them.
@@ -43,6 +54,9 @@ const AGE_CATEGORY_ORDER = ["Under 18", "18 to 24", "25 to 34", "35 to 44", "45 
 function resolveDemographicScope(demographicType, demographicCategory) {
   if (demographicType === "race_ethnicity") {
     return { dimension: RACE_ETHNICITY_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
+  }
+  if (demographicType === "unsheltered_in_period") {
+    return { dimension: demographicType, category: UNSHELTERED_CATEGORY_LABELS[demographicCategory] };
   }
   return { dimension: demographicType, category: demographicCategory };
 }
@@ -98,6 +112,9 @@ export default function App() {
   const demographicCategories = useMemo(() => {
     if (!data || demographicType === "overall") return ["Overall"];
     if (demographicType === "race_ethnicity") return Object.keys(RACE_ETHNICITY_CATEGORY_DIMENSIONS);
+    // Same reasoning as race_ethnicity above: fixed display labels, not
+    // derived from the dimension's own raw Included/Not Included values.
+    if (demographicType === "unsheltered_in_period") return Object.keys(UNSHELTERED_CATEGORY_LABELS);
     const categories = distinctValues(filterRows(data.flow, { dimension: demographicType }), "category").filter(
       (category) => !HIDDEN_CATEGORIES.has(category)
     );

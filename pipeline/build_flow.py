@@ -3,6 +3,7 @@ dimension, category, flow_type). Sourced from episode_systemwide (inflow,
 outflow, active/status, CE) joined to episode_ce for CE dates, plus an
 enrollment-level table for the resource-access flow types.
 """
+import numpy as np
 import pandas as pd
 
 from .config import (
@@ -21,6 +22,16 @@ from .config import (
 _RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
 from .population import filter_population, filter_population_enrollment
 
+# dashboard_flow_monthly/yearly/quarterly's own dimension list, layered on
+# top of config.DIMENSIONS with "unsheltered_in_period" — see config.py's
+# own comment on DIMENSIONS for why that one dimension can't live in the
+# list every other build_*.py module shares. Only the three build_flow_*_rows
+# functions below use this; build_resource_access_rows deliberately keeps
+# using plain DIMENSIONS (no All_Program_Enrollments equivalent exists).
+FLOW_DIMENSIONS = [*DIMENSIONS, "unsheltered_in_period"]
+
+_BINARY_CATEGORIES = ["Included", "Not Included"]
+
 
 def _all_categories(df: pd.DataFrame, dimension: str, category_col_map: dict) -> list:
     """Every category value that appears anywhere in `df` for this
@@ -29,6 +40,14 @@ def _all_categories(df: pd.DataFrame, dimension: str, category_col_map: dict) ->
     silently having no row at all (see _count_by_category)."""
     if dimension == "overall":
         return ["Overall"]
+    if dimension == "unsheltered_in_period":
+        # Fixed Included/Not Included pair, same convention as the race_*
+        # dimensions — not data-derived like every other branch here, since
+        # this dimension's column doesn't exist yet on `df` at the point
+        # this runs (it's computed fresh per period — see
+        # _unsheltered_in_period_category), only once the per-period loop
+        # below actually builds it.
+        return _BINARY_CATEGORIES
     return sorted(df[category_col_map[dimension]].dropna().unique().tolist())
 
 
@@ -278,8 +297,9 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
 
 
 # Dimensions _partition_counts_by_category can break indiv_*/indiv_flow_*
-# out by category.
-PARTITION_CATEGORY_DIMENSIONS = [d for d in DIMENSIONS if d != "overall"]
+# out by category. FLOW_DIMENSIONS, not plain DIMENSIONS, so
+# "unsheltered_in_period" gets this same indiv_* breakdown.
+PARTITION_CATEGORY_DIMENSIONS = [d for d in FLOW_DIMENSIONS if d != "overall"]
 
 # "household_type" and "age_category", unlike race_ethnicity/gender_identity/
 # gender_alignment (client_demographics columns, genuinely constant for a
@@ -323,10 +343,42 @@ def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.S
     return ordered.drop_duplicates("PersonalID", keep="last").set_index("PersonalID")[category_col]
 
 
+# "unsheltered_in_period" needs a third resolution strategy, distinct from
+# both EPISODE_SCOPED_CATEGORY_DIMENSIONS' "pick this period's latest row"
+# and the plain whole-window snapshot: whether a person was EVER Unsheltered
+# in the period being built, an OR across every row they have in it, not a
+# single row's value — "did this person experience unsheltered homelessness
+# this month/quarter/year" is itself an inherently period-level question,
+# unlike age_category's or household_type's single current value. See
+# _unsheltered_in_period_category below.
+PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = ["unsheltered_in_period"]
+
+
+def _unsheltered_in_period_category(period_df: pd.DataFrame) -> pd.Series:
+    """PersonalID -> "Included"/"Not Included", true if ANY of the person's
+    rows within `period_df` (this month's, quarter's, or year's own episode
+    rows — unfiltered by population, same contract as
+    _person_category_for_period) has LastShelterStatusInTimeframe ==
+    "Unsheltered". A person with no recorded shelter status at all in the
+    period (about 1% of active_df most months — episode_systemwide can
+    carry a null LastShelterStatusInTimeframe when no ClientShelterStatus
+    event has landed yet) simply isn't Unsheltered by this definition and
+    falls to "Not Included", the same as anyone confirmed Sheltered/
+    Temporarily Housed — a deliberate choice (not every other dimension's
+    explicit-"Unknown"-bucket pattern) so this stays a clean two-category
+    partition without a third bucket to suppress and hide from the
+    frontend."""
+    ids = period_df["PersonalID"].unique()
+    unsheltered_ids = set(period_df.loc[period_df["LastShelterStatusInTimeframe"] == "Unsheltered", "PersonalID"])
+    return pd.Series(np.where(pd.Index(ids).isin(unsheltered_ids), "Included", "Not Included"), index=ids)
+
+
 # The subset of PARTITION_CATEGORY_DIMENSIONS that really is safe to
 # snapshot once across the whole window (see EPISODE_SCOPED_CATEGORY_DIMENSIONS
-# above for the two that aren't).
-_CONSTANT_CATEGORY_DIMENSIONS = [d for d in PARTITION_CATEGORY_DIMENSIONS if d not in EPISODE_SCOPED_CATEGORY_DIMENSIONS]
+# and PERIOD_AGGREGATE_CATEGORY_DIMENSIONS above for the ones that aren't).
+_CONSTANT_CATEGORY_DIMENSIONS = [
+    d for d in PARTITION_CATEGORY_DIMENSIONS if d not in EPISODE_SCOPED_CATEGORY_DIMENSIONS and d not in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS
+]
 
 
 def _partition_counts_by_category(partition: dict, cat_series: pd.Series, categories: list) -> tuple[dict, dict]:
@@ -406,7 +458,7 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
     # to an explicit 0 row (see _count_by_category).
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
     all_categories = {
-        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in DIMENSIONS
+        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in FLOW_DIMENSIONS
     }
 
     # PersonalID -> category, one lookup per demographic dimension (see
@@ -427,11 +479,24 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
         # This month's own category lookup, constant dimensions plus this
         # month's freshly-resolved episode-scoped ones — see
-        # EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        # EPISODE_SCOPED_CATEGORY_DIMENSIONS — and unsheltered_in_period's
+        # own OR-across-the-month resolution (see
+        # PERIOD_AGGREGATE_CATEGORY_DIMENSIONS).
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(month_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+            **{dim: _unsheltered_in_period_category(month_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
         }
+        # Broadcast this month's unsheltered_in_period category back onto
+        # every one of month_df's own rows (inflow/outflow/active alike),
+        # so the per-flow-type/dimension loop below — which groups the raw
+        # dataframe by DIMENSION_COLUMNS[dimension] directly, unlike the
+        # indiv_*/period_category-driven partition below it — can break any
+        # flow_type out by it the same way it already does for every native
+        # column dimension.
+        month_df = month_df.assign(
+            UnshelteredInPeriod=month_df["PersonalID"].map(period_category["unsheltered_in_period"])
+        )
         ce_active_ids = set(
             episode_ce.loc[
                 (episode_ce["CEEntryDate"] <= month)
@@ -446,7 +511,7 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
             outflow_df = pop_df[pop_df["_is_outflow_row"]]
             active_df = pop_df[~pop_df["_is_outflow_row"]]
 
-            for dimension in DIMENSIONS:
+            for dimension in FLOW_DIMENSIONS:
                 categories = all_categories[dimension]
                 for hud_value, flow_type in INFLOW_TYPE_MAP.items():
                     matched = inflow_df[inflow_df["EpisodeInflowType"] == hud_value]
@@ -592,7 +657,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
     # across the whole window, not per-year, and these columns are constant
     # per person regardless of which year/episode they're read from.
     all_categories = {
-        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in DIMENSIONS
+        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in FLOW_DIMENSIONS
     }
     # EPISODE_SCOPED_CATEGORY_DIMENSIONS deliberately left out of this
     # one-time snapshot — resolved fresh per year below instead (see
@@ -607,10 +672,12 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
         months = sorted(year_df["TimePeriodStartDate"].unique())
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
-        # This year's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        # This year's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
+        # and, for unsheltered_in_period, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(year_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+            **{dim: _unsheltered_in_period_category(year_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
@@ -710,7 +777,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
     published = episodes if window_start is None else episodes[episodes["TimePeriodStartDate"] >= window_start]
 
     all_categories = {
-        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in DIMENSIONS
+        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in FLOW_DIMENSIONS
     }
     # EPISODE_SCOPED_CATEGORY_DIMENSIONS deliberately left out of this
     # one-time snapshot — resolved fresh per quarter below instead (see
@@ -727,10 +794,12 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
             continue
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
-        # This quarter's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS.
+        # This quarter's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
+        # and, for unsheltered_in_period, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(quarter_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
+            **{dim: _unsheltered_in_period_category(quarter_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():

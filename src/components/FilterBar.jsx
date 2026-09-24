@@ -22,6 +22,7 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "gender_identity", label: "Gender Identity" },
   { value: "gender_alignment", label: "Gender Alignment" },
   { value: "age_category", label: "Age Category" },
+  { value: "unsheltered_in_period", label: "Unsheltered This Period" },
 ];
 
 export function PopulationSegmentSelect({ value, onChange }) {
