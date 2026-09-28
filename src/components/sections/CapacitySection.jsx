@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import Scrolly from "../Scrolly.jsx";
 import CapacityUnitsChart from "../charts/CapacityUnitsChart.jsx";
 import CapacityUtilizationChart from "../charts/CapacityUtilizationChart.jsx";
 import CapacityTurnoverChart from "../charts/CapacityTurnoverChart.jsx";
@@ -101,16 +100,6 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
     );
   }
 
-  const steps = [
-    // A point-in-time snapshot (unitsRows is one specific month's rows,
-    // not an accumulation across the year), so the label is just "as of
-    // {month}" — no "(year to date)" qualifier, which would incorrectly
-    // imply a running total building up since January.
-    `How many units exist in the system? Here's the total by project type, as of ${formatMonthLabel(latestMonth)}.`,
-    `How full is that capacity, quarter by quarter over the last three years in the reporting period? Utilization near 100% means a project type has little room left.`,
-    `Of everyone served by each project type in ${year}, what share exited? What counts as "good" here depends on the program: permanent housing succeeds when people stay housed (a lower share exiting). Shelter and transitional programs succeed when people move through toward something more stable (a higher share exiting).`,
-  ];
-
   return (
     <section className="section">
       <h2 className="section-heading">
@@ -121,16 +110,55 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
         How much shelter and housing capacity exists in our system, how full is it running, and how quickly do
         people move through it?
       </p>
-      <Scrolly
-        steps={steps}
-        renderGraphic={() => (
-          <div className="scrolly-graphic-stack">
-            <CapacityUnitsChart rows={unitsRows} />
-            <CapacityUtilizationChart series={utilizationSeries} />
-            <CapacityTurnoverChart rows={turnoverRows} />
-          </div>
-        )}
-      />
+
+      {/* A point-in-time snapshot (unitsRows is one specific month's rows,
+          not an accumulation across the year), so the caption is just "as
+          of {month}" — no "(year to date)" qualifier, which would
+          incorrectly imply a running total building up since January. */}
+      <p className="section-subhead">How many units exist in the system? Here's the total by project type, as of {formatMonthLabel(latestMonth)}.</p>
+      <CapacityUnitsChart rows={unitsRows} />
+      <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
+      <p className="chart-analysis">
+        King County's homelessness response system <strong>relies primarily on Permanent Housing</strong> as a
+        strategy for ending homelessness, and that's reflected here. See the{" "}
+        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
+          System Performance Dashboard
+        </a>{" "}
+        for more on performance by program type, or the{" "}
+        <a href="https://kcrha.org/find-services/regional-services-database/" target="_blank" rel="noreferrer">
+          Regional Services Dashboard
+        </a>{" "}
+        for details on program attributes.
+      </p>
+
+      <p className="section-subhead">How full is that capacity, quarter by quarter over the last three years?</p>
+      <CapacityUtilizationChart series={utilizationSeries} />
+      <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
+      <p className="chart-analysis">
+        Utilization near 100% means a project type has little room left, and across time periods and project types,{" "}
+        <strong>utilization stays consistently high, generally above 80%</strong>. That helps explain why the number
+        of people active in the system stays fairly consistent: resources are running near capacity. For more, see
+        the{" "}
+        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
+          System Performance Dashboard
+        </a>
+        .
+      </p>
+
+      <p className="section-subhead">Of everyone served by each project type in {year}, what share exited?</p>
+      <CapacityTurnoverChart rows={turnoverRows} />
+      <p className="chart-analysis">
+        The percentage shown is the share of people leaving the program. What counts as "good" depends on the
+        program: <strong>permanent housing succeeds when people stay housed</strong> (a lower share exiting);{" "}
+        <strong>shelter and transitional programs succeed when people move through</strong> toward something more
+        stable (a higher share exiting). This is related to length of stay, but different: throughput measures
+        everyone served within a single year, while length of stay is measured per person across their whole time in
+        the program, which may start or end outside that year's window. For length-of-stay analysis, see the{" "}
+        <a href="https://kcrha.org/community-data/system-performance/" target="_blank" rel="noreferrer">
+          System Performance Dashboard
+        </a>
+        .
+      </p>
     </section>
   );
 }

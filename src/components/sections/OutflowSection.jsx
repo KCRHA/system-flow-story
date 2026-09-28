@@ -408,7 +408,32 @@ export default function OutflowSection({
               )}
             </div>
           </div>
-          {trendPoints.length > 0 && <HomelessnessTrendChart points={trendPoints} />}
+          <ul className="chart-note">
+            <li>The dashboard counts everyone who was active at least once during the selected period.</li>
+            <li>Current-year totals don't reflect a full year of data yet, so they're expected to be lower than completed years.</li>
+            <li>
+              Arrows show the change from the previous comparable period. 2026's annual figures don't have one yet,
+              since there isn't a full prior year to compare against.
+            </li>
+          </ul>
+          <p className="chart-analysis">
+            The number of people experiencing homelessness has <strong>stayed fairly consistent year to year</strong>
+            , which can point to sustained high demand for programs, with program capacity holding fairly steady
+            alongside it.
+          </p>
+          {trendPoints.length > 0 && (
+            <>
+              <p className="section-subhead">
+                Time periods above the median of the displayed points are shaded navy; time periods below are shaded
+                light green.
+              </p>
+              <HomelessnessTrendChart points={trendPoints} />
+            </>
+          )}
+          <p className="section-subhead">
+            The ribbon chart below shows how people's homelessness status changes between the start and end of the
+            selected period.
+          </p>
           <FlowSankeyChart data={period} periodLabel={periodLabel} isFullYear={!quarter && !month} populationSegment={populationSegment} />
         </>
       )}

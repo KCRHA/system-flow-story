@@ -149,6 +149,21 @@ export default function App() {
           experience homelessness.
         </p>
       </header>
+      <section className="section intro-section">
+        <p>
+          System Flow analysis is different from system performance analysis: it tracks the movement of people
+          through homelessness, rather than the performance of a particular program or intervention. It follows a
+          person or household from initial intake through assessment, services, and housing placement or exit, to
+          show the full experience from start to finish and how the system as a whole is functioning. On this page,
+          you'll see, for a selected time frame, how many people are moving from intake to services to exit, and how
+          long that process takes.
+        </p>
+        <p>
+          To see how the different parts of the system work together, you'll also find shelter and housing program
+          capacity and utilization rates here, framed the same system-flow way. Together, this gives an integrated
+          view of both people's experience and the system's capacity to meet it.
+        </p>
+      </section>
       <OutflowSection
         flowYearlyRows={data.flowYearly}
         flowQuarterlyRows={data.flowQuarterly}
