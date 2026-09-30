@@ -43,6 +43,66 @@ function formatCell(cell) {
   return (cell.value ?? 0).toLocaleString();
 }
 
+// The max true value a primary-suppressed ("*") cell can hold — HUD
+// small-cell suppression masks any nonzero count under this (see
+// pipeline/config.py's SUPPRESSION_THRESHOLD = 11), so 10 is the largest
+// it could possibly be.
+const MAX_PRIMARY_SUPPRESSED_VALUE = 10;
+
+// Share of the link's own inflow node that this link represents, e.g.
+// "(18% of Newly Homeless inflow)" alongside the link's count. Only shown
+// when both the link and its source node have real (non-suppressed)
+// values — a suppressed marker isn't a true count, so dividing by or into
+// one would produce a percentage that misrepresents the actual share.
+function formatLinkPercentOfInflow(d) {
+  if (d.source.cell?.marker) return "";
+  if (!d.cell.marker) {
+    const linkValue = d.cell.value ?? 0;
+    const inflowTotal = d.source.cell?.value ?? 0;
+    if (!inflowTotal) return "";
+    const pct = Math.round((linkValue / inflowTotal) * 100);
+    return ` <span style="font-style:italic">(${pct}% of ${d.source.label} inflow)</span>`;
+  }
+  if (d.cell.marker === SECONDARY_SUPPRESSION_MARKER) {
+    return formatSecondarySuppressedPercentEstimate(d);
+  }
+  return "";
+}
+
+// A secondary-suppressed ("**") link's own true value isn't published, but
+// a lower bound can still be estimated from numbers that ARE public: the
+// inflow node's own total, minus every visible sibling link, minus the
+// largest every primary-suppressed ("*") sibling could possibly be
+// (MAX_PRIMARY_SUPPRESSED_VALUE each). Since a smaller true primary value
+// would only leave MORE, not less, for this cell, that's a floor on the
+// secondary cell's share — not its exact value. Bails out (returns "") if
+// any sibling link carries an unrecognized marker (e.g.
+// INSUFFICIENT_POPULATION_MARKER) this estimate doesn't account for, or if
+// the estimate comes out non-positive (the bound isn't actually
+// informative).
+function formatSecondarySuppressedPercentEstimate(d) {
+  const inflowTotal = d.source.cell?.value ?? 0;
+  if (!inflowTotal) return "";
+  const siblingLinks = d.source.sourceLinks ?? [];
+  let visibleSum = 0;
+  let primaryCount = 0;
+  for (const link of siblingLinks) {
+    const marker = link.cell?.marker;
+    if (!marker) {
+      visibleSum += link.cell?.value ?? 0;
+    } else if (marker === PRIMARY_SUPPRESSION_MARKER) {
+      primaryCount += 1;
+    } else if (marker !== SECONDARY_SUPPRESSION_MARKER) {
+      return "";
+    }
+  }
+  const estimate = inflowTotal - visibleSum - primaryCount * MAX_PRIMARY_SUPPRESSED_VALUE;
+  if (estimate <= 0) return "";
+  const rawPct = (estimate / inflowTotal) * 100;
+  const pct = Math.round(rawPct / 5) * 5;
+  return ` <span style="font-style:italic">(about ${pct}% of ${d.source.label} inflow, rounded to the nearest 5%)</span>`;
+}
+
 function nodeColor(id) {
   return ACTIVE_NODE_IDS.has(id) ? ACTIVE_COLOR : FLOW_COLORS[id];
 }
@@ -322,7 +382,7 @@ export default function FlowSankeyChart({ data, periodLabel, isFullYear, populat
       .on("mouseenter", (event, d) => {
         d3.select(event.currentTarget).attr("fill-opacity", 0.65);
         tooltip.show(
-          `<div style="font-weight:600">${d.source.label} → ${d.target.label}</div><div>${formatCell(d.cell)}</div>`,
+          `<div style="font-weight:600">${d.source.label} → ${d.target.label}</div><div>${formatCell(d.cell)}${formatLinkPercentOfInflow(d)}</div>`,
           event
         );
       })

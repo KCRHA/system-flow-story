@@ -48,8 +48,16 @@ export function createTooltip(container) {
   function hide() {
     el.style.opacity = "0";
   }
+  // For a caller that creates one tooltip per persistent component instance
+  // (e.g. KpiCard, one per card, appended to document.body) rather than per
+  // chart render — clearTooltip's container-scoped removal assumes the
+  // latter (a chart wiping and rebuilding its whole container each render),
+  // which doesn't apply here since there's no shared container to clear.
+  function destroy() {
+    el.remove();
+  }
 
-  return { show, move, hide };
+  return { show, move, hide, destroy };
 }
 
 // Removes any tooltip left over from a previous render of this chart —

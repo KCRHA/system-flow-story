@@ -19,7 +19,15 @@ from .build_capacity import build_capacity_quarterly_rows, build_capacity_rows, 
 from .build_flow import build_flow_quarterly_rows, build_flow_rows, build_flow_yearly_rows, build_resource_access_rows
 from .build_length import build_length_rows
 from .build_return_cohorts import build_return_cohort_rows
-from .config import DIMENSION_COLUMNS, PROJECT_TYPE_CODE_TEXT_TO_HUD, RACE_DIMENSIONS, RETURN_WINDOW_DAYS, get_export_window, month_before
+from .config import (
+    DIMENSION_COLUMNS,
+    PROJECT_ENGAGEMENT_DIMENSIONS,
+    PROJECT_TYPE_CODE_TEXT_TO_HUD,
+    RACE_DIMENSIONS,
+    RETURN_WINDOW_DAYS,
+    get_export_window,
+    month_before,
+)
 
 # The 8 derived race_* columns (see demographics.py's compute_race_rollups),
 # reused at both client_demographics merge sites below — sourced from
@@ -126,14 +134,21 @@ def main():
     # CAPACITY_PROJECT_TYPE_GROUPS is keyed by — see config.py.
     program_attributes["ProjectTypeCode"] = program_attributes["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
 
-    # --- dashboard_flow_monthly ---
-    flow_df = build_flow_rows(episodes_with_lookback, episode_ce, window_start=pd.Timestamp(start))
-
+    # All_Program_Enrollments — loaded ahead of build_flow_rows below, not
+    # just build_resource_access_rows, since build_flow_rows/yearly/
+    # quarterly now also need it to resolve the project_engaged_*
+    # dimensions (see build_flow.py's _project_engagement_category). Not
+    # date-scoped to the window: a long-open enrollment that started years
+    # earlier must still count as overlapping this window's periods.
     enrollments = connection.query(conn, "all_program_enrollments")
     enrollments["ProjectStartDate"] = pd.to_datetime(enrollments["ProjectStartDate"])
     enrollments["ProjectExitDate"] = pd.to_datetime(enrollments["ProjectExitDate"])
     # Same text-label-vs-numeric-code mismatch as program_attributes above.
     enrollments["ProjectTypeCode"] = enrollments["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
+
+    # --- dashboard_flow_monthly ---
+    flow_df = build_flow_rows(episodes_with_lookback, episode_ce, enrollments, window_start=pd.Timestamp(start))
+
     # All_Program_Enrollments has no monthly grain of its own (each row spans
     # ProjectStartDate..ProjectExitDate) — build_resource_access_rows expands
     # it against the same month list every other table uses.
@@ -158,6 +173,12 @@ def main():
     # own, independent of the within-dimension protection already applied
     # above.
     flow_df = apply_race_crossdim_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS)
+    # The 5 project_engaged_* dimensions overlap the same way the race_*
+    # ones do (see config.py's PROJECT_ENGAGEMENT_GROUPS comment) — same
+    # cross-dimension inclusion-exclusion leak, same fix, just a separate
+    # pass since apply_race_crossdim_suppression only compares dimensions
+    # within one `race_dimensions` list against each other.
+    flow_df = apply_race_crossdim_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS)
     # A demographic category small enough (crossed with a small population
     # segment) can leave a group with literally nothing left to hide behind
     # — see apply_insufficient_population_fallback's own docstring. Rather
@@ -178,12 +199,13 @@ def main():
     # and indiv_* partition per year — see build_flow_yearly_rows for why
     # these can't just be summed from dashboard_flow_monthly's per-month
     # figures) ---
-    flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, window_start=pd.Timestamp(start))
+    flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
     flow_yearly_df = apply_full_suppression_pipeline(
         flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
     )
     flow_yearly_df = apply_crosstab_secondary_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
     flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS)
+    flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS)
     flow_yearly_df = apply_insufficient_population_fallback(
         flow_yearly_df,
         period_col="year",
@@ -196,13 +218,16 @@ def main():
     # --- dashboard_flow_quarterly (drill-down granularity for OutflowSection's
     # pills — same "can't be summed from monthly cells" rationale as yearly,
     # see build_flow_quarterly_rows) ---
-    flow_quarterly_df = build_flow_quarterly_rows(episodes_with_lookback, window_start=pd.Timestamp(start))
+    flow_quarterly_df = build_flow_quarterly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
     flow_quarterly_df = apply_full_suppression_pipeline(
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"]
     )
     flow_quarterly_df = apply_crosstab_secondary_suppression(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
     flow_quarterly_df = apply_race_crossdim_suppression(
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS
+    )
+    flow_quarterly_df = apply_race_crossdim_suppression(
+        flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS
     )
     flow_quarterly_df = apply_insufficient_population_fallback(
         flow_quarterly_df,

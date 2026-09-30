@@ -12,6 +12,8 @@ from .config import (
     INFLOW_TYPE_MAP,
     OUTFLOW_TYPE_MAP,
     POPULATION_SEGMENTS,
+    PROJECT_ENGAGEMENT_DIMENSIONS,
+    PROJECT_ENGAGEMENT_GROUPS,
     RACE_DIMENSIONS,
     RESOURCE_PROJECT_TYPE_GROUPS,
 )
@@ -23,12 +25,14 @@ _RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
 from .population import filter_population, filter_population_enrollment
 
 # dashboard_flow_monthly/yearly/quarterly's own dimension list, layered on
-# top of config.DIMENSIONS with "unsheltered_in_period" — see config.py's
-# own comment on DIMENSIONS for why that one dimension can't live in the
-# list every other build_*.py module shares. Only the three build_flow_*_rows
-# functions below use this; build_resource_access_rows deliberately keeps
-# using plain DIMENSIONS (no All_Program_Enrollments equivalent exists).
-FLOW_DIMENSIONS = [*DIMENSIONS, "unsheltered_in_period"]
+# top of config.DIMENSIONS with "unsheltered_in_period" and the
+# project_engaged_* dimensions — see config.py's own comments on DIMENSIONS/
+# PROJECT_ENGAGEMENT_GROUPS for why these can't live in the list every other
+# build_*.py module shares. Only the three build_flow_*_rows functions below
+# use this; build_resource_access_rows deliberately keeps using plain
+# DIMENSIONS (it already has its own, differently-grouped project-type
+# breakdown — RESOURCE_PROJECT_TYPE_GROUPS — and doesn't need this one too).
+FLOW_DIMENSIONS = [*DIMENSIONS, "unsheltered_in_period", *PROJECT_ENGAGEMENT_DIMENSIONS]
 
 _BINARY_CATEGORIES = ["Included", "Not Included"]
 
@@ -40,13 +44,13 @@ def _all_categories(df: pd.DataFrame, dimension: str, category_col_map: dict) ->
     silently having no row at all (see _count_by_category)."""
     if dimension == "overall":
         return ["Overall"]
-    if dimension == "unsheltered_in_period":
+    if dimension in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS:
         # Fixed Included/Not Included pair, same convention as the race_*
         # dimensions — not data-derived like every other branch here, since
-        # this dimension's column doesn't exist yet on `df` at the point
-        # this runs (it's computed fresh per period — see
-        # _unsheltered_in_period_category), only once the per-period loop
-        # below actually builds it.
+        # none of these dimensions' columns exist yet on `df` at the point
+        # this runs (each is computed fresh per period — see
+        # _unsheltered_in_period_category/_project_engagement_category),
+        # only once the per-period loop below actually builds them.
         return _BINARY_CATEGORIES
     return sorted(df[category_col_map[dimension]].dropna().unique().tolist())
 
@@ -142,12 +146,19 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     the sankey/KPI cards, which need to represent individuals, not
     episodes.
 
-    Inflow priority: "already active" (active as of the end of
-    `prior_month`) wins over any inflow event that also happens during the
-    period — a person already homeless at the period's start who also
-    opens a new episode partway through is still fundamentally "already
-    active", not "newly arriving". Otherwise, their earliest inflow event
-    within the period determines the bucket.
+    Inflow priority: "already active" (an open episode as of the end of
+    `prior_month`, checked against the RAW episode data — not whether that
+    prior-month row itself passes filter_population, since YYA population
+    membership is month-dependent and a person's episode can already be
+    open before they become YYA-countable; see "Population membership can
+    begin mid-episode" below) wins over any inflow event that also happens
+    during the period — a person already homeless at the period's start
+    who also opens a new episode partway through is still fundamentally
+    "already active", not "newly arriving". Otherwise, their earliest
+    inflow event within the period determines the bucket — also resolved
+    against the raw episode data for the same reason, so a genuine inflow
+    event isn't missed just because that one row happens to fail the
+    population filter on its own.
 
     Outflow priority (symmetric): "still active" (active as of the end of
     the period's last month) wins over any earlier outflow event within
@@ -159,16 +170,53 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
 
     Aged out: unlike every other population segment, filter_population's
     YYA branch is month-dependent — a person can drop out of the YYA
-    segment mid-episode (AgedOutOfYYA passes) with no inflow/outflow row
-    involved at all. AgedOutOfYYA, when present, is YBNL's own effective
-    end date for this person's youth tracking — it overrides EpisodeEndDate
-    outright, independent of whether the underlying HMIS episode has
-    actually closed. Without an explicit bucket for this, such a person
-    would silently disappear from every inflow/outflow bucket instead of
-    landing in a dashboard-visible outflow reason, breaking the partition
-    guarantee above. Detected directly from AgedOutOfYYA rather than
-    inferred, so it's never mistaken for any other kind of "unexplained"
-    dropout.
+    segment mid-episode (their 25th birthday passes) with no inflow/
+    outflow row involved at all. Two complementary signals catch this
+    (confirmed against Episode_Systemwide's own source notebook — note
+    EpisodeEndDate is NEVER actually null there: an episode still open as
+    of the pipeline run gets EpisodeEndDate = that run's own date, not a
+    missing value, so AgedOutOfYYA reliably gets backfilled even for
+    still-open episodes once at least one full month has passed since the
+    25th birthday):
+      - AgedOutOfYYA, when present, is YBNL's own effective end date for
+        this person's youth tracking, overriding EpisodeEndDate outright.
+        The primary signal, and correct for the overwhelming majority of
+        cases — but it only ever gets checked against rows WITHIN this
+        function's own `months` window (via period_raw_df below), and a
+        person whose 25th birthday falls in `months`' own LAST month has
+        their confirming row (one month later) fall just outside that
+        window, even though the row genuinely exists in the broader
+        `episodes` table (the episode is still open well past this
+        period). Confirmed via synthetic stress testing: ~0.03% of YYA
+        period-members in a fully-completed past year hit this exact
+        boundary gap.
+      - The second signal below closes that gap directly, without relying
+        on AgedOutOfYYA at all: anyone with a still-open raw row at
+        `months`' own last month who nonetheless fails the population
+        filter there (FlagYYA zeroed, whether from the 25th birthday or a
+        later enrollment's own reassessment) is aged out just as surely,
+        regardless of whether AgedOutOfYYA happens to have a matching row
+        inside this specific window.
+    Without an explicit bucket for this, such a person would silently
+    disappear from every inflow/outflow bucket instead of landing in a
+    dashboard-visible outflow reason, breaking the partition guarantee
+    above.
+
+    Population membership can begin mid-episode (YYA only): the mirror
+    image of "aged out" above. Confirmed against Episode_Systemwide's own
+    source notebook (DataHubDevelopment/Systemwide) — EpisodeAgeTier and
+    FlagHeadOfHousehold are both fixed once per episode (age-at-start;
+    "was anyone ever HoH at any point in the episode"), so neither one can
+    flip mid-episode. FlagYYA is the one genuinely month-varying factor:
+    it's `yya_status_asof`'s reading of whichever enrollment was open that
+    month, and a single continuous episode can span multiple enrollments
+    (e.g. moving between shelter programs while staying homeless) — an
+    earlier enrollment can carry YYA=No (unset, or not yet reassessed)
+    while a later one in the SAME episode correctly carries YYA=Yes, with
+    no inflow/outflow event marking the transition. already_active_ids/
+    inflow_candidates both resolve against the raw (not population-
+    filtered) episode data for exactly this reason — see their own
+    comments below.
 
     `episodes` must already carry _is_inflow_row/_is_outflow_row (see
     _add_inflow_outflow_flags) and span far enough back to include
@@ -181,10 +229,33 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     period_pop_df = pd.concat(period_frames, ignore_index=True) if period_frames else episodes.iloc[0:0]
     period_ids = set(period_pop_df["PersonalID"])
 
+    # Every raw (not population-filtered) row within the period — used
+    # below for already_active_ids and inflow_candidates, not just the
+    # YYA-only aged-out detection that originally lived here. See the
+    # comments at each use for why: population membership for YYA is
+    # month-dependent (filter_population's YYA branch — a person can
+    # become HoH, or age from "Under 18" into "18 to 24", mid-episode),
+    # so requiring a specific row to itself pass the population filter can
+    # miss a real prior-active/inflow row that's population-eligible only
+    # once you look across the row's own later history, not in isolation.
+    period_raw_df = episodes[episodes["TimePeriodStartDate"].isin(months)]
+
     if prior_month is not None:
         prior_df = episodes[episodes["TimePeriodStartDate"] == prior_month]
-        prior_pop_df = filter_population(prior_df, pop_label, prior_month)
-        prior_active_ids = set(prior_pop_df.loc[~prior_pop_df["_is_outflow_row"], "PersonalID"])
+        # Raw ~_is_outflow_row, not filter_population(prior_df, ...): a
+        # person already homeless before the period started, who only
+        # becomes YYA-countable partway through this period (see the
+        # module docstring above), still had an open episode going into
+        # the period — filtering prior_df by population here would miss
+        # them entirely (they don't pass the filter at prior_month, only
+        # later), leaving them with no inflow bucket at all even though
+        # they're legitimately in period_ids. Scoped back to population
+        # correctness by the `& period_ids` intersection below, which IS
+        # the true population-filtered set for this period — this can
+        # never let in someone who was never actually in-population at any
+        # point in the period, just widens who counts as "already active"
+        # among people who genuinely are.
+        prior_active_ids = set(prior_df.loc[~prior_df["_is_outflow_row"], "PersonalID"])
     else:
         prior_active_ids = set()
     # Intersected with this period's own people defensively — every
@@ -215,13 +286,9 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         for frame in period_frames:
             ever_active_ids |= set(frame.loc[~frame["_is_outflow_row"], "PersonalID"])
 
-        # Unfiltered (not period_frames): someone who's just aged out has
+        # period_raw_df (not period_frames): someone who's just aged out has
         # already dropped out of the YYA-filtered population, so their row
-        # only still exists in the raw episodes table — pulled across
-        # every month in the period, not just the last one, since a
-        # multi-month period (the yearly builder) can see the aged-out
-        # transition land anywhere within it.
-        period_raw_df = episodes[episodes["TimePeriodStartDate"].isin(months)]
+        # only still exists in the raw episodes table.
         aged_out_of_yya = pd.to_datetime(period_raw_df["AgedOutOfYYA"], errors="coerce")
         # filter_population's own aged_out_before check (`< month_ts`) means
         # someone is still counted as active through the calendar month
@@ -235,11 +302,45 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
 
         aged_out_ids = ever_active_ids & set(period_raw_df.loc[is_aged_out_row, "PersonalID"])
 
+        # Second, complementary signal closing the months-window boundary
+        # gap AgedOutOfYYA's exact-row match can miss (see this function's
+        # own docstring's "Aged out" section): anyone with a raw, still-open
+        # row (not _is_outflow_row) at the period's own LAST month, who
+        # nonetheless fails the population filter there (not in
+        # still_active_ids) — i.e. their episode is still literally going,
+        # they've just turned 25 (or lost YYA eligibility some other way)
+        # and FlagYYA was zeroed for it, whether or not the confirming
+        # AgedOutOfYYA-matched row happens to fall inside this exact
+        # `months` window. `ever_active_ids` confirms this is a genuine
+        # aged-out transition (they WERE population-eligible earlier in
+        # the period), not someone who was never YYA at any point in it.
+        raw_end_df = period_raw_df[period_raw_df["TimePeriodStartDate"] == months[-1]]
+        raw_end_open_ids = set(raw_end_df.loc[~raw_end_df["_is_outflow_row"], "PersonalID"])
+        aged_out_ids |= (ever_active_ids & raw_end_open_ids) - still_active_ids
+
+        # "Still active" wins over "aged out" per this function's own
+        # documented outflow priority (see docstring) — without this, a
+        # person whose AgedOutOfYYA falls inside the period but who is
+        # ALSO still population-eligible and active as of the period's own
+        # last month (e.g. a data quality case, or a person with more than
+        # one concurrent episode) could land in both buckets at once,
+        # double-counting them across outflow_buckets.
+        aged_out_ids -= still_active_ids
+
     inflow_buckets = {_ALREADY_ACTIVE: already_active_ids}
-    inflow_candidates = period_pop_df[
-        period_pop_df["_is_inflow_row"]
-        & period_pop_df["EpisodeInflowType"].notna()
-        & ~period_pop_df["PersonalID"].isin(already_active_ids)
+    # period_raw_df, not period_pop_df: same reasoning as already_active_ids
+    # above — a person's genuine inflow-type row (Newly Homeless/Return
+    # from Housed/Return from Inactive) can itself fail the population
+    # filter (their episode's earliest enrollment carried FlagYYA=No, not
+    # yet reassessed) even though they later become a legitimate period
+    # member via a later enrollment within the same episode. Restricted to
+    # period_ids explicitly, since period_raw_df itself carries no
+    # population filtering at all.
+    inflow_candidates = period_raw_df[
+        period_raw_df["_is_inflow_row"]
+        & period_raw_df["EpisodeInflowType"].notna()
+        & period_raw_df["PersonalID"].isin(period_ids)
+        & ~period_raw_df["PersonalID"].isin(already_active_ids)
     ]
     earliest_inflow = (
         inflow_candidates.loc[inflow_candidates.groupby("PersonalID")["TimePeriodStartDate"].idxmin()]
@@ -250,11 +351,22 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         inflow_buckets[key] = set(earliest_inflow.loc[earliest_inflow["EpisodeInflowType"] == hud_value, "PersonalID"])
 
     outflow_buckets = {_STILL_ACTIVE: still_active_ids, _AGED_OUT: aged_out_ids}
-    outflow_candidates = period_pop_df[
-        period_pop_df["_is_outflow_row"]
-        & period_pop_df["EpisodeOutflowType"].notna()
-        & ~period_pop_df["PersonalID"].isin(still_active_ids)
-        & ~period_pop_df["PersonalID"].isin(aged_out_ids)
+    # period_raw_df, not period_pop_df: mirrors inflow_candidates above — a
+    # person's genuine outflow-type row can itself fail the population
+    # filter when their 25th birthday falls in the SAME month as their real
+    # exit (FlagYYA is zeroed for that exact month, per Episode_Systemwide's
+    # own AgedOutOfYYA/FlagYYA computation — see this function's docstring),
+    # which would otherwise silently drop their real exit reason even though
+    # neither still_active_ids nor aged_out_ids ends up catching them either
+    # (their episode has, in fact, genuinely closed). Restricted to
+    # period_ids explicitly, since period_raw_df carries no population
+    # filtering at all.
+    outflow_candidates = period_raw_df[
+        period_raw_df["_is_outflow_row"]
+        & period_raw_df["EpisodeOutflowType"].notna()
+        & period_raw_df["PersonalID"].isin(period_ids)
+        & ~period_raw_df["PersonalID"].isin(still_active_ids)
+        & ~period_raw_df["PersonalID"].isin(aged_out_ids)
     ]
     latest_outflow = (
         outflow_candidates.loc[outflow_candidates.groupby("PersonalID")["TimePeriodStartDate"].idxmax()]
@@ -343,15 +455,18 @@ def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.S
     return ordered.drop_duplicates("PersonalID", keep="last").set_index("PersonalID")[category_col]
 
 
-# "unsheltered_in_period" needs a third resolution strategy, distinct from
-# both EPISODE_SCOPED_CATEGORY_DIMENSIONS' "pick this period's latest row"
-# and the plain whole-window snapshot: whether a person was EVER Unsheltered
-# in the period being built, an OR across every row they have in it, not a
-# single row's value — "did this person experience unsheltered homelessness
-# this month/quarter/year" is itself an inherently period-level question,
-# unlike age_category's or household_type's single current value. See
-# _unsheltered_in_period_category below.
-PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = ["unsheltered_in_period"]
+# "unsheltered_in_period" (and, for the same reason, every project_engaged_*
+# dimension) needs a third resolution strategy, distinct from both
+# EPISODE_SCOPED_CATEGORY_DIMENSIONS' "pick this period's latest row" and
+# the plain whole-window snapshot: whether a person was EVER Unsheltered (or
+# EVER enrolled in a matching project type) at any point in the period being
+# built, an OR across every row/enrollment they have in it, not a single
+# row's value — "did this person experience unsheltered homelessness" or
+# "was this person engaged with Emergency Shelter" this month/quarter/year
+# is itself an inherently period-level question, unlike age_category's or
+# household_type's single current value. See _unsheltered_in_period_category
+# and _project_engagement_category below.
+PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = ["unsheltered_in_period", *PROJECT_ENGAGEMENT_DIMENSIONS]
 
 
 def _unsheltered_in_period_category(period_df: pd.DataFrame) -> pd.Series:
@@ -371,6 +486,42 @@ def _unsheltered_in_period_category(period_df: pd.DataFrame) -> pd.Series:
     ids = period_df["PersonalID"].unique()
     unsheltered_ids = set(period_df.loc[period_df["LastShelterStatusInTimeframe"] == "Unsheltered", "PersonalID"])
     return pd.Series(np.where(pd.Index(ids).isin(unsheltered_ids), "Included", "Not Included"), index=ids)
+
+
+def _project_engagement_category(period_df: pd.DataFrame, group_enrollments: pd.DataFrame, period_start, period_end) -> pd.Series:
+    """PersonalID -> "Included"/"Not Included" for one project_engaged_*
+    dimension, true if the person has ANY All_Program_Enrollments row in
+    `group_enrollments` (already restricted to that dimension's HUD
+    ProjectTypeCodes — see config.py's PROJECT_ENGAGEMENT_GROUPS) whose
+    [ProjectStartDate, ProjectExitDate] span overlaps ANY part of
+    [period_start, period_end] — a null ProjectExitDate (still enrolled)
+    always counts as overlapping. Same OR-across-the-period contract as
+    _unsheltered_in_period_category, just resolved against enrollment-level
+    project type instead of episode_systemwide's own per-row shelter
+    status, since project type has no episode_systemwide equivalent at all.
+
+    `ids` (the population this gets reindexed against) comes from
+    `period_df`, same as _unsheltered_in_period_category — every
+    episode_systemwide PersonalID active/inflowing/outflowing this period,
+    not `group_enrollments`' own PersonalIDs, so someone with zero matching
+    enrollments still gets an explicit "Not Included" row rather than being
+    silently absent."""
+    ids = period_df["PersonalID"].unique()
+    overlapping = group_enrollments[
+        (group_enrollments["ProjectStartDate"] <= period_end)
+        & (group_enrollments["ProjectExitDate"].isna() | (group_enrollments["ProjectExitDate"] >= period_start))
+    ]
+    engaged_ids = set(overlapping["PersonalID"])
+    return pd.Series(np.where(pd.Index(ids).isin(engaged_ids), "Included", "Not Included"), index=ids)
+
+
+def _group_enrollments_by_dimension(enrollments: pd.DataFrame) -> dict:
+    """One {dimension: pre-filtered enrollments} entry per
+    PROJECT_ENGAGEMENT_GROUPS dimension, computed once per builder call (not
+    per period) since the ProjectTypeCode filter itself doesn't depend on
+    which period is being built — only the date-overlap check in
+    _project_engagement_category does."""
+    return {dim: enrollments[enrollments["ProjectTypeCode"].isin(codes)] for dim, codes in PROJECT_ENGAGEMENT_GROUPS.items()}
 
 
 # The subset of PARTITION_CATEGORY_DIMENSIONS that really is safe to
@@ -414,7 +565,7 @@ def _partition_counts_by_category(partition: dict, cat_series: pd.Series, catego
     return bucket_counts, pair_counts
 
 
-def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """episodes: episode_systemwide rows scoped to the export window, with
     the race_*/gender_* rollup columns already joined in from
     Client_Demographics. May additionally carry one lookback month before
@@ -424,6 +575,14 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
     window's own first published month resolve a true prior_month for
     _partition_by_individual's already-active/aged-out detection instead of
     treating everyone whose episode predates the window as brand new.
+
+    enrollments: raw All_Program_Enrollments rows (one per enrollment span,
+    ProjectTypeCode already mapped to numeric HUD codes, ProjectStartDate/
+    ProjectExitDate already parsed) — not date-scoped to the export window
+    at all, unlike `episodes`: a long-open enrollment that started years
+    before the window must still count as overlapping this window's
+    periods. Used only to resolve the project_engaged_* dimensions (see
+    _project_engagement_category); has no bearing on any other flow_type.
 
     episode_systemwide's own EpisodeInflowType/EpisodeOutflowType are
     computed once per *episode* (see Episode_Systemwide notebook's
@@ -473,29 +632,38 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
         for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
+    # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
+    # across every month below — see _group_enrollments_by_dimension.
+    group_enrollments = _group_enrollments_by_dimension(enrollments)
 
     for month in months:
         prior_month = all_months[month_index[month] - 1] if month_index[month] > 0 else None
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
+        period_start = pd.Timestamp(month)
+        period_end = period_start + pd.offsets.MonthEnd(0)
         # This month's own category lookup, constant dimensions plus this
         # month's freshly-resolved episode-scoped ones — see
-        # EPISODE_SCOPED_CATEGORY_DIMENSIONS — and unsheltered_in_period's
-        # own OR-across-the-month resolution (see
+        # EPISODE_SCOPED_CATEGORY_DIMENSIONS — and unsheltered_in_period's/
+        # project_engaged_*'s own OR-across-the-month resolution (see
         # PERIOD_AGGREGATE_CATEGORY_DIMENSIONS).
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(month_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
-            **{dim: _unsheltered_in_period_category(month_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
+            "unsheltered_in_period": _unsheltered_in_period_category(month_df),
+            **{
+                dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
+                for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
         }
-        # Broadcast this month's unsheltered_in_period category back onto
-        # every one of month_df's own rows (inflow/outflow/active alike),
-        # so the per-flow-type/dimension loop below — which groups the raw
-        # dataframe by DIMENSION_COLUMNS[dimension] directly, unlike the
-        # indiv_*/period_category-driven partition below it — can break any
-        # flow_type out by it the same way it already does for every native
-        # column dimension.
+        # Broadcast this month's PERIOD_AGGREGATE_CATEGORY_DIMENSIONS
+        # categories back onto every one of month_df's own rows (inflow/
+        # outflow/active alike), so the per-flow-type/dimension loop below
+        # — which groups the raw dataframe by DIMENSION_COLUMNS[dimension]
+        # directly, unlike the indiv_*/period_category-driven partition
+        # below it — can break any flow_type out by them the same way it
+        # already does for every native column dimension.
         month_df = month_df.assign(
-            UnshelteredInPeriod=month_df["PersonalID"].map(period_category["unsheltered_in_period"])
+            **{DIMENSION_COLUMNS[dim]: month_df["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
         )
         ce_active_ids = set(
             episode_ce.loc[
@@ -604,10 +772,13 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, window_sta
     return pd.DataFrame(rows)
 
 
-def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """Builds dashboard_flow_yearly: one row per (year, population_segment,
     dimension, category, flow_type) — same shape as dashboard_flow_monthly
     (month -> year), carrying:
+
+    enrollments: same contract as build_flow_rows' own `enrollments` param
+    — raw, not window-scoped, used only to resolve project_engaged_*.
 
     window_start: same lookback contract as build_flow_rows — `episodes`
     may carry one extra month before window_start (see export.py's
@@ -666,18 +837,25 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
         for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
+    group_enrollments = _group_enrollments_by_dimension(enrollments)
 
     rows: list = []
     for year, year_df in published.groupby("_year"):
         months = sorted(year_df["TimePeriodStartDate"].unique())
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
+        period_start = pd.Timestamp(months[0])
+        period_end = pd.Timestamp(months[-1]) + pd.offsets.MonthEnd(0)
         # This year's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
-        # and, for unsheltered_in_period, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
+        # and, for unsheltered_in_period/project_engaged_*, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(year_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
-            **{dim: _unsheltered_in_period_category(year_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
+            "unsheltered_in_period": _unsheltered_in_period_category(year_df),
+            **{
+                dim: _project_engagement_category(year_df, group_enrollments[dim], period_start, period_end)
+                for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
@@ -753,7 +931,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, window_start=None) -> pd.Data
     return pd.DataFrame(rows)
 
 
-def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """Builds dashboard_flow_quarterly: one row per (quarter, population_segment,
     dimension, category, flow_type) — same shape and same rationale as
     build_flow_yearly_rows (see its own docstring for why experienced_homelessness/
@@ -761,6 +939,9 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
     per-month figures client-side), just grouped by calendar quarter instead
     of calendar year. `quarter` is that quarter's start date (e.g. Q3 2026 ->
     2026-07-01), matching dashboard_return_cohorts' own exit_quarter convention.
+
+    enrollments: same contract as build_flow_rows' own `enrollments` param
+    — raw, not window-scoped, used only to resolve project_engaged_*.
 
     A quarter whose 3 calendar months aren't ALL present in the completed-
     months window (window_start onward — see get_export_window) is skipped
@@ -786,6 +967,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
         dimension: episodes.drop_duplicates("PersonalID").set_index("PersonalID")[DIMENSION_COLUMNS[dimension]]
         for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
+    group_enrollments = _group_enrollments_by_dimension(enrollments)
 
     rows: list = []
     for quarter, quarter_df in published.groupby("_quarter"):
@@ -794,12 +976,18 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, window_start=None) -> pd.D
             continue
         prior_idx = month_index[months[0]] - 1
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
+        period_start = pd.Timestamp(months[0])
+        period_end = pd.Timestamp(months[-1]) + pd.offsets.MonthEnd(0)
         # This quarter's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
-        # and, for unsheltered_in_period, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
+        # and, for unsheltered_in_period/project_engaged_*, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
             **person_category,
             **{dim: _person_category_for_period(quarter_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
-            **{dim: _unsheltered_in_period_category(quarter_df) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS},
+            "unsheltered_in_period": _unsheltered_in_period_category(quarter_df),
+            **{
+                dim: _project_engagement_category(quarter_df, group_enrollments[dim], period_start, period_end)
+                for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():

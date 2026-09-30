@@ -36,6 +36,23 @@ const UNSHELTERED_CATEGORY_LABELS = {
   "Not unsheltered this period": "Not Included",
 };
 
+// Same pattern as RACE_ETHNICITY_CATEGORY_DIMENSIONS above: project type
+// engagement is 5 independent binary dimensions (see pipeline/config.py's
+// PROJECT_ENGAGEMENT_GROUPS), not one dimension with 5 overlapping
+// categories, since a person can be engaged with more than one project
+// type in the same period (e.g. Street Outreach AND Emergency Shelter).
+// "Engaged" here means the person had an enrollment of that project type
+// overlapping ANY part of the currently selected time period, not just one
+// still open at the period's end. "Housing Programs" bundles PSH, RRH, and
+// both generic PH types (Housing Only + Housing with Services).
+const PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS = {
+  "Emergency Shelter": "project_engaged_es",
+  "Street Outreach": "project_engaged_so",
+  "Housing Programs": "project_engaged_housing",
+  "Transitional Housing": "project_engaged_th",
+  "Coordinated Entry": "project_engaged_ce",
+};
+
 // Hidden from every demographic type's category dropdown for now — a
 // deliberate, revisitable choice (not a data error) to keep "we don't know"
 // buckets out of the filter until there's a considered way to present them.
@@ -57,6 +74,9 @@ function resolveDemographicScope(demographicType, demographicCategory) {
   }
   if (demographicType === "unsheltered_in_period") {
     return { dimension: demographicType, category: UNSHELTERED_CATEGORY_LABELS[demographicCategory] };
+  }
+  if (demographicType === "project_type_engagement") {
+    return { dimension: PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
   }
   return { dimension: demographicType, category: demographicCategory };
 }
@@ -115,6 +135,7 @@ export default function App() {
     // Same reasoning as race_ethnicity above: fixed display labels, not
     // derived from the dimension's own raw Included/Not Included values.
     if (demographicType === "unsheltered_in_period") return Object.keys(UNSHELTERED_CATEGORY_LABELS);
+    if (demographicType === "project_type_engagement") return Object.keys(PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS);
     const categories = distinctValues(filterRows(data.flow, { dimension: demographicType }), "category").filter(
       (category) => !HIDDEN_CATEGORIES.has(category)
     );

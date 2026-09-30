@@ -22,9 +22,8 @@ function formatMonthLabel(month) {
   return `${d.toLocaleString("en-US", { month: "long", timeZone: "UTC" })} ${d.getUTCFullYear()}`;
 }
 
-// "up"/"down" if `current` is (or must be) higher/lower than `previous`;
-// null if there's no previous period to compare against, or we genuinely
-// can't tell.
+// "up"/"down"/"flat" if `current` is (or must be) higher/lower/equal to
+// `previous`; null if there's no previous period to compare against at all.
 //
 // Suppression only ever hides a NONZERO value below the threshold (see
 // suppression.py) — a true zero is never suppressed. So a suppressed
@@ -41,7 +40,37 @@ function trendDirectionFor(current, previous) {
   if (previous.marker) return current.value > 0 ? "up" : "down";
   if (current.value > previous.value) return "up";
   if (current.value < previous.value) return "down";
-  return null;
+  return "flat";
+}
+
+// A hover sentence for a KPI card's trend arrow, covering every case
+// trendDirectionFor above can produce an arrow for:
+// - both sides known and different: an exact percent ("This is a 12%
+//   increase from 8,404 in Q1 2026.").
+// - both sides known and equal: called out as unchanged, not a 0% change.
+// - a real (non-suppressed) previous value of 0: direction only, no percent
+//   — percent change from zero is undefined.
+// - a suppressed previous value: direction only, naming that side as
+//   suppressed rather than implying a precise number (the exact prior
+//   count isn't knowable, only that it's under the suppression threshold —
+//   see trendDirectionFor's comment on why direction alone is still safe
+//   to state).
+function trendTooltipFor(current, previous, previousLabel) {
+  if (!current || !previous || current.marker || !previousLabel) return null;
+  if (previous.marker) {
+    return current.value > 0
+      ? `This is an increase from fewer than 11 in ${previousLabel}.`
+      : `This is a decrease from fewer than 11 in ${previousLabel}.`;
+  }
+  if (current.value === previous.value) {
+    return `This is unchanged from ${previous.value.toLocaleString()} in ${previousLabel}.`;
+  }
+  if (!previous.value) {
+    return `This is an increase from 0 in ${previousLabel}.`;
+  }
+  const direction = current.value > previous.value ? "increase" : "decrease";
+  const percent = Math.round((Math.abs(current.value - previous.value) / previous.value) * 100);
+  return `This is a ${percent}% ${direction} from ${previous.value.toLocaleString()} in ${previousLabel}.`;
 }
 
 // `cell`'s share of `total` ("12.3%"), for the inflow/outflow cards that
@@ -158,6 +187,26 @@ export default function OutflowSection({
     return years.includes(year - 1) ? buildFlowPeriod(scopedYearly, scopedQuarterly, scopedMonthly, { year: year - 1 }) : null;
   }, [scopedYearly, scopedQuarterly, scopedMonthly, allQuarters, allMonths, years, year, quarter, month, quartersForYear]);
 
+  // A human-readable label for whatever period previousPeriod above landed
+  // on, for the KPI cards' trend-arrow tooltip ("...in Q1 2026") — mirrors
+  // that same month/quarter/year-1 logic so the two never disagree about
+  // which period they're describing.
+  const previousPeriodLabel = useMemo(() => {
+    if (!year) return null;
+    if (month) {
+      const idx = allMonths.indexOf(month);
+      const prevMonth = idx > 0 ? allMonths[idx - 1] : null;
+      return prevMonth ? formatMonthLabel(prevMonth) : null;
+    }
+    if (quarter) {
+      const idx = allQuarters.indexOf(quarter);
+      const prevQuarter = idx > 0 ? allQuarters[idx - 1] : null;
+      return prevQuarter ? formatQuarterLabel(prevQuarter) : null;
+    }
+    if (quartersForYear.length < 4) return null;
+    return years.includes(year - 1) ? String(year - 1) : null;
+  }, [allQuarters, allMonths, years, year, quarter, month, quartersForYear]);
+
   // Population/year live in App.jsx now (shared across every section) — a
   // population switch there keeps browsing the same quarter/month here (see
   // the `quarter`/`month` fallbacks above, which just check the new prop
@@ -235,12 +284,27 @@ export default function OutflowSection({
   // That's easy to misread as a data error (category totals can add up to
   // more than the overall total), so it's called out explicitly whenever
   // this type is selected, not just when a specific category is.
-  const demographicNote = demographicType === "race_ethnicity" && (
-    <p className="demographic-note">
-      In HMIS, individuals can select more than one race or ethnicity. For the most complete picture, this filter
-      includes everyone who selected a given category, whether alone or in combination with another.
-    </p>
-  );
+  const demographicNote =
+    demographicType === "race_ethnicity" ? (
+      <p className="demographic-note">
+        In HMIS, individuals can select more than one race or ethnicity. For the most complete picture, this filter
+        includes everyone who selected a given category, whether alone or in combination with another.
+      </p>
+    ) : (
+      // Project type engagement categories can also overlap (someone can be
+      // engaged with Street Outreach and Emergency Shelter in the same
+      // period), same reasoning as the race/ethnicity note above, plus a
+      // second thing worth calling out: "engaged" counts anyone whose
+      // enrollment overlaps any part of the selected period, not just
+      // enrollments still open at the period's end.
+      demographicType === "project_type_engagement" && (
+        <p className="demographic-note">
+          A person can be engaged with more than one project type in the same period, so category totals can add up
+          to more than the overall total. "Engaged" includes anyone with an enrollment overlapping any part of the
+          selected period, not just enrollments still open at the end of it.
+        </p>
+      )
+    );
 
   if (!period) {
     return (
@@ -339,6 +403,7 @@ export default function OutflowSection({
                 value={totalExperienced.value?.toLocaleString()}
                 marker={totalExperienced.marker}
                 trendDirection={trendDirectionFor(totalExperienced, previousTotalExperienced)}
+                trendTooltip={trendTooltipFor(totalExperienced, previousTotalExperienced, previousPeriodLabel)}
                 goodDirection="down"
               />
             </div>
@@ -349,6 +414,7 @@ export default function OutflowSection({
                 marker={period.inflow.newly_homeless.marker}
                 percent={percentOfExperienced(period.inflow.newly_homeless, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless)}
+                trendTooltip={trendTooltipFor(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless, previousPeriodLabel)}
                 goodDirection="down"
               />
               <KpiCard
@@ -357,6 +423,7 @@ export default function OutflowSection({
                 marker={period.inflow.return_from_housed.marker}
                 percent={percentOfExperienced(period.inflow.return_from_housed, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed)}
+                trendTooltip={trendTooltipFor(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed, previousPeriodLabel)}
                 goodDirection="down"
               />
               <KpiCard
@@ -365,6 +432,7 @@ export default function OutflowSection({
                 marker={period.inflow.return_from_inactive.marker}
                 percent={percentOfExperienced(period.inflow.return_from_inactive, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive)}
+                trendTooltip={trendTooltipFor(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive, previousPeriodLabel)}
                 goodDirection="down"
               />
             </div>
@@ -375,6 +443,7 @@ export default function OutflowSection({
                 marker={period.outflow.inactive.marker}
                 percent={percentOfExperienced(period.outflow.inactive, totalExperienced)}
                 trendDirection={trendDirectionFor(period.outflow.inactive, previousPeriod?.outflow?.inactive)}
+                trendTooltip={trendTooltipFor(period.outflow.inactive, previousPeriod?.outflow?.inactive, previousPeriodLabel)}
                 goodDirection={null}
               />
               <KpiCard
@@ -383,6 +452,7 @@ export default function OutflowSection({
                 marker={period.outflow.permanently_housed.marker}
                 percent={percentOfExperienced(period.outflow.permanently_housed, totalExperienced)}
                 trendDirection={trendDirectionFor(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed)}
+                trendTooltip={trendTooltipFor(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed, previousPeriodLabel)}
                 goodDirection="up"
               />
               <KpiCard
@@ -391,6 +461,7 @@ export default function OutflowSection({
                 marker={period.outflow.deceased.marker}
                 percent={percentOfExperienced(period.outflow.deceased, totalExperienced)}
                 trendDirection={trendDirectionFor(period.outflow.deceased, previousPeriod?.outflow?.deceased)}
+                trendTooltip={trendTooltipFor(period.outflow.deceased, previousPeriod?.outflow?.deceased, previousPeriodLabel)}
                 goodDirection={null}
               />
               {/* Only meaningful for the YYA population — every other segment's
@@ -403,6 +474,7 @@ export default function OutflowSection({
                   value={period.outflow.aged_out.value?.toLocaleString()}
                   marker={period.outflow.aged_out.marker}
                   trendDirection={trendDirectionFor(period.outflow.aged_out, previousPeriod?.outflow?.aged_out)}
+                  trendTooltip={trendTooltipFor(period.outflow.aged_out, previousPeriod?.outflow?.aged_out, previousPeriodLabel)}
                   goodDirection={null}
                 />
               )}
@@ -410,11 +482,13 @@ export default function OutflowSection({
           </div>
           <ul className="chart-note">
             <li>The dashboard counts everyone who was active at least once during the selected period.</li>
-            <li>Current-year totals don't reflect a full year of data yet, so they're expected to be lower than completed years.</li>
-            <li>
-              Arrows show the change from the previous comparable period. 2026's annual figures don't have one yet,
-              since there isn't a full prior year to compare against.
-            </li>
+            {/* Only meaningful in the full-year view of the current, still-in-progress
+                year (same "fewer than 4 quarters present" signal previousPeriod above
+                uses) — a quarter/month pill, or a completed prior year, already reflects
+                its own full selected period, so the caveat would be noise there. */}
+            {!quarter && !month && quartersForYear.length < 4 && (
+              <li>Current-year totals don't reflect a full year of data yet, so they're expected to be lower than completed years.</li>
+            )}
           </ul>
           <p className="chart-analysis">
             The number of people experiencing homelessness has <strong>stayed fairly consistent year to year</strong>
@@ -432,7 +506,14 @@ export default function OutflowSection({
           )}
           <p className="section-subhead">
             The ribbon chart below shows how people's homelessness status changes between the start and end of the
-            selected period.
+            selected period. The left column is how each person's episode began this period (already active, newly
+            homeless, or returning from housed or inactive); the right column is how it ended (still active,
+            permanently housed, inactive, or deceased). Each ribbon connects one starting status to one ending
+            status, and its width is the number of people who took that specific path: hover over a ribbon to see
+            the number of people included. For example, a wide ribbon from "Newly Homeless" to "Still Active" means
+            most people who newly became homeless this period were still experiencing homelessness by its end,
+            while a thinner ribbon from "Newly Homeless" to "Permanently Housed" means only a small share of that
+            same group exited to housing within the period.
           </p>
           <FlowSankeyChart data={period} periodLabel={periodLabel} isFullYear={!quarter && !month} populationSegment={populationSegment} />
         </>

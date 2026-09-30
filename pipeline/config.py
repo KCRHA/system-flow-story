@@ -105,6 +105,34 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 # own FLOW_DIMENSIONS.
 DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type", "age_category"]
 
+# --- Project type engagement (dashboard_flow_monthly "project_engaged_*"
+# dimensions) ---
+# Like RACE_DIMENSIONS, these 5 groups are deliberately NOT mutually
+# exclusive — a person can be engaged with more than one project type within
+# the same period (e.g. Street Outreach AND Emergency Shelter in the same
+# month), so each is its own independent binary ("Included"/"Not Included")
+# dimension rather than one dimension with 5 overlapping categories, same
+# reasoning as config.py's RACE_DIMENSIONS comment above. "Housing Programs"
+# groups PSH(3), RRH(13), and both generic PH codes (9=Housing Only,
+# 10=Housing w/Services) into one bucket — confirmed with the dashboard
+# owner (2026-09-29) that "OPH" and "PH" in the original request both refer
+# to this same generic-PH pair, not two distinct groups.
+#
+# Computed fresh per period (month/quarter/year being built), same
+# "OR across every row in the period" contract as unsheltered_in_period
+# below — never a fixed per-row episode_systemwide value, since project
+# type has no episode_systemwide equivalent at all (episode_systemwide is
+# episode-level, not enrollment-level). See build_flow.py's
+# _project_engagement_category and PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
+PROJECT_ENGAGEMENT_GROUPS = {
+    "project_engaged_es": [0, 1, 8],
+    "project_engaged_so": [4],
+    "project_engaged_housing": [3, 9, 10, 13],
+    "project_engaged_th": [2],
+    "project_engaged_ce": [14],
+}
+PROJECT_ENGAGEMENT_DIMENSIONS = list(PROJECT_ENGAGEMENT_GROUPS)
+
 # episode_systemwide column carrying each dimension's category value
 DIMENSION_COLUMNS = {
     "race_aian": "RaceIncludes_AIAN",  # derived — see demographics.py
@@ -128,6 +156,15 @@ DIMENSION_COLUMNS = {
     # build_flow.py's own FLOW_DIMENSIONS (not this DIMENSIONS list) actually
     # iterates over it — see FLOW_DIMENSIONS' own comment for why.
     "unsheltered_in_period": "UnshelteredInPeriod",
+    # Same story as unsheltered_in_period immediately above, one synthetic
+    # column per PROJECT_ENGAGEMENT_GROUPS entry — computed fresh per period
+    # in build_flow.py's _project_engagement_category, from
+    # All_Program_Enrollments, not a standing episode_systemwide column.
+    "project_engaged_es": "ProjectEngagedEmergencyShelter",
+    "project_engaged_so": "ProjectEngagedStreetOutreach",
+    "project_engaged_housing": "ProjectEngagedHousingPrograms",
+    "project_engaged_th": "ProjectEngagedTransitionalHousing",
+    "project_engaged_ce": "ProjectEngagedCoordinatedEntry",
 }
 
 # All_Program_Enrollments' equivalent columns (confirmed against

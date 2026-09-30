@@ -116,7 +116,9 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
           of {month}" — no "(year to date)" qualifier, which would
           incorrectly imply a running total building up since January. */}
       <p className="section-subhead">How many units exist in the system? Here's the total by project type, as of {formatMonthLabel(latestMonth)}.</p>
-      <CapacityUnitsChart rows={unitsRows} />
+      <div className="chart-frame">
+        <CapacityUnitsChart rows={unitsRows} />
+      </div>
       <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
       <p className="chart-analysis">
         King County's homelessness response system <strong>relies primarily on Permanent Housing</strong> as a
@@ -132,7 +134,9 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
       </p>
 
       <p className="section-subhead">How full is that capacity, quarter by quarter over the last three years?</p>
-      <CapacityUtilizationChart series={utilizationSeries} />
+      <div className="chart-frame">
+        <CapacityUtilizationChart series={utilizationSeries} />
+      </div>
       <p className="chart-note">Permanent Housing figures here don't include Rapid Re-Housing capacity.</p>
       <p className="chart-analysis">
         Utilization near 100% means a project type has little room left, and across time periods and project types,{" "}
@@ -146,7 +150,9 @@ export default function CapacitySection({ capacityRows, capacityQuarterlyRows, c
       </p>
 
       <p className="section-subhead">Of everyone served by each project type in {year}, what share exited?</p>
-      <CapacityTurnoverChart rows={turnoverRows} />
+      <div className="chart-frame">
+        <CapacityTurnoverChart rows={turnoverRows} />
+      </div>
       <p className="chart-analysis">
         The percentage shown is the share of people leaving the program. What counts as "good" depends on the
         program: <strong>permanent housing succeeds when people stay housed</strong> (a lower share exiting);{" "}

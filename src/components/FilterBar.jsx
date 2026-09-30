@@ -23,6 +23,7 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "gender_alignment", label: "Gender Alignment" },
   { value: "age_category", label: "Age Category" },
   { value: "unsheltered_in_period", label: "Unsheltered This Period" },
+  { value: "project_type_engagement", label: "Project Type Engagement" },
 ];
 
 export function PopulationSegmentSelect({ value, onChange }) {
@@ -43,7 +44,7 @@ export function PopulationSegmentSelect({ value, onChange }) {
 export function DemographicTypeSelect({ value, onChange, options = DEMOGRAPHIC_TYPES }) {
   return (
     <label>
-      Demographic
+      Demographic/Characteristic
       <select value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
