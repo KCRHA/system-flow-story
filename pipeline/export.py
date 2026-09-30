@@ -68,6 +68,23 @@ def _write(name: str, records: list[dict]):
     print(f"wrote {len(records)} rows -> {path}")
 
 
+# dashboard_flow_monthly split one file per calendar year (~35-45MB each)
+# instead of one ~250MB blob — a single file exceeds GitHub's 100MB push
+# limit once the full export window is included, and the frontend only
+# ever needs one year's worth of monthly rows loaded at a time (see
+# loadData.js's loadMonthlyFlowForYear). Old per-year files from a since-
+# shrunk export window are removed so a stale year never lingers.
+def _write_monthly_flow_split(records: list[dict]):
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for stale in OUTPUT_DIR.glob("dashboard_flow_monthly_*.json"):
+        stale.unlink()
+    by_year: dict[str, list[dict]] = {}
+    for record in records:
+        by_year.setdefault(record["month"][:4], []).append(record)
+    for year, year_records in sorted(by_year.items()):
+        _write(f"dashboard_flow_monthly_{year}.json", year_records)
+
+
 def main():
     start, end = get_export_window()
     print(f"export window: {start} .. {end}")
@@ -311,7 +328,7 @@ def main():
     flow_yearly_df = flow_yearly_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")
     flow_quarterly_df = flow_quarterly_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")
 
-    _write("dashboard_flow_monthly.json", _to_json_records(flow_df, ["month"]))
+    _write_monthly_flow_split(_to_json_records(flow_df, ["month"]))
     _write("dashboard_flow_yearly.json", _to_json_records(flow_yearly_df, []))
     _write("dashboard_flow_quarterly.json", _to_json_records(flow_quarterly_df, ["quarter"]))
     _write("dashboard_length_monthly.json", _to_json_records(length_df, ["month"]))

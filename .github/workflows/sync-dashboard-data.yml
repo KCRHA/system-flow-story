@@ -45,6 +45,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/dashboard_flow_monthly.json public/data/dashboard_flow_yearly.json public/data/dashboard_length_monthly.json public/data/dashboard_return_cohorts.json public/data/dashboard_capacity_monthly.json public/data/dashboard_capacity_quarterly.json public/data/dashboard_capacity_yearly.json
+          # -A (not a plain `git add <glob>`) so a year file removed by
+          # _write_monthly_flow_split's stale-year cleanup (export window
+          # shrinking) gets its deletion staged too, not just new/changed years.
+          git add -A -- public/data/dashboard_flow_monthly_*.json public/data/dashboard_flow_yearly.json public/data/dashboard_flow_quarterly.json public/data/dashboard_length_monthly.json public/data/dashboard_return_cohorts.json public/data/dashboard_capacity_monthly.json public/data/dashboard_capacity_quarterly.json public/data/dashboard_capacity_yearly.json
           git diff --staged --quiet && echo "no data changes" || git commit -m "chore: refresh dashboard data [skip ci]"
           git push

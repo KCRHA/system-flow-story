@@ -87,6 +87,7 @@ export default function OutflowSection({
   flowYearlyRows,
   flowQuarterlyRows,
   flowMonthlyRows,
+  flowMonthlyLoading,
   populationSegment,
   onPopulationChange,
   years,
@@ -388,7 +389,11 @@ export default function OutflowSection({
         </div>
       </div>
       <QuarterPills quarters={quartersForYear} selected={quarter} fullYearActive={!quarter && !month} onSelect={selectQuarter} />
-      <MonthPills months={monthsForYear} selected={month} onSelect={selectMonth} />
+      {flowMonthlyLoading && monthsForYear.length === 0 ? (
+        <p className="month-pills-loading">Loading months…</p>
+      ) : (
+        <MonthPills months={monthsForYear} selected={month} onSelect={selectMonth} />
+      )}
       {insufficientPopulation ? (
         <p className="suppressed-note">
           Population too small to safely display for this combination of population, demographic, and period. Try a

@@ -363,6 +363,13 @@
   color: #fff;
 }
 
+.month-pills-loading {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  font-style: italic;
+  margin: 0 0 1.5rem;
+}
+
 .chart-legend {
   display: flex;
   flex-wrap: wrap;

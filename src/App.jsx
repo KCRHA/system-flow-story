@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { loadDashboardData, filterRows, distinctValues } from "./lib/loadData.js";
+import { loadDashboardData, loadMonthlyFlowForYear, filterRows, distinctValues } from "./lib/loadData.js";
 import { DEMOGRAPHIC_TYPES } from "./components/FilterBar.jsx";
 import LengthSection from "./components/sections/LengthSection.jsx";
 import OutflowSection from "./components/sections/OutflowSection.jsx";
@@ -109,6 +109,26 @@ export default function App() {
   // spans a different range of years).
   const year = years.includes(selectedYear) ? selectedYear : years[0] ?? null;
 
+  // dashboard_flow_monthly is pre-split one file per year (~35-45MB each —
+  // see loadData.js's loadMonthlyFlowForYear), so only the currently
+  // selected year's rows are ever fetched, and each year fetched once is
+  // kept here rather than re-fetched on every switch back to it. A year
+  // not yet in the cache resolves to OutflowSection's flowMonthlyRows as
+  // [] (see MonthPills, which renders an empty pill row rather than
+  // crashing) while its fetch is in flight, not undefined/broken.
+  const [monthlyFlowByYear, setMonthlyFlowByYear] = useState({});
+  useEffect(() => {
+    if (year == null || monthlyFlowByYear[year]) return;
+    let cancelled = false;
+    loadMonthlyFlowForYear(year).then((rows) => {
+      if (!cancelled) setMonthlyFlowByYear((prev) => ({ ...prev, [year]: rows }));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [year, monthlyFlowByYear]);
+  const monthlyFlowLoading = year != null && !monthlyFlowByYear[year];
+
   // age_category isn't offered for the YYA population segment — everyone in
   // it already falls in the same one or two age tiers by definition, so
   // breaking it down further is meaningless (see FilterBar.jsx's own
@@ -194,7 +214,8 @@ export default function App() {
       <OutflowSection
         flowYearlyRows={data.flowYearly}
         flowQuarterlyRows={data.flowQuarterly}
-        flowMonthlyRows={data.flow}
+        flowMonthlyRows={monthlyFlowByYear[year] ?? []}
+        flowMonthlyLoading={monthlyFlowLoading}
         populationSegment={populationSegment}
         onPopulationChange={setPopulationSegment}
         years={years}

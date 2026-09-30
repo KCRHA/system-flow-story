@@ -32,11 +32,7 @@ async function fetchJson(path) {
 }
 
 export async function loadDashboardData() {
-  const [flow, flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly] = await Promise.all([
-    // dashboard_flow_monthly.json is too large to publish on this demo
-    // deploy (see .gitignore) — month-level views (MonthPills) just end up
-    // empty rather than the whole dashboard failing to load.
-    fetchJson("dashboard_flow_monthly.json").catch(() => []),
+  const [flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly] = await Promise.all([
     fetchJson("dashboard_flow_yearly.json"),
     fetchJson("dashboard_flow_quarterly.json"),
     fetchJson("dashboard_length_monthly.json"),
@@ -45,7 +41,18 @@ export async function loadDashboardData() {
     fetchJson("dashboard_capacity_quarterly.json"),
     fetchJson("dashboard_capacity_yearly.json"),
   ]);
-  return { flow, flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly };
+  return { flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly };
+}
+
+// dashboard_flow_monthly is pre-split by calendar year (see
+// pipeline/export.py's _write_monthly_flow_split) — one year's worth of
+// rows (~35-45MB) is still a lot to fetch on every year switch, so App.jsx
+// caches each year's rows after the first fetch rather than calling this
+// again. A year with no export file (outside the pipeline's export window)
+// resolves to [] instead of throwing, matching MonthPills' existing
+// empty-is-fine rendering.
+export async function loadMonthlyFlowForYear(year) {
+  return fetchJson(`dashboard_flow_monthly_${year}.json`).catch(() => []);
 }
 
 export function filterRows(rows, { populationSegment, dimension, category, month, flowType, projectType }) {
