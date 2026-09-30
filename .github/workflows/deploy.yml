@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, gwen-dev]   # gwen-dev added temporarily for demo deploy; remove after
   workflow_dispatch: {}   # lets you trigger a rebuild manually from the Actions tab
 
 permissions:
