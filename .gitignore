@@ -9,9 +9,8 @@ pipeline/**/__pycache__
 .env
 *.pyc
 
-# Generated flow-detail exports — too large to commit (dashboard_flow_monthly.json
-# alone exceeds GitHub's 100MB per-file push limit once the race-dimension
-# breakdown is included). Regenerate locally with `python -m pipeline.export`.
+# Generated flow-detail export — too large to commit (exceeds GitHub's
+# 100MB per-file push limit once the race-dimension breakdown is included).
+# Regenerate locally with `python -m pipeline.export`. quarterly/yearly
+# exports are small enough to commit and are tracked normally.
 public/data/dashboard_flow_monthly.json
-public/data/dashboard_flow_quarterly.json
-public/data/dashboard_flow_yearly.json

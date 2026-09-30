@@ -33,7 +33,10 @@ async function fetchJson(path) {
 
 export async function loadDashboardData() {
   const [flow, flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly] = await Promise.all([
-    fetchJson("dashboard_flow_monthly.json"),
+    // dashboard_flow_monthly.json is too large to publish on this demo
+    // deploy (see .gitignore) — month-level views (MonthPills) just end up
+    // empty rather than the whole dashboard failing to load.
+    fetchJson("dashboard_flow_monthly.json").catch(() => []),
     fetchJson("dashboard_flow_yearly.json"),
     fetchJson("dashboard_flow_quarterly.json"),
     fetchJson("dashboard_length_monthly.json"),

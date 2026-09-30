@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadDashboardData, filterRows, distinctValues } from "./lib/loadData.js";
 import { DEMOGRAPHIC_TYPES } from "./components/FilterBar.jsx";
-import { yearsIn } from "./lib/sankeyData.js";
 import LengthSection from "./components/sections/LengthSection.jsx";
 import OutflowSection from "./components/sections/OutflowSection.jsx";
 import CapacitySection from "./components/sections/CapacitySection.jsx";
@@ -93,13 +92,17 @@ export default function App() {
     loadDashboardData().then(setData).catch(setError);
   }, []);
 
-  // Derived from dashboard_flow_monthly (the most granular source) —
-  // capacity/length/return-cohort data all share the same export window
-  // (see get_export_window in the pipeline), so this year list applies
-  // across every section that uses one.
+  // Derived from dashboard_flow_yearly — capacity/length/return-cohort data
+  // all share the same export window (see get_export_window in the
+  // pipeline), so this year list applies across every section that uses
+  // one. Deliberately not dashboard_flow_monthly: that export is too large
+  // to publish on every deploy target (see loadData.js), and yearly covers
+  // the exact same year range since it's aggregated from it.
   const years = useMemo(() => {
     if (!data) return [];
-    return yearsIn(filterRows(data.flow, { populationSegment, dimension: "overall", category: "Overall" }));
+    return [...new Set(filterRows(data.flowYearly, { populationSegment, dimension: "overall", category: "Overall" }).map((r) => r.year))].sort(
+      (a, b) => b - a
+    );
   }, [data, populationSegment]);
   // Falls back to the most recent available year whenever the current
   // selection isn't valid (first load, or a population switch whose data
@@ -121,14 +124,17 @@ export default function App() {
     ? selectedDemographicType
     : "overall";
 
-  // Every category dashboard_flow_monthly carries for the selected
+  // Every category dashboard_flow_quarterly carries for the selected
   // demographic type — data-derived, not hardcoded, so it always matches
   // what the export actually contains (see distinctValues/filterRows,
   // loadData.js). "overall" only ever has "Overall". "race_ethnicity" is
   // the one exception: its 8 visible categories are fixed labels (see
   // RACE_ETHNICITY_CATEGORY_DIMENSIONS above), not derived from any single
   // dimension's own distinct category values, since there is no single
-  // "race_ethnicity" dimension in the data anymore.
+  // "race_ethnicity" dimension in the data anymore. Deliberately not
+  // dashboard_flow_monthly: quarterly carries the same dimension/category
+  // coverage and is small enough to publish on every deploy target (see
+  // loadData.js).
   const demographicCategories = useMemo(() => {
     if (!data || demographicType === "overall") return ["Overall"];
     if (demographicType === "race_ethnicity") return Object.keys(RACE_ETHNICITY_CATEGORY_DIMENSIONS);
@@ -136,7 +142,7 @@ export default function App() {
     // derived from the dimension's own raw Included/Not Included values.
     if (demographicType === "unsheltered_in_period") return Object.keys(UNSHELTERED_CATEGORY_LABELS);
     if (demographicType === "project_type_engagement") return Object.keys(PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS);
-    const categories = distinctValues(filterRows(data.flow, { dimension: demographicType }), "category").filter(
+    const categories = distinctValues(filterRows(data.flowQuarterly, { dimension: demographicType }), "category").filter(
       (category) => !HIDDEN_CATEGORIES.has(category)
     );
     if (demographicType === "age_category") {
