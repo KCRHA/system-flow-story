@@ -282,7 +282,26 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     # carried in from prior_month.
     aged_out_ids: set = set()
     if pop_label == "Youth and Young Adults":
-        ever_active_ids = set(prior_active_ids)
+        # Seeded from the population-FILTERED prior-month roster, not raw
+        # prior_active_ids: prior_active_ids is deliberately unfiltered (any
+        # population, any age — see its own comment above) so that
+        # already_active_ids can catch someone who only becomes YYA-countable
+        # mid-period. Reusing that same raw set here would do the opposite of
+        # what "ever_active_ids" is supposed to guard — instead of confirming
+        # a person was genuinely YYA-eligible at some point in the period, it
+        # would let in anyone merely active last month for ANY population
+        # (e.g. a continuously-active 45-year-old single adult), who then
+        # gets swept into aged_out_ids by the second signal below since they
+        # fail today's YYA filter (they were never YYA to begin with). The
+        # "becomes YYA mid-period" case doesn't need the raw seed anyway —
+        # it's already caught by the period_frames union below, since
+        # period_frames are population-filtered per month across the whole
+        # `months` window.
+        if prior_month is not None:
+            prior_pop_df = filter_population(prior_df, pop_label, prior_month)
+            ever_active_ids = set(prior_pop_df.loc[~prior_pop_df["_is_outflow_row"], "PersonalID"])
+        else:
+            ever_active_ids = set()
         for frame in period_frames:
             ever_active_ids |= set(frame.loc[~frame["_is_outflow_row"], "PersonalID"])
 

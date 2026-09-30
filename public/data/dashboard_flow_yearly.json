@@ -13442,7 +13442,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 2539.0,
+    "count": 102.0,
     "suppression_marker": null
   },
   {
@@ -13748,7 +13748,7 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 210.0,
+    "count": 14.0,
     "suppression_marker": null
   },
   {
@@ -13757,7 +13757,7 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2329.0,
+    "count": 88.0,
     "suppression_marker": null
   },
   {
@@ -14270,8 +14270,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 108.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2021,
@@ -14279,8 +14279,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2431.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -14792,7 +14792,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 912.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -14801,7 +14801,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1627.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -15314,8 +15314,8 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 74.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2021,
@@ -15323,8 +15323,8 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2465.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -15836,7 +15836,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1323.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -15845,7 +15845,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1216.0,
+    "count": 58.0,
     "suppression_marker": null
   },
   {
@@ -16358,7 +16358,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 361.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -16367,7 +16367,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2178.0,
+    "count": 86.0,
     "suppression_marker": null
   },
   {
@@ -16880,8 +16880,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -16889,8 +16889,8 @@
     "dimension": "race_mena",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 102.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -17402,7 +17402,7 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 254.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -17411,7 +17411,7 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2285.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -18014,8 +18014,8 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 956.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -18023,7 +18023,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1562.0,
+    "count": 55.0,
     "suppression_marker": null
   },
   {
@@ -18033,7 +18033,7 @@
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2021,
@@ -18041,8 +18041,8 @@
     "dimension": "gender_identity",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -19013,8 +19013,8 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2501.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -19023,7 +19023,7 @@
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2021,
@@ -19031,8 +19031,8 @@
     "dimension": "gender_alignment",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -19841,8 +19841,8 @@
     "dimension": "household_type",
     "category": "Household with Children and Adults",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 24.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -19859,7 +19859,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1847.0,
+    "count": 78.0,
     "suppression_marker": null
   },
   {
@@ -19868,8 +19868,8 @@
     "dimension": "household_type",
     "category": "Unknown Household Type",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -21065,8 +21065,8 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 77.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -21074,7 +21074,7 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 388.0,
+    "count": 25.0,
     "suppression_marker": null
   },
   {
@@ -21083,7 +21083,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 527.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -21092,7 +21092,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 456.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -21101,7 +21101,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 504.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -21110,7 +21110,7 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": 165.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -21119,8 +21119,8 @@
     "dimension": "age_category",
     "category": "Undefined",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -21128,7 +21128,7 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 392.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -22883,7 +22883,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 783.0,
+    "count": 39.0,
     "suppression_marker": null
   },
   {
@@ -22892,7 +22892,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1756.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -23405,7 +23405,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1520.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -23414,7 +23414,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1019.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -23927,7 +23927,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 261.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -23936,7 +23936,7 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2278.0,
+    "count": 86.0,
     "suppression_marker": null
   },
   {
@@ -24449,7 +24449,7 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 941.0,
+    "count": 32.0,
     "suppression_marker": null
   },
   {
@@ -24458,7 +24458,7 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1598.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -24971,7 +24971,7 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 554.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -24980,7 +24980,7 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1985.0,
+    "count": 78.0,
     "suppression_marker": null
   },
   {
@@ -25493,7 +25493,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 982.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -25502,7 +25502,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1557.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -91202,7 +91202,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 2556.0,
+    "count": 112.0,
     "suppression_marker": null
   },
   {
@@ -91508,8 +91508,8 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 209.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -91517,8 +91517,8 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2347.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -92030,8 +92030,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 103.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -92039,8 +92039,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2453.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -92552,7 +92552,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 888.0,
+    "count": 55.0,
     "suppression_marker": null
   },
   {
@@ -92561,7 +92561,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1668.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -93074,8 +93074,8 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 98.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -93083,8 +93083,8 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2458.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -93596,7 +93596,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1357.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -93605,7 +93605,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1199.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -94118,7 +94118,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 340.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -94127,7 +94127,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2216.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -94640,8 +94640,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -94649,8 +94649,8 @@
     "dimension": "race_mena",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 112.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -95162,7 +95162,7 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 247.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -95171,7 +95171,7 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2309.0,
+    "count": 93.0,
     "suppression_marker": null
   },
   {
@@ -95774,7 +95774,7 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 963.0,
+    "count": 47.0,
     "suppression_marker": null
   },
   {
@@ -95783,7 +95783,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1565.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -95793,7 +95793,7 @@
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -96773,7 +96773,7 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2516.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -96783,7 +96783,7 @@
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -97619,7 +97619,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1966.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -97628,8 +97628,8 @@
     "dimension": "household_type",
     "category": "Unknown Household Type",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -98825,8 +98825,8 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 78.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -98834,8 +98834,8 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 441.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -98843,7 +98843,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 547.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -98852,7 +98852,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 529.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -98861,7 +98861,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 469.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -98870,7 +98870,7 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": 146.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -98879,8 +98879,8 @@
     "dimension": "age_category",
     "category": "Undefined",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -98888,8 +98888,8 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 312.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2022,
@@ -100643,7 +100643,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 876.0,
+    "count": 59.0,
     "suppression_marker": null
   },
   {
@@ -100652,7 +100652,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1680.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -101165,7 +101165,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1472.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -101174,7 +101174,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1084.0,
+    "count": 45.0,
     "suppression_marker": null
   },
   {
@@ -101687,7 +101687,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 313.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -101696,7 +101696,7 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2243.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -102209,8 +102209,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1043.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -102218,8 +102218,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1513.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -102731,7 +102731,7 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 481.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -102740,7 +102740,7 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2075.0,
+    "count": 85.0,
     "suppression_marker": null
   },
   {
@@ -103253,7 +103253,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 952.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -103262,7 +103262,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1604.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -168962,7 +168962,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 2198.0,
+    "count": 135.0,
     "suppression_marker": null
   },
   {
@@ -169268,7 +169268,7 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 166.0,
+    "count": 14.0,
     "suppression_marker": null
   },
   {
@@ -169277,7 +169277,7 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2032.0,
+    "count": 121.0,
     "suppression_marker": null
   },
   {
@@ -169790,8 +169790,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 106.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2023,
@@ -169799,8 +169799,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2092.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -170312,7 +170312,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 827.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -170321,7 +170321,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1371.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -170834,7 +170834,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 109.0,
+    "count": 11.0,
     "suppression_marker": null
   },
   {
@@ -170843,7 +170843,7 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2089.0,
+    "count": 124.0,
     "suppression_marker": null
   },
   {
@@ -171356,7 +171356,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1049.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -171365,7 +171365,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1149.0,
+    "count": 84.0,
     "suppression_marker": null
   },
   {
@@ -171878,7 +171878,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 327.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -171887,7 +171887,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1871.0,
+    "count": 109.0,
     "suppression_marker": null
   },
   {
@@ -172922,7 +172922,7 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 219.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -172931,7 +172931,7 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1979.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -173534,7 +173534,7 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 927.0,
+    "count": 58.0,
     "suppression_marker": null
   },
   {
@@ -173543,7 +173543,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1249.0,
+    "count": 72.0,
     "suppression_marker": null
   },
   {
@@ -173553,7 +173553,7 @@
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2023,
@@ -174533,7 +174533,7 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2165.0,
+    "count": 129.0,
     "suppression_marker": null
   },
   {
@@ -174543,7 +174543,7 @@
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2023,
@@ -175361,8 +175361,8 @@
     "dimension": "household_type",
     "category": "Household with Children and Adults",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 37.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -175379,7 +175379,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1465.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -175388,8 +175388,8 @@
     "dimension": "household_type",
     "category": "Unknown Household Type",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -176585,7 +176585,7 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": 123.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -176594,8 +176594,8 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 397.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -176603,7 +176603,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 438.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -176612,7 +176612,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 396.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -176621,7 +176621,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 330.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -176630,8 +176630,8 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -176639,8 +176639,8 @@
     "dimension": "age_category",
     "category": "Undefined",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -176648,8 +176648,8 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 396.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2023,
@@ -178403,7 +178403,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 585.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -178412,7 +178412,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1613.0,
+    "count": 75.0,
     "suppression_marker": null
   },
   {
@@ -178925,7 +178925,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1508.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -178934,7 +178934,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 690.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -179447,7 +179447,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 350.0,
+    "count": 23.0,
     "suppression_marker": null
   },
   {
@@ -179456,7 +179456,7 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1848.0,
+    "count": 112.0,
     "suppression_marker": null
   },
   {
@@ -179969,7 +179969,7 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 481.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -179978,7 +179978,7 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1717.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -180491,7 +180491,7 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 525.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -180500,7 +180500,7 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1673.0,
+    "count": 111.0,
     "suppression_marker": null
   },
   {
@@ -181013,7 +181013,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1194.0,
+    "count": 86.0,
     "suppression_marker": null
   },
   {
@@ -181022,7 +181022,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1004.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -246722,7 +246722,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 2176.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -247028,8 +247028,8 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 107.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -247037,8 +247037,8 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2069.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -247550,8 +247550,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 94.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -247559,8 +247559,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2082.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -248072,7 +248072,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 856.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -248081,7 +248081,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1320.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -248594,8 +248594,8 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 125.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -248603,8 +248603,8 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2051.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -249116,7 +249116,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 956.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -249125,7 +249125,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1220.0,
+    "count": 64.0,
     "suppression_marker": null
   },
   {
@@ -249638,7 +249638,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 347.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -249647,7 +249647,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1829.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -250160,8 +250160,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -250169,8 +250169,8 @@
     "dimension": "race_mena",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 92.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -250682,7 +250682,7 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 182.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -250691,7 +250691,7 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1994.0,
+    "count": 79.0,
     "suppression_marker": null
   },
   {
@@ -251294,8 +251294,8 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 927.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -251303,7 +251303,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1223.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -251313,7 +251313,7 @@
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -251321,8 +251321,8 @@
     "dimension": "gender_identity",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -252293,8 +252293,8 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2140.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -252303,7 +252303,7 @@
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -252311,8 +252311,8 @@
     "dimension": "gender_alignment",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -253121,8 +253121,8 @@
     "dimension": "household_type",
     "category": "Household with Children and Adults",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 23.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -253130,8 +253130,8 @@
     "dimension": "household_type",
     "category": "Household with Only Children",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -253139,7 +253139,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1355.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -254345,7 +254345,7 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": 116.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -254354,8 +254354,8 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 336.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -254363,7 +254363,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 490.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -254372,7 +254372,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 341.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -254381,7 +254381,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 310.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -254390,7 +254390,7 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": 127.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -254408,8 +254408,8 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 456.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2024,
@@ -256163,7 +256163,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 473.0,
+    "count": 37.0,
     "suppression_marker": null
   },
   {
@@ -256172,7 +256172,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1703.0,
+    "count": 55.0,
     "suppression_marker": null
   },
   {
@@ -256685,7 +256685,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1570.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -256694,7 +256694,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 606.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -257207,7 +257207,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 283.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -257216,7 +257216,7 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1893.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -257729,7 +257729,7 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 292.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -257738,7 +257738,7 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1884.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -258251,7 +258251,7 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 588.0,
+    "count": 11.0,
     "suppression_marker": null
   },
   {
@@ -258260,7 +258260,7 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1588.0,
+    "count": 81.0,
     "suppression_marker": null
   },
   {
@@ -258773,7 +258773,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1391.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -258782,7 +258782,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 785.0,
+    "count": 32.0,
     "suppression_marker": null
   },
   {
@@ -324482,7 +324482,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 2157.0,
+    "count": 119.0,
     "suppression_marker": null
   },
   {
@@ -324788,8 +324788,8 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 131.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -324797,8 +324797,8 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2026.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -325310,8 +325310,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 93.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -325319,8 +325319,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2064.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -325832,7 +325832,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 792.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -325841,7 +325841,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1365.0,
+    "count": 71.0,
     "suppression_marker": null
   },
   {
@@ -326354,8 +326354,8 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 137.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -326363,8 +326363,8 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2020.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -326876,7 +326876,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 958.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -326885,7 +326885,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1199.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -327398,7 +327398,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 322.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -327407,7 +327407,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1835.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -327920,8 +327920,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 14.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -327929,8 +327929,8 @@
     "dimension": "race_mena",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2143.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -328442,7 +328442,7 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 191.0,
+    "count": 15.0,
     "suppression_marker": null
   },
   {
@@ -328451,7 +328451,7 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1966.0,
+    "count": 104.0,
     "suppression_marker": null
   },
   {
@@ -329054,7 +329054,7 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 870.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {
@@ -329063,7 +329063,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1238.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -329072,8 +329072,8 @@
     "dimension": "gender_identity",
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
-    "count": 32.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -329081,8 +329081,8 @@
     "dimension": "gender_identity",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": 17.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -330053,7 +330053,7 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2102.0,
+    "count": 106.0,
     "suppression_marker": null
   },
   {
@@ -330062,8 +330062,8 @@
     "dimension": "gender_alignment",
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
-    "count": 38.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -330071,8 +330071,8 @@
     "dimension": "gender_alignment",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": 17.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2025,
@@ -330881,8 +330881,8 @@
     "dimension": "household_type",
     "category": "Household with Children and Adults",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 24.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -330890,8 +330890,8 @@
     "dimension": "household_type",
     "category": "Household with Only Children",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -330899,7 +330899,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1442.0,
+    "count": 95.0,
     "suppression_marker": null
   },
   {
@@ -330908,8 +330908,8 @@
     "dimension": "household_type",
     "category": "Unknown Household Type",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -332105,8 +332105,8 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 92.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -332114,7 +332114,7 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 308.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -332123,7 +332123,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 453.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -332132,7 +332132,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 391.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -332141,7 +332141,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 344.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -332150,7 +332150,7 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": 144.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -332159,8 +332159,8 @@
     "dimension": "age_category",
     "category": "Undefined",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -332168,7 +332168,7 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 385.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -333923,7 +333923,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 503.0,
+    "count": 35.0,
     "suppression_marker": null
   },
   {
@@ -333932,7 +333932,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1654.0,
+    "count": 84.0,
     "suppression_marker": null
   },
   {
@@ -334445,7 +334445,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1528.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -334454,7 +334454,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 629.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -334967,7 +334967,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 255.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -334976,7 +334976,7 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1902.0,
+    "count": 102.0,
     "suppression_marker": null
   },
   {
@@ -335489,8 +335489,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 258.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -335498,8 +335498,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1899.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -336011,7 +336011,7 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 598.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -336020,7 +336020,7 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1559.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -336533,7 +336533,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1422.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -336542,7 +336542,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 735.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -402242,7 +402242,7 @@
     "dimension": "overall",
     "category": "Overall",
     "flow_type": "indiv_aged_out",
-    "count": 3031.0,
+    "count": 71.0,
     "suppression_marker": null
   },
   {
@@ -402548,8 +402548,8 @@
     "dimension": "race_aian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 201.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -402557,8 +402557,8 @@
     "dimension": "race_aian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2830.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -403070,8 +403070,8 @@
     "dimension": "race_asian",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 128.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -403079,8 +403079,8 @@
     "dimension": "race_asian",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2903.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -403592,7 +403592,7 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1151.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -403601,7 +403601,7 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1880.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {
@@ -404114,8 +404114,8 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 173.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -404123,8 +404123,8 @@
     "dimension": "race_nhpi",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2858.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -404636,7 +404636,7 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1266.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -404645,7 +404645,7 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1765.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -405158,7 +405158,7 @@
     "dimension": "race_hl",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 498.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -405167,7 +405167,7 @@
     "dimension": "race_hl",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2533.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -405680,8 +405680,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 23.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -405689,8 +405689,8 @@
     "dimension": "race_mena",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 3008.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -406202,8 +406202,8 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 281.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -406211,8 +406211,8 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2750.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -406814,7 +406814,7 @@
     "dimension": "gender_identity",
     "category": "Female",
     "flow_type": "indiv_aged_out",
-    "count": 1293.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -406823,7 +406823,7 @@
     "dimension": "gender_identity",
     "category": "Male",
     "flow_type": "indiv_aged_out",
-    "count": 1673.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -406832,8 +406832,8 @@
     "dimension": "gender_identity",
     "category": "Non-binary or Other",
     "flow_type": "indiv_aged_out",
-    "count": 35.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -406841,8 +406841,8 @@
     "dimension": "gender_identity",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": 30.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -407813,7 +407813,7 @@
     "dimension": "gender_alignment",
     "category": "Likely Cisgender",
     "flow_type": "indiv_aged_out",
-    "count": 2955.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -407822,8 +407822,8 @@
     "dimension": "gender_alignment",
     "category": "Likely Transgender",
     "flow_type": "indiv_aged_out",
-    "count": 46.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -407831,8 +407831,8 @@
     "dimension": "gender_alignment",
     "category": "Unknown",
     "flow_type": "indiv_aged_out",
-    "count": 30.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -408650,8 +408650,8 @@
     "dimension": "household_type",
     "category": "Household with Only Children",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -408659,7 +408659,7 @@
     "dimension": "household_type",
     "category": "Household without Children",
     "flow_type": "indiv_aged_out",
-    "count": 1958.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -409865,7 +409865,7 @@
     "dimension": "age_category",
     "category": "18 to 24",
     "flow_type": "indiv_aged_out",
-    "count": 105.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -409874,7 +409874,7 @@
     "dimension": "age_category",
     "category": "25 to 34",
     "flow_type": "indiv_aged_out",
-    "count": 502.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -409883,7 +409883,7 @@
     "dimension": "age_category",
     "category": "35 to 44",
     "flow_type": "indiv_aged_out",
-    "count": 651.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -409892,7 +409892,7 @@
     "dimension": "age_category",
     "category": "45 to 54",
     "flow_type": "indiv_aged_out",
-    "count": 554.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -409901,7 +409901,7 @@
     "dimension": "age_category",
     "category": "55 to 64",
     "flow_type": "indiv_aged_out",
-    "count": 461.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -409910,7 +409910,7 @@
     "dimension": "age_category",
     "category": "65+",
     "flow_type": "indiv_aged_out",
-    "count": 188.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -409928,7 +409928,7 @@
     "dimension": "age_category",
     "category": "Under 18",
     "flow_type": "indiv_aged_out",
-    "count": 570.0,
+    "count": 0.0,
     "suppression_marker": null
   },
   {
@@ -411683,7 +411683,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 618.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -411692,7 +411692,7 @@
     "dimension": "unsheltered_in_period",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2413.0,
+    "count": 45.0,
     "suppression_marker": null
   },
   {
@@ -412205,7 +412205,7 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 2087.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -412214,7 +412214,7 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 944.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -412727,8 +412727,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 333.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -412736,8 +412736,8 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2698.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -413249,7 +413249,7 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 443.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -413258,7 +413258,7 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2588.0,
+    "count": 58.0,
     "suppression_marker": null
   },
   {
@@ -413771,8 +413771,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 725.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "year": 2026,
@@ -413780,8 +413780,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 2306.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -414293,7 +414293,7 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 1943.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -414302,7 +414302,7 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 1088.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
