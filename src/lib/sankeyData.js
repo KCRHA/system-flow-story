@@ -61,6 +61,27 @@ export function monthsInYear(monthlyRows, year) {
   return [...new Set(monthlyRows.filter((r) => r.month.slice(0, 4) === String(year)).map((r) => r.month))].sort();
 }
 
+// The quarter-start string ("YYYY-MM-DD", matching quartersInYear's own
+// convention) that `month` ("YYYY-MM-DD") falls within — UTC-safe for the
+// same reason quarterAbbrev (QuarterPills) and formatQuarterLabel
+// (OutflowSection) are.
+export function quarterStartOfMonth(month) {
+  const d = new Date(month);
+  return new Date(Date.UTC(d.getUTCFullYear(), Math.floor(d.getUTCMonth() / 3) * 3, 1)).toISOString().slice(0, 10);
+}
+
+/** Every month present in `monthlyRows` that falls within `quarter` (one of
+ * quartersInYear's own quarter-start strings) — the (up to) 3 calendar
+ * months that make it up, sorted ascending. Used to scope the month-pills
+ * row to whichever quarter pill is currently active (see OutflowSection) —
+ * works the same whether `quarter` is a "complete" quarter (one
+ * quartersInYear actually lists) or not, since it filters the monthly
+ * rows directly rather than requiring a matching quarterly row to exist. */
+export function monthsInQuarter(monthlyRows, quarter) {
+  if (!quarter) return [];
+  return [...new Set(monthlyRows.map((r) => r.month))].filter((month) => quarterStartOfMonth(month) === quarter).sort();
+}
+
 // Every number here comes straight from the pipeline's indiv_* flow_types
 // (build_flow.py's _partition_by_individual) — each of the four inflow
 // buckets (already active / newly homeless / return from housed / return

@@ -44,6 +44,13 @@
   margin-top: 0;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
 .section-heading {
   margin-bottom: 0.25rem;
 }
@@ -97,75 +104,183 @@
   color: var(--text-navy);
 }
 
-.demographic-note {
-  text-align: center;
-  font-style: italic;
-  color: var(--text-gray);
-  font-size: 0.95rem;
-  max-width: 66%;
-  margin: 0 auto 1.5rem;
+/* Hover-to-open "ⓘ" popover (InfoIcon) — used standalone in the section
+   header (definitions glossary) and next to the Category filter label
+   (demographic-specific notes). */
+.info-icon {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.info-icon-trigger {
+  display: inline-flex;
+  color: var(--text-navy);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.info-icon-trigger-lg {
+  opacity: 0.85;
+}
+
+.info-icon-trigger-lg:hover {
+  opacity: 1;
+}
+
+.info-icon-popover {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  z-index: 20;
+  width: max-content;
+  max-width: 280px;
+  background: #fff;
+  color: var(--text-dark);
+  border: 1px solid var(--gray-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(23, 43, 105, 0.18);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* `--nudge` is a JS-computed px correction (InfoIcon's useLayoutEffect) that
+   pulls the popover back onscreen whenever its CSS-positioned place would
+   run it off the left or right edge of the viewport — e.g. a narrow window
+   with a long selected category. 0px (its default) when no correction is
+   needed, so this is a no-op in the common case. */
+.info-icon-popover.align-center {
+  left: 50%;
+  transform: translateX(calc(-50% + var(--nudge, 0px)));
+}
+
+.info-icon-popover.align-end {
+  right: 0;
+  transform: translateX(var(--nudge, 0px));
+}
+
+.info-icon-popover p {
+  margin: 0;
+}
+
+.info-icon-popover p + p {
+  margin-top: 0.5rem;
+}
+
+.definitions-list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.definitions-divider {
+  border: none;
+  border-top: 1px solid var(--gray-light);
+  margin: 0.75rem 0;
+}
+
+.definitions-item dt {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  color: var(--text-navy);
+  font-size: 0.85rem;
+}
+
+.definitions-item dd {
+  margin: 0.1rem 0 0;
+  color: var(--text-dark);
+}
+
+/* Legend for the KPI cards' trend arrows (see KpiCard's .kpi-direction) —
+   same good/bad/neutral tones as the arrows themselves, so the two stay
+   visually tied together. Tints are derived from the approved chart/accent
+   tokens rather than separate hardcoded colors, so every color used here
+   stays in the KCRHA palette (see tokens.css). */
+.arrow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--gray-dark);
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.legend-chip.positive {
+  background: color-mix(in srgb, var(--color-teal) 25%, white);
+  color: var(--color-teal);
+}
+
+.legend-chip.concerning {
+  background: color-mix(in srgb, var(--chart-5) 35%, white);
+  color: color-mix(in srgb, var(--chart-5) 65%, var(--text-navy));
+}
+
+.legend-chip.neutral {
+  background: var(--bg-suppressed);
+  color: var(--gray-dark);
 }
 
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.75rem;
-  padding: 0 1.5rem;
   margin-bottom: 1.5rem;
 }
 
 .filter-bar label {
   display: flex;
   flex-direction: column;
-  font-size: 0.75rem;
-  color: var(--text-gray);
-  gap: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+  gap: 0.4rem;
+}
+
+.filter-bar-label-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .filter-bar select {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  padding: 0.4rem 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 400;
+  padding: 0.55rem 0.75rem;
   border: 1px solid var(--gray-light);
-  border-radius: 4px;
-  color: var(--text-dark);
+  border-radius: 8px;
+  color: var(--text-navy);
   background: #fff;
 }
 
 .kpi-row-month {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
   font-family: var(--font-headline);
   font-weight: 700;
   color: var(--text-navy);
-  font-size: 1.1rem;
+  font-size: 1.75rem;
   margin: 0 0 0.75rem;
-}
-
-.kpi-month-nav {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.kpi-month-nav button {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  line-height: 1;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid var(--gray-light);
-  border-radius: 4px;
-  background: #fff;
-  color: var(--text-dark);
-  cursor: pointer;
-}
-
-.kpi-month-nav button:disabled {
-  color: var(--gray-mid);
-  cursor: not-allowed;
 }
 
 .kpi-rows {
@@ -335,6 +450,41 @@
   }
 }
 
+/* Quarter pills, the Full/Qx <-> Months divider, and the scoped month
+   pills all sit in one row (matching the approved mockup), not stacked on
+   separate lines — see OutflowSection's period-pills-row. */
+.period-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.period-pills-row .month-pills {
+  margin: 0;
+}
+
+.period-pills-divider {
+  align-self: stretch;
+  width: 1px;
+  background: var(--gray-light);
+}
+
+.month-pills-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.month-pills-label {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  white-space: nowrap;
+}
+
 .month-pills {
   display: flex;
   flex-wrap: wrap;
@@ -344,12 +494,13 @@
 
 .month-pill {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  padding: 0.4rem 0.9rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.1rem;
   border: 1px solid var(--gray-light);
   border-radius: 999px;
   background: #fff;
-  color: var(--text-dark);
+  color: var(--text-navy);
   cursor: pointer;
 }
 

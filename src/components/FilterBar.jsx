@@ -1,5 +1,5 @@
 const POPULATION_SEGMENTS = [
-  { value: "all_population", label: "All Population" },
+  { value: "all_population", label: "All population" },
   { value: "yya", label: "Youth and Young Adults" },
   { value: "chronic", label: "Chronically Homeless" },
   { value: "single_adults", label: "Single Adults" },
@@ -60,10 +60,16 @@ export function DemographicTypeSelect({ value, onChange, options = DEMOGRAPHIC_T
 // is the caller's own data-derived category list for that type (see
 // App.jsx), not a hardcoded one, so it always matches what's actually in
 // the export. Disabled once there's nothing to pick beyond "Overall".
-export function DemographicCategorySelect({ options, value, onChange, disabled }) {
+// `info`, when given (see OutflowSection's demographicNote), renders an
+// InfoIcon next to the label — omitted entirely whenever the current
+// demographic type needs no clarification.
+export function DemographicCategorySelect({ options, value, onChange, disabled, info }) {
   return (
     <label>
-      Category
+      <span className="filter-bar-label-text">
+        Category
+        {info}
+      </span>
       <select value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled}>
         {disabled ? (
           <option value="Overall">Overall</option>
@@ -79,7 +85,11 @@ export function DemographicCategorySelect({ options, value, onChange, disabled }
   );
 }
 
-export function YearSelect({ years, value, onChange }) {
+// `partialYears` (a Set of year numbers), when given, suffixes those
+// options as "2026 (partial year)" — OutflowSection passes the years that
+// don't yet have all 4 quarters present in dashboard_flow_quarterly (same
+// signal QuarterPills' own throughLabel uses for the Full year pill).
+export function YearSelect({ years, value, onChange, partialYears }) {
   return (
     <label>
       Year
@@ -87,6 +97,7 @@ export function YearSelect({ years, value, onChange }) {
         {years.map((year) => (
           <option key={year} value={year}>
             {year}
+            {partialYears?.has(year) ? " (partial year)" : ""}
           </option>
         ))}
       </select>

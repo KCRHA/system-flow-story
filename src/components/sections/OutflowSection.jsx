@@ -1,12 +1,38 @@
 import { useMemo, useState } from "react";
 import KpiCard from "../KpiCard.jsx";
+import InfoIcon from "../InfoIcon.jsx";
 import QuarterPills from "../charts/QuarterPills.jsx";
 import MonthPills from "../charts/MonthPills.jsx";
 import FlowSankeyChart from "../charts/FlowSankeyChart.jsx";
 import HomelessnessTrendChart from "../charts/HomelessnessTrendChart.jsx";
 import FilterBar, { PopulationSegmentSelect, YearSelect, DemographicTypeSelect, DemographicCategorySelect } from "../FilterBar.jsx";
 import { filterRows, distinctValues, resolveCell, INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
-import { quartersInYear, monthsInYear, buildFlowPeriod } from "../../lib/sankeyData.js";
+import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod } from "../../lib/sankeyData.js";
+
+// Plain-text definitions for every flow-type term shown in this section's
+// KPI cards and sankey, for the section header's definitions popover —
+// content supplied directly by the KCRHA team, not derived/guessed from the
+// data pipeline. "Aged Out" is YYA-specific (see OutflowSection's own "Aged
+// Out" KpiCard, which is likewise hidden for every other population
+// segment).
+// Split inflow/outflow, matching sankeyData.js's own INFLOW_REASONS/
+// OUTFLOW_REASONS grouping — a horizontal rule separates the two groups in
+// the popover (see definitionsContent) so "which side of the sankey is
+// this term on" reads at a glance.
+const INFLOW_TERM_DEFINITIONS = [
+  { term: "Newly Homeless", definition: "Experiencing homelessness with no prior record of homelessness in the system within the last two years." },
+  { term: "Return from Housed", definition: "Previously housed but experiencing homelessness again." },
+  { term: "Return from Inactive", definition: "Experiencing homelessness again after 30 or more days with no contact." },
+];
+const OUTFLOW_TERM_DEFINITIONS = [
+  { term: "Inactive", definition: "Was experiencing homelessness; 30 or more days with no contact." },
+  { term: "Permanently Housed", definition: "Was experiencing homelessness and has now moved into housing." },
+  { term: "Deceased", definition: "Passed away while experiencing homelessness." },
+];
+const AGED_OUT_DEFINITION = {
+  term: "Aged Out",
+  definition: "Individual turned 25 while experiencing homelessness and is no longer included in YYA reporting.",
+};
 
 // Same UTC-safe parsing as QuarterPills/ReturnCohortChart's quarterLabel —
 // "YYYY-MM-DD" parses as UTC midnight, so reading it back with local-time
@@ -15,6 +41,13 @@ function formatQuarterLabel(quarter) {
   const d = new Date(quarter);
   const q = Math.floor(d.getUTCMonth() / 3) + 1;
   return `Q${q} ${d.getUTCFullYear()}`;
+}
+
+// Same as formatQuarterLabel but without the year — for the "Months in Q2:"
+// label above the scoped month-pills row, where the year is already shown
+// elsewhere on screen.
+function quarterAbbrevLabel(quarter) {
+  return `Q${Math.floor(new Date(quarter).getUTCMonth() / 3) + 1}`;
 }
 
 function formatMonthLabel(month) {
@@ -124,6 +157,14 @@ export default function OutflowSection({
   const allMonths = useMemo(() => distinctValues(scopedMonthly, "month").sort(), [scopedMonthly]);
   const quartersForYear = useMemo(() => (year ? quartersInYear(scopedQuarterly, year) : []), [scopedQuarterly, year]);
   const monthsForYear = useMemo(() => (year ? monthsInYear(scopedMonthly, year) : []), [scopedMonthly, year]);
+  // Every year in the Year dropdown that doesn't yet have all 4 quarters in
+  // dashboard_flow_quarterly — labeled "(partial year)" there (see
+  // YearSelect) so it reads the same as the Full year pill's own "(through
+  // Aug)" suffix.
+  const partialYears = useMemo(
+    () => new Set(years.filter((y) => quartersInYear(scopedQuarterly, y).length < 4)),
+    [years, scopedQuarterly]
+  );
   // Falls back to Full Year (null) whenever selectedQuarter isn't valid for
   // the current population + year — either it belongs to a different year
   // (a year switch, which explicitly resets it below) or this population
@@ -217,29 +258,6 @@ export default function OutflowSection({
   // out of the same `quarter`/`month` derivations for free (selectedQuarter/
   // selectedMonth's year no longer matches the new `year` prop), so no extra
   // handler is needed for it.
-  const quarterIdx = quarter ? allQuarters.indexOf(quarter) : -1;
-  const stepQuarter = (delta) => {
-    const nextIdx = quarterIdx + delta;
-    if (nextIdx < 0 || nextIdx >= allQuarters.length) return;
-    const nextQuarter = allQuarters[nextIdx];
-    selectQuarter(nextQuarter);
-    // Stepping past a year boundary (e.g. Q1 -> prior Q4) needs to move
-    // the *shared* year selector too, not just the local quarter — React
-    // batches this with the selectQuarter above, so there's no in-between
-    // render where they disagree.
-    const nextYear = Number(nextQuarter.slice(0, 4));
-    if (nextYear !== year) onYearChange(nextYear);
-  };
-
-  const monthIdx = month ? allMonths.indexOf(month) : -1;
-  const stepMonth = (delta) => {
-    const nextIdx = monthIdx + delta;
-    if (nextIdx < 0 || nextIdx >= allMonths.length) return;
-    const nextMonth = allMonths[nextIdx];
-    selectMonth(nextMonth);
-    const nextYear = Number(nextMonth.slice(0, 4));
-    if (nextYear !== year) onYearChange(nextYear);
-  };
 
   // The trend chart's own trailing (up to 3-year, 12-quarter) window always
   // ends at whatever's currently selected above: the exact quarter when a
@@ -284,10 +302,15 @@ export default function OutflowSection({
   // demographic type here, where a person falls into exactly one category.
   // That's easy to misread as a data error (category totals can add up to
   // more than the overall total), so it's called out explicitly whenever
-  // this type is selected, not just when a specific category is.
+  // this type is selected, not just when a specific category is — as an
+  // InfoIcon next to the Category filter (see DemographicCategorySelect's
+  // `info` prop) rather than an always-visible paragraph, so it doesn't
+  // clutter the default "All" view. null whenever the current demographic
+  // type needs no clarification, which also hides the icon entirely (see
+  // FilterBar.jsx's DemographicCategorySelect).
   const demographicNote =
     demographicType === "race_ethnicity" ? (
-      <p className="demographic-note">
+      <p>
         In HMIS, individuals can select more than one race or ethnicity. For the most complete picture, this filter
         includes everyone who selected a given category, whether alone or in combination with another.
       </p>
@@ -299,7 +322,7 @@ export default function OutflowSection({
       // enrollment overlaps any part of the selected period, not just
       // enrollments still open at the period's end.
       demographicType === "project_type_engagement" && (
-        <p className="demographic-note">
+        <p>
           A person can be engaged with more than one project type in the same period, so category totals can add up
           to more than the overall total. "Engaged" includes anyone with an enrollment overlapping any part of the
           selected period, not just enrollments still open at the end of it.
@@ -307,26 +330,84 @@ export default function OutflowSection({
       )
     );
 
+  // The definitions popover's content (see the section header's InfoIcon) —
+  // flow-term glossary, split into an inflow group and an outflow group
+  // (divided by a rule, matching the sankey's own left/right columns), with
+  // "Aged Out" appended to the outflow group only for the YYA population
+  // segment, same gating as the "Aged Out" KpiCard itself further down.
+  const definitionsContent = (
+    <>
+      <dl className="definitions-list">
+        {INFLOW_TERM_DEFINITIONS.map(({ term, definition }) => (
+          <div className="definitions-item" key={term}>
+            <dt>{term}</dt>
+            <dd>{definition}</dd>
+          </div>
+        ))}
+      </dl>
+      <hr className="definitions-divider" />
+      <dl className="definitions-list">
+        {[...OUTFLOW_TERM_DEFINITIONS, ...(populationSegment === "yya" ? [AGED_OUT_DEFINITION] : [])].map(({ term, definition }) => (
+          <div className="definitions-item" key={term}>
+            <dt>{term}</dt>
+            <dd>{definition}</dd>
+          </div>
+        ))}
+      </dl>
+    </>
+  );
+
+  // Months not covered by any complete quarter (dashboard_flow_quarterly
+  // never carries one still in progress — see quartersInYear's own
+  // comment) — the trailing partial-quarter months of the current year
+  // (e.g. July/August before Q3 is complete), just for naming the "Full
+  // year (through Aug)" pill below.
+  const trailingMonths = useMemo(
+    () => monthsForYear.filter((m) => !quartersForYear.includes(quarterStartOfMonth(m))),
+    [monthsForYear, quartersForYear]
+  );
+  // "Aug" suffix for the "Full Year (through Aug)" pill label — only once
+  // the selected year isn't complete yet (same quartersForYear.length < 4
+  // signal previousPeriod/the chart-note caveat elsewhere in this file use)
+  // and there's actually a trailing month to name.
+  const throughLabel = useMemo(() => {
+    if (quartersForYear.length >= 4 || trailingMonths.length === 0) return null;
+    return new Date(trailingMonths.at(-1)).toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+  }, [quartersForYear, trailingMonths]);
+
+  // Month pills always mirror whatever's selected on the left: that
+  // quarter's 3 months when a quarter pill is active, every month in the
+  // year otherwise (Full Year, or a specific month picked directly — which
+  // clears `quarter` per the mutual-exclusivity handling above, but doesn't
+  // correspond to any one quarter pill either, so the full year's months
+  // stay the relevant set to keep browsing from).
+  const monthsForQuarter = useMemo(() => monthsInQuarter(scopedMonthly, quarter), [scopedMonthly, quarter]);
+  const activeMonths = quarter ? monthsForQuarter : monthsForYear;
+
   if (!period) {
     return (
       <section className="section">
-        <h2 className="section-heading">Entries, Actively Experiencing Homelessness &amp; Exits</h2>
-        <p className="section-subhead">
-          How many people are entering, staying active in, and leaving our homelessness response system? Pick a
-          year, then click a quarter or a month to zoom into it.
-        </p>
+        <div className="section-header">
+          <div>
+            <h2 className="section-heading">How are people experiencing homelessness coming into our system, and where are they going?</h2>
+            <p className="section-subhead">Pick a year, then a quarter or month.</p>
+          </div>
+          <InfoIcon label="Show definitions" size="lg" align="end">
+            {definitionsContent}
+          </InfoIcon>
+        </div>
         <FilterBar>
           <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
-          <YearSelect years={years} value={year} onChange={onYearChange} />
+          <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
           <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
           <DemographicCategorySelect
             options={demographicCategoryOptions}
             value={demographicCategory}
             onChange={onDemographicCategoryChange}
             disabled={demographicType === "overall"}
+            info={demographicNote && <InfoIcon label="About this category" align="end">{demographicNote}</InfoIcon>}
           />
         </FilterBar>
-        {demographicNote}
         <p className="suppressed-note">No data available for this population.</p>
       </section>
     );
@@ -350,50 +431,60 @@ export default function OutflowSection({
 
   return (
     <section className="section">
-      <h2 className="section-heading">Entries, Actively Experiencing Homelessness &amp; Exits</h2>
-      <p className="section-subhead">
-        How many people are entering, staying active in, and leaving our homelessness response system? Pick a year,
-        then click a quarter or a month to zoom into it: the cards and chart below always show the same period.
-      </p>
+      <div className="section-header">
+        <div>
+          <h2 className="section-heading">How are people experiencing homelessness coming into our system, and where are they going?</h2>
+          <p className="section-subhead">Pick a year, then a quarter or month.</p>
+        </div>
+        <InfoIcon label="Show definitions" size="lg" align="end">
+          {definitionsContent}
+        </InfoIcon>
+      </div>
       <FilterBar>
         <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
-        <YearSelect years={years} value={year} onChange={onYearChange} />
+        <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
         <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
         <DemographicCategorySelect
           options={demographicCategoryOptions}
           value={demographicCategory}
           onChange={onDemographicCategoryChange}
           disabled={demographicType === "overall"}
+          info={demographicNote && <InfoIcon label="About this category" align="end">{demographicNote}</InfoIcon>}
         />
       </FilterBar>
-      {demographicNote}
       <div className="kpi-row-month">
         <span>{periodLabel}</span>
-        <div className="kpi-month-nav">
-          <button
-            type="button"
-            aria-label={month ? "Show an older month" : "Show an older quarter"}
-            disabled={month ? monthIdx <= 0 : !quarter || quarterIdx <= 0}
-            onClick={() => (month ? stepMonth(-1) : stepQuarter(-1))}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label={month ? "Show a more recent month" : "Show a more recent quarter"}
-            disabled={month ? monthIdx >= allMonths.length - 1 : !quarter || quarterIdx >= allQuarters.length - 1}
-            onClick={() => (month ? stepMonth(1) : stepQuarter(1))}
-          >
-            ›
-          </button>
-        </div>
+        {previousPeriodLabel && (
+          <div className="arrow-legend">
+            <span>Arrows compare to {previousPeriodLabel}:</span>
+            <span className="legend-chip positive">Positive change</span>
+            <span className="legend-chip concerning">Concerning change</span>
+            <span className="legend-chip neutral">Neutral</span>
+          </div>
+        )}
       </div>
-      <QuarterPills quarters={quartersForYear} selected={quarter} fullYearActive={!quarter && !month} onSelect={selectQuarter} />
-      {flowMonthlyLoading && monthsForYear.length === 0 ? (
-        <p className="month-pills-loading">Loading months…</p>
-      ) : (
-        <MonthPills months={monthsForYear} selected={month} onSelect={selectMonth} />
-      )}
+      <div className="period-pills-row">
+        <QuarterPills
+          quarters={quartersForYear}
+          selected={quarter}
+          fullYearActive={!quarter && !month}
+          onSelect={selectQuarter}
+          throughLabel={throughLabel}
+        />
+        {flowMonthlyLoading && monthsForYear.length === 0 ? (
+          <p className="month-pills-loading">Loading months…</p>
+        ) : (
+          activeMonths.length > 0 && (
+            <>
+              <span className="period-pills-divider" aria-hidden="true" />
+              <div className="month-pills-group">
+                {quarter && <span className="month-pills-label">Months in {quarterAbbrevLabel(quarter)}:</span>}
+                <MonthPills months={activeMonths} selected={month} onSelect={selectMonth} />
+              </div>
+            </>
+          )
+        )}
+      </div>
       {insufficientPopulation ? (
         <p className="suppressed-note">
           Population too small to safely display for this combination of population, demographic, and period. Try a

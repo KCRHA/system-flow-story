@@ -14,12 +14,17 @@ function quarterAbbrev(quarter) {
  * the active period — distinct from `selected == null`, since a sibling
  * MonthPills row can also leave `selected` null while a month is active
  * (see OutflowSection's mutual-exclusivity handling); defaults to
- * `selected == null` for callers with no month row to worry about. */
-export default function QuarterPills({ quarters, selected, onSelect, fullYearActive = selected == null }) {
+ * `selected == null` for callers with no month row to worry about.
+ * `throughLabel` ("Aug"), when given, suffixes the Full year pill as
+ * "Full year (through Aug)" — OutflowSection passes this only when the
+ * selected year is still in progress (dashboard_flow_quarterly never
+ * carries an incomplete quarter, so there's no quarter pill covering those
+ * trailing months — see its own trailingMonths/throughLabel comment). */
+export default function QuarterPills({ quarters, selected, onSelect, fullYearActive = selected == null, throughLabel }) {
   return (
     <div className="month-pills">
       <button type="button" className={`month-pill${fullYearActive ? " is-active" : ""}`} onClick={() => onSelect(null)}>
-        Full Year
+        Full year{throughLabel ? ` (through ${throughLabel})` : ""}
       </button>
       {quarters.map((quarter) => (
         <button
