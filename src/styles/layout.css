@@ -94,6 +94,19 @@
   margin-top: 0.25rem;
 }
 
+/* The "current-year totals are partial" caveat under the KPI cards — dark
+   blue and left-aligned per the approved mockup, unlike .chart-note's gray
+   centered italic (shared with CapacitySection, so left untouched rather
+   than restyled here). */
+.partial-year-note {
+  font-size: 0.95rem;
+  color: var(--text-navy);
+  font-style: italic;
+  text-align: left;
+  max-width: 66%;
+  margin: 0.75rem auto 0;
+}
+
 .chart-analysis {
   color: var(--text-dark);
   font-size: 1.1rem;
@@ -168,6 +181,29 @@
 
 .info-icon-popover p + p {
   margin-top: 0.5rem;
+}
+
+/* Dark variant for the KPI cards' per-term definitions (see KpiCard's
+   `info` prop) — a navy box with light text, matching the approved KPI
+   card mockup, instead of the white popover used elsewhere. */
+.info-icon-popover-dark {
+  background: var(--text-navy);
+  color: #fff;
+}
+
+.info-icon-popover-dark .info-icon-popover-title {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+
+.info-icon-popover-dark a {
+  color: var(--chart-7);
+  font-weight: 700;
+}
+
+.info-icon-popover-dark a:hover {
+  color: #fff;
 }
 
 .definitions-list {
@@ -290,6 +326,13 @@
   margin-bottom: 2rem;
 }
 
+/* "Entered the system in..." / "Exited the system in..." — labels the
+   inflow and outflow card rows below it (see OutflowSection), matching the
+   approved mockup. */
+.kpi-group-heading {
+  margin: 0;
+}
+
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -299,62 +342,94 @@
 /* The "actively homeless" row: one card, deliberately the largest/loudest
    number on the page — auto-fit already stretches a lone grid item to
    fill the row's full width, so only the enlarged typography is needed
-   here. */
+   here. `position: relative` anchors its trend pill, which (unlike every
+   other card's) sits top-right next to the label instead of below the
+   value, per the approved mockup. */
 .kpi-row-hero .kpi-card {
-  padding: 1.5rem 1.75rem;
+  position: relative;
+  padding: 1.75rem;
+  background: color-mix(in srgb, var(--color-navy) 5%, white);
 }
 
-.kpi-row-hero .kpi-label {
+.kpi-row-hero .kpi-label-row .kpi-label {
   font-size: 1rem;
 }
 
-.kpi-row-hero .kpi-value {
-  font-size: 3rem;
+/* .kpi-row-hero .kpi-card .kpi-value (3 classes), not just ".kpi-row-hero
+   .kpi-value" (2) — needs to outrank .kpi-card .kpi-value below on
+   specificity, not just source order, since both match this same element
+   and a future reorder of either rule would otherwise silently flip which
+   one wins. */
+.kpi-row-hero .kpi-card .kpi-value {
+  font-size: 4.5rem;
+  /* The body's inherited line-height (1.5) turns into a lot of empty space
+     below the digits at this size — a 4.5rem line box is 108px tall, but
+     digits have no descenders to fill the bottom third of it, so the card
+     read as having much more bottom padding than top/left/right. Tightened
+     to 1 so the visible gap around the number actually matches the card's
+     padding on every side. */
+  line-height: 1;
+}
+
+.kpi-row-hero .kpi-trend-pill {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.75rem;
+  margin-top: 0;
 }
 
 .kpi-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   border: 1px solid var(--gray-light);
   border-radius: 8px;
   padding: 1rem 1.1rem;
-  text-align: center;
+  text-align: left;
+}
+
+.kpi-label-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.35rem;
 }
 
 .kpi-card .kpi-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.kpi-description {
   font-size: 0.8rem;
   color: var(--text-gray);
-  margin-bottom: 0.35rem;
+  margin: 0 0 0.5rem;
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .kpi-card .kpi-value {
   font-family: var(--font-headline);
-  font-size: 1.6rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: var(--text-navy);
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.4rem;
 }
 
-.kpi-percent {
+.kpi-percent-total {
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 400;
-  font-style: italic;
-  color: var(--gray-mid);
+  color: var(--text-dark);
 }
 
-.kpi-direction {
-  font-size: 1rem;
-}
-.kpi-direction.good {
-  color: var(--color-teal);
-}
-.kpi-direction.bad {
-  color: var(--chart-5);
-}
-.kpi-direction.neutral {
-  color: var(--gray-mid);
+.kpi-trend-pill {
+  margin-top: 0.6rem;
 }
 
 .scrolly {

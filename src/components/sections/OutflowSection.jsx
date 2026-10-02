@@ -19,19 +19,83 @@ import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, bui
 // OUTFLOW_REASONS grouping — a horizontal rule separates the two groups in
 // the popover (see definitionsContent) so "which side of the sankey is
 // this term on" reads at a glance.
+//
+// Bodies here match KPI_CARD_INFO below word-for-word (minus each entry's
+// own title, which is redundant with `term` in this list) — one glossary of
+// plain-language definitions, shown two ways: all at once here, or one at a
+// time next to its own KPI card.
 const INFLOW_TERM_DEFINITIONS = [
-  { term: "Newly Homeless", definition: "Experiencing homelessness with no prior record of homelessness in the system within the last two years." },
-  { term: "Return from Housed", definition: "Previously housed but experiencing homelessness again." },
-  { term: "Return from Inactive", definition: "Experiencing homelessness again after 30 or more days with no contact." },
+  { term: "Newly experiencing homelessness", definition: "The person has no record of a prior experience of homelessness, or their last one ended more than 2 years ago." },
+  { term: "Returned from housed", definition: "The person moved into housing after their last experience of homelessness, then became homeless again within 2 years." },
+  { term: "Returned from inactive", definition: "The person's last experience of homelessness ended due to inactivity (30+ days with no recorded contact), and they became homeless again within 2 years." },
 ];
 const OUTFLOW_TERM_DEFINITIONS = [
-  { term: "Inactive", definition: "Was experiencing homelessness; 30 or more days with no contact." },
-  { term: "Permanently Housed", definition: "Was experiencing homelessness and has now moved into housing." },
-  { term: "Deceased", definition: "Passed away while experiencing homelessness." },
+  { term: "Inactive", definition: "No qualifying activity recorded in HMIS for more than 30 days. This does not mean the person found housing." },
+  { term: "Permanently housed", definition: "The person moved into permanent housing, based on their most recent activity in the system." },
+  { term: "Deceased", definition: "The person passed away while experiencing homelessness." },
 ];
 const AGED_OUT_DEFINITION = {
   term: "Aged Out",
   definition: "Individual turned 25 while experiencing homelessness and is no longer included in YYA reporting.",
+};
+
+// KCRHA policy doc linked from every KPI-card popover's "See full
+// definitions" (see KPI_CARD_INFO below) — the only definitions doc we
+// have today, so every term points here for now even though it's written
+// around the active/inactive distinction specifically; swap in per-term
+// URLs later if/when more specific docs exist for the other terms.
+const FULL_DEFINITIONS_LINK = "https://kingcounty.bitfocus.com/hubfs/Youth%20By-Name%20List%20Active_Inactive%20Policy%20(1).pdf?hsLang=en";
+
+// Per-card hover definitions (see KpiCard's `info` prop) — same content as
+// the INFLOW_/OUTFLOW_TERM_DEFINITIONS glossary above, just addressed by
+// flow-type key instead of listed all at once, plus a `title` (shown bold
+// in the popover) matching each card's own label.
+const KPI_CARD_INFO = {
+  experienced: {
+    title: "Active in Our System",
+    body: "Everyone with recorded activity indicating homelessness at some point during this period.",
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  newly_homeless: {
+    title: "Newly Experiencing Homelessness",
+    body: INFLOW_TERM_DEFINITIONS[0].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  return_from_housed: {
+    title: "Returned from Housed",
+    body: INFLOW_TERM_DEFINITIONS[1].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  return_from_inactive: {
+    title: "Returned from Inactive",
+    body: INFLOW_TERM_DEFINITIONS[2].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  inactive: {
+    title: "Inactive",
+    body: OUTFLOW_TERM_DEFINITIONS[0].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  permanently_housed: {
+    title: "Permanently Housed",
+    body: OUTFLOW_TERM_DEFINITIONS[1].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+  deceased: {
+    title: "Deceased",
+    body: OUTFLOW_TERM_DEFINITIONS[2].definition,
+    linkHref: FULL_DEFINITIONS_LINK,
+  },
+};
+
+// Short, always-visible line shown directly under each outflow card's label
+// (see KpiCard's `description` prop) — distinct from KPI_CARD_INFO's longer
+// hover definition above. Outflow-only, per the approved mockup: the inflow
+// and hero cards don't carry one.
+const KPI_CARD_DESCRIPTION = {
+  inactive: "No activity for 30+ days, not confirmed housed",
+  permanently_housed: "Moved into permanent housing",
+  deceased: "Exit destination recorded as deceased",
 };
 
 // Same UTC-safe parsing as QuarterPills/ReturnCohortChart's quarterLabel —
@@ -76,34 +140,25 @@ function trendDirectionFor(current, previous) {
   return "flat";
 }
 
-// A hover sentence for a KPI card's trend arrow, covering every case
-// trendDirectionFor above can produce an arrow for:
-// - both sides known and different: an exact percent ("This is a 12%
-//   increase from 8,404 in Q1 2026.").
+// Short, always-visible text for a KPI card's trend pill (see KpiCard's
+// `trendText` prop) — covers every case trendDirectionFor above can produce
+// an arrow for, condensed to pill length rather than a full sentence:
+// - both sides known and different: an exact percent ("12% vs. Q1 2026").
 // - both sides known and equal: called out as unchanged, not a 0% change.
-// - a real (non-suppressed) previous value of 0: direction only, no percent
-//   — percent change from zero is undefined.
-// - a suppressed previous value: direction only, naming that side as
-//   suppressed rather than implying a precise number (the exact prior
-//   count isn't knowable, only that it's under the suppression threshold —
-//   see trendDirectionFor's comment on why direction alone is still safe
-//   to state).
-function trendTooltipFor(current, previous, previousLabel) {
+// - a real (non-suppressed) previous value of 0: "New", no percent — percent
+//   change from zero is undefined.
+// - a suppressed previous value: no percent, naming that side as suppressed
+//   rather than implying a precise number (the exact prior count isn't
+//   knowable, only that it's under the suppression threshold — see
+//   trendDirectionFor's comment on why direction alone is still safe to
+//   state).
+function trendPillText(current, previous, previousLabel) {
   if (!current || !previous || current.marker || !previousLabel) return null;
-  if (previous.marker) {
-    return current.value > 0
-      ? `This is an increase from fewer than 11 in ${previousLabel}.`
-      : `This is a decrease from fewer than 11 in ${previousLabel}.`;
-  }
-  if (current.value === previous.value) {
-    return `This is unchanged from ${previous.value.toLocaleString()} in ${previousLabel}.`;
-  }
-  if (!previous.value) {
-    return `This is an increase from 0 in ${previousLabel}.`;
-  }
-  const direction = current.value > previous.value ? "increase" : "decrease";
+  if (previous.marker) return `vs. fewer than 11 in ${previousLabel}`;
+  if (current.value === previous.value) return `No change vs. ${previousLabel}`;
+  if (!previous.value) return `New vs. ${previousLabel}`;
   const percent = Math.round((Math.abs(current.value - previous.value) / previous.value) * 100);
-  return `This is a ${percent}% ${direction} from ${previous.value.toLocaleString()} in ${previousLabel}.`;
+  return `${percent}% vs. ${previousLabel}`;
 }
 
 // `cell`'s share of `total` ("12.3%"), for the inflow/outflow cards that
@@ -495,70 +550,82 @@ export default function OutflowSection({
           <div className="kpi-rows">
             <div className="kpi-row kpi-row-hero">
               <KpiCard
-                label={`Experienced Homelessness At Any Point In ${periodLabel}`}
+                label={`Active in our system at any point in ${periodLabel}`}
                 value={totalExperienced.value?.toLocaleString()}
                 marker={totalExperienced.marker}
                 trendDirection={trendDirectionFor(totalExperienced, previousTotalExperienced)}
-                trendTooltip={trendTooltipFor(totalExperienced, previousTotalExperienced, previousPeriodLabel)}
+                trendText={trendPillText(totalExperienced, previousTotalExperienced, previousPeriodLabel)}
                 goodDirection="down"
+                info={KPI_CARD_INFO.experienced}
               />
             </div>
+            <h3 className="kpi-group-heading">Entered the system in {periodLabel}</h3>
             <div className="kpi-row">
               <KpiCard
-                label="Newly Homeless"
+                label="Newly experiencing homelessness"
                 value={period.inflow.newly_homeless.value?.toLocaleString()}
                 marker={period.inflow.newly_homeless.marker}
                 percent={percentOfExperienced(period.inflow.newly_homeless, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless)}
-                trendTooltip={trendTooltipFor(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless, previousPeriodLabel)}
+                trendText={trendPillText(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless, previousPeriodLabel)}
                 goodDirection="down"
+                info={KPI_CARD_INFO.newly_homeless}
               />
               <KpiCard
-                label="Return from Housed"
+                label="Returned from housed"
                 value={period.inflow.return_from_housed.value?.toLocaleString()}
                 marker={period.inflow.return_from_housed.marker}
                 percent={percentOfExperienced(period.inflow.return_from_housed, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed)}
-                trendTooltip={trendTooltipFor(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed, previousPeriodLabel)}
+                trendText={trendPillText(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed, previousPeriodLabel)}
                 goodDirection="down"
+                info={KPI_CARD_INFO.return_from_housed}
               />
               <KpiCard
-                label="Return from Inactive"
+                label="Returned from inactive"
                 value={period.inflow.return_from_inactive.value?.toLocaleString()}
                 marker={period.inflow.return_from_inactive.marker}
                 percent={percentOfExperienced(period.inflow.return_from_inactive, totalExperienced)}
                 trendDirection={trendDirectionFor(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive)}
-                trendTooltip={trendTooltipFor(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive, previousPeriodLabel)}
+                trendText={trendPillText(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive, previousPeriodLabel)}
                 goodDirection="down"
+                info={KPI_CARD_INFO.return_from_inactive}
               />
             </div>
+            <h3 className="kpi-group-heading">Exited the system in {periodLabel}</h3>
             <div className="kpi-row">
               <KpiCard
                 label="Inactive"
                 value={period.outflow.inactive.value?.toLocaleString()}
                 marker={period.outflow.inactive.marker}
                 percent={percentOfExperienced(period.outflow.inactive, totalExperienced)}
+                description={KPI_CARD_DESCRIPTION.inactive}
                 trendDirection={trendDirectionFor(period.outflow.inactive, previousPeriod?.outflow?.inactive)}
-                trendTooltip={trendTooltipFor(period.outflow.inactive, previousPeriod?.outflow?.inactive, previousPeriodLabel)}
+                trendText={trendPillText(period.outflow.inactive, previousPeriod?.outflow?.inactive, previousPeriodLabel)}
                 goodDirection={null}
+                info={KPI_CARD_INFO.inactive}
               />
               <KpiCard
-                label="Permanently Housed"
+                label="Permanently housed"
                 value={period.outflow.permanently_housed.value?.toLocaleString()}
                 marker={period.outflow.permanently_housed.marker}
                 percent={percentOfExperienced(period.outflow.permanently_housed, totalExperienced)}
+                description={KPI_CARD_DESCRIPTION.permanently_housed}
                 trendDirection={trendDirectionFor(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed)}
-                trendTooltip={trendTooltipFor(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed, previousPeriodLabel)}
+                trendText={trendPillText(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed, previousPeriodLabel)}
                 goodDirection="up"
+                info={KPI_CARD_INFO.permanently_housed}
               />
               <KpiCard
                 label="Deceased"
                 value={period.outflow.deceased.value?.toLocaleString()}
                 marker={period.outflow.deceased.marker}
                 percent={percentOfExperienced(period.outflow.deceased, totalExperienced)}
+                description={KPI_CARD_DESCRIPTION.deceased}
                 trendDirection={trendDirectionFor(period.outflow.deceased, previousPeriod?.outflow?.deceased)}
-                trendTooltip={trendTooltipFor(period.outflow.deceased, previousPeriod?.outflow?.deceased, previousPeriodLabel)}
+                trendText={trendPillText(period.outflow.deceased, previousPeriod?.outflow?.deceased, previousPeriodLabel)}
                 goodDirection={null}
+                info={KPI_CARD_INFO.deceased}
               />
               {/* Only meaningful for the YYA population — every other segment's
                   aged_out count is always 0 (see build_flow.py's
@@ -570,22 +637,22 @@ export default function OutflowSection({
                   value={period.outflow.aged_out.value?.toLocaleString()}
                   marker={period.outflow.aged_out.marker}
                   trendDirection={trendDirectionFor(period.outflow.aged_out, previousPeriod?.outflow?.aged_out)}
-                  trendTooltip={trendTooltipFor(period.outflow.aged_out, previousPeriod?.outflow?.aged_out, previousPeriodLabel)}
+                  trendText={trendPillText(period.outflow.aged_out, previousPeriod?.outflow?.aged_out, previousPeriodLabel)}
                   goodDirection={null}
                 />
               )}
             </div>
           </div>
-          <ul className="chart-note">
-            <li>The dashboard counts everyone who was active at least once during the selected period.</li>
-            {/* Only meaningful in the full-year view of the current, still-in-progress
-                year (same "fewer than 4 quarters present" signal previousPeriod above
-                uses) — a quarter/month pill, or a completed prior year, already reflects
-                its own full selected period, so the caveat would be noise there. */}
-            {!quarter && !month && quartersForYear.length < 4 && (
-              <li>Current-year totals don't reflect a full year of data yet, so they're expected to be lower than completed years.</li>
-            )}
-          </ul>
+          {/* Only meaningful in the full-year view of the current, still-in-progress
+              year (same "fewer than 4 quarters present" signal previousPeriod above
+              uses) — a quarter/month pill, or a completed prior year, already reflects
+              its own full selected period, so the caveat would be noise there. */}
+          {!quarter && !month && quartersForYear.length < 4 && (
+            <p className="partial-year-note">
+              Current-year totals don't reflect a full year of data yet, so they're expected to be lower than
+              completed years.
+            </p>
+          )}
           <p className="chart-analysis">
             The number of people experiencing homelessness has <strong>stayed fairly consistent year to year</strong>
             , which can point to sustained high demand for programs, with program capacity holding fairly steady
