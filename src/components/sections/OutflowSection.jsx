@@ -686,12 +686,12 @@ export default function OutflowSection({
             experiencing homelessness and how many are returning, and the exit cards show how many people left the
             system.
           </p>
-          <hr className="definitions-divider" />
           {/* Methodology page doesn't exist yet — placeholder so the link doesn't
               navigate away until it's built. */}
           <a href="#" className="methodology-link" onClick={(e) => e.preventDefault()}>
             Learn more about our methodology and definitions
           </a>
+          <hr className="definitions-divider" />
           {trendPoints.length > 0 && (
             <>
               <h2 className="section-heading">
@@ -731,20 +731,26 @@ export default function OutflowSection({
                   selectedQuarter={trendEndQuarter}
                 />
               </div>
+              <h3 className="kpi-group-heading">What this shows</h3>
+              <p className="chart-analysis">
+                Looking across periods shows whether a change is part of a longer pattern or a one-time shift. The
+                median gives a steady reference point, so a period well above or below it stands out. Some measures
+                may rise and fall with the seasons, so comparing the same quarter across years can tell you more
+                than comparing back-to-back quarters.
+              </p>
+              <hr className="definitions-divider" />
             </>
           )}
-          <p className="section-subhead">
-            The ribbon chart below shows how people's homelessness status changes between the start and end of the
-            selected period. The left column is how each person's episode began this period (already active, newly
-            homeless, or returning from housed or inactive); the right column is how it ended (still active,
-            permanently housed, inactive, or deceased). Each ribbon connects one starting status to one ending
-            status, and its width is the number of people who took that specific path: hover over a ribbon to see
-            the number of people included. For example, a wide ribbon from "Newly Homeless" to "Still Active" means
-            most people who newly became homeless this period were still experiencing homelessness by its end,
-            while a thinner ribbon from "Newly Homeless" to "Permanently Housed" means only a small share of that
-            same group exited to housing within the period.
-          </p>
+          <h2 className="section-heading">How did people's status change from the start to the end of the period?</h2>
+          <p className="section-subhead">Each band shows the number of people who moved from one status to another.</p>
           <FlowSankeyChart data={period} periodLabel={periodLabel} isFullYear={!quarter && !month} populationSegment={populationSegment} />
+          <h3 className="kpi-group-heading">What this shows</h3>
+          <p className="chart-analysis" style={{ marginBottom: 0 }}>
+            Each person appears once on each side of the chart, based on their status at the start and end of the
+            period. Following a band from left to right shows where people who started in each group ended up. For
+            example, compare how many people newly experiencing homelessness ended the period permanently housed,
+            still active, or with an unknown status.
+          </p>
         </>
       )}
     </section>

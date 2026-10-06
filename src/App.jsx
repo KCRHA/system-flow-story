@@ -224,13 +224,6 @@ export default function App() {
         filterDimension={filterDimension}
         filterCategory={filterCategory}
       />
-      <CapacitySection
-        capacityRows={data.capacity}
-        capacityQuarterlyRows={data.capacityQuarterly}
-        capacityYearlyRows={data.capacityYearly}
-        year={year}
-        demographicType={demographicType}
-      />
       <LengthSection
         lengthRows={data.length}
         returnCohortRows={data.returnCohorts}
@@ -240,6 +233,13 @@ export default function App() {
         filterDimension={filterDimension}
         filterCategory={filterCategory}
         year={year}
+      />
+      <CapacitySection
+        capacityRows={data.capacity}
+        capacityQuarterlyRows={data.capacityQuarterly}
+        capacityYearlyRows={data.capacityYearly}
+        year={year}
+        demographicType={demographicType}
       />
       <footer className="data-footnote">
         <p>
