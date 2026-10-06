@@ -40,12 +40,12 @@ const AGED_OUT_DEFINITION = {
   definition: "Individual turned 25 while experiencing homelessness and is no longer included in YYA reporting.",
 };
 
-// KCRHA policy doc linked from every KPI-card popover's "See full
+// KCRHA methodology doc linked from every KPI-card popover's "See full
 // definitions" (see KPI_CARD_INFO below) — the only definitions doc we
-// have today, so every term points here for now even though it's written
-// around the active/inactive distinction specifically; swap in per-term
-// URLs later if/when more specific docs exist for the other terms.
-const FULL_DEFINITIONS_LINK = "https://kingcounty.bitfocus.com/hubfs/Youth%20By-Name%20List%20Active_Inactive%20Policy%20(1).pdf?hsLang=en";
+// have today, so every term points here for now; swap in per-term URLs
+// later if/when more specific docs exist for the other terms. Hosted in
+// public/docs so it ships with the site build (see BASE_URL below).
+const FULL_DEFINITIONS_LINK = `${import.meta.env.BASE_URL}docs/KCRHA%20Active%20Homelessness%20Methodology.pdf`;
 
 // Per-card hover definitions (see KpiCard's `info` prop) — same content as
 // the INFLOW_/OUTFLOW_TERM_DEFINITIONS glossary above, just addressed by
