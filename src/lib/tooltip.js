@@ -22,16 +22,31 @@ const TOOLTIP_STYLE = {
   whiteSpace: "normal",
 };
 
+// "dark" variant — a navy box with white text, used by the run chart
+// (HomelessnessTrendChart) for its selected-period panel, per the approved
+// mockup, instead of every other chart's white hover tooltip above.
+const TOOLTIP_STYLE_DARK = {
+  ...TOOLTIP_STYLE,
+  background: "#172b69",
+  color: "#ffffff",
+  border: "none",
+  borderRadius: "10px",
+  padding: "14px 18px",
+  fontSize: "13px",
+  lineHeight: "1.7",
+  maxWidth: "280px",
+};
+
 // Creates a fresh tooltip appended to `container` and returns handlers to
 // wire up to D3 mouse events. Callers are expected to remove any tooltip
 // left over from a prior render before calling this again — every chart
 // in this app already fully clears and rebuilds its SVG each render, so
 // this just follows that same pattern rather than needing its own
-// persistent ref.
-export function createTooltip(container) {
+// persistent ref. `variant` ("light", the default, or "dark" — see above).
+export function createTooltip(container, { variant = "light" } = {}) {
   const el = document.createElement("div");
   el.className = "chart-tooltip";
-  Object.assign(el.style, TOOLTIP_STYLE);
+  Object.assign(el.style, variant === "dark" ? TOOLTIP_STYLE_DARK : TOOLTIP_STYLE);
   container.appendChild(el);
 
   const OFFSET = 14;

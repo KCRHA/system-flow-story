@@ -5,9 +5,10 @@ import QuarterPills from "../charts/QuarterPills.jsx";
 import MonthPills from "../charts/MonthPills.jsx";
 import FlowSankeyChart from "../charts/FlowSankeyChart.jsx";
 import HomelessnessTrendChart from "../charts/HomelessnessTrendChart.jsx";
-import FilterBar, { PopulationSegmentSelect, YearSelect, DemographicTypeSelect, DemographicCategorySelect } from "../FilterBar.jsx";
+import FilterBar, { PopulationSegmentSelect, YearSelect, DemographicTypeSelect, DemographicCategorySelect, MeasureSelect, MEASURES } from "../FilterBar.jsx";
 import { filterRows, distinctValues, resolveCell, INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod } from "../../lib/sankeyData.js";
+import { subjectFor } from "../../lib/demographics.js";
 
 // Plain-text definitions for every flow-type term shown in this section's
 // KPI cards and sankey, for the section header's definitions popover —
@@ -192,6 +193,15 @@ export default function OutflowSection({
 }) {
   const [selectedQuarter, setSelectedQuarter] = useState(null); // null = full year
   const [selectedMonth, setSelectedMonth] = useState(null); // null = no month pill active
+  const [trendMeasure, setTrendMeasure] = useState(MEASURES[0].value); // which KPI the run chart below plots
+
+  // Scoping to a demographic category isn't visible once a reader has
+  // scrolled past the filter controls — same reasoning as LengthSection's
+  // own blurb `subject` (see subjectFor) — so every piece of text here that
+  // otherwise says plain "people" (this section's own header, the run
+  // chart's heading/y-axis/hover panel) names who's actually being measured
+  // instead.
+  const subject = subjectFor(demographicType, demographicCategory);
 
   const scopedQuarterly = useMemo(
     () => filterRows(flowQuarterlyRows, { populationSegment, dimension: filterDimension, category: filterCategory }),
@@ -334,21 +344,36 @@ export default function OutflowSection({
     }
     return allQuarters.filter((q) => q <= target).at(-1) ?? null;
   }, [quarter, month, year, allQuarters]);
+  // Pinned to the earliest 12 quarters we have (through end of 2023, given
+  // data starting beginning-of-2021) whenever trendEndQuarter is too close
+  // to the start of the dataset for a full trailing window — rather than
+  // showing a short, growing chart for an early period, the window itself
+  // stays fixed at 3 years and only the "selected period" ring (still
+  // trendEndQuarter, passed to HomelessnessTrendChart unchanged below)
+  // moves within it. Once trendEndQuarter is far enough in, this falls
+  // back to the normal trailing window exactly as before.
   const trendQuarters = useMemo(() => {
     if (!trendEndQuarter) return [];
+    const windowSize = 12;
     const idx = allQuarters.indexOf(trendEndQuarter);
-    return allQuarters.slice(Math.max(0, idx - 11), idx + 1);
+    if (idx < windowSize - 1) return allQuarters.slice(0, windowSize);
+    return allQuarters.slice(idx - (windowSize - 1), idx + 1);
   }, [allQuarters, trendEndQuarter]);
+  // "Aged Out" is YYA-specific (see the "Aged Out" KpiCard's own gating
+  // above) — hidden from the Measure dropdown for every other population
+  // segment, same as the card itself.
+  const trendMeasureOptions = useMemo(() => MEASURES.filter((m) => !m.yyaOnly || populationSegment === "yya"), [populationSegment]);
+  const activeTrendMeasure = trendMeasureOptions.find((m) => m.value === trendMeasure) ?? trendMeasureOptions[0];
   const trendPoints = useMemo(
     () =>
       trendQuarters.map((q) => ({
         quarter: q,
         ...resolveCell(
-          scopedQuarterly.find((r) => r.quarter === q && r.flow_type === "experienced_homelessness"),
+          scopedQuarterly.find((r) => r.quarter === q && r.flow_type === activeTrendMeasure.value),
           "count"
         ),
       })),
-    [trendQuarters, scopedQuarterly]
+    [trendQuarters, scopedQuarterly, activeTrendMeasure]
   );
 
   // Race/ethnicity is HMIS's one multi-select demographic field — a person
@@ -444,7 +469,7 @@ export default function OutflowSection({
       <section className="section">
         <div className="section-header">
           <div>
-            <h2 className="section-heading">How are people experiencing homelessness coming into our system, and where are they going?</h2>
+            <h2 className="section-heading">How are {subject} experiencing homelessness coming into our system, and where are they going?</h2>
             <p className="section-subhead">Pick a year, then a quarter or month.</p>
           </div>
           <InfoIcon label="Show definitions" size="lg" align="end">
@@ -488,7 +513,7 @@ export default function OutflowSection({
     <section className="section">
       <div className="section-header">
         <div>
-          <h2 className="section-heading">How are people experiencing homelessness coming into our system, and where are they going?</h2>
+          <h2 className="section-heading">How are {subject} experiencing homelessness coming into our system, and where are they going?</h2>
           <p className="section-subhead">Pick a year, then a quarter or month.</p>
         </div>
         <InfoIcon label="Show definitions" size="lg" align="end">
@@ -653,18 +678,59 @@ export default function OutflowSection({
               completed years.
             </p>
           )}
+          <h3 className="kpi-group-heading">What this shows</h3>
           <p className="chart-analysis">
-            The number of people experiencing homelessness has <strong>stayed fairly consistent year to year</strong>
-            , which can point to sustained high demand for programs, with program capacity holding fairly steady
-            alongside it.
+            This view shows movement across a whole period, including who entered our system, who was active, and
+            who exited. A total that looks stable from one period to the next can hide a lot of change, with many
+            people entering and exiting at the same time. The entry cards show how many people are newly
+            experiencing homelessness and how many are returning, and the exit cards show how many people left the
+            system.
           </p>
+          <hr className="definitions-divider" />
+          {/* Methodology page doesn't exist yet — placeholder so the link doesn't
+              navigate away until it's built. */}
+          <a href="#" className="methodology-link" onClick={(e) => e.preventDefault()}>
+            Learn more about our methodology and definitions
+          </a>
           {trendPoints.length > 0 && (
             <>
-              <p className="section-subhead">
-                Time periods above the median of the displayed points are shaded navy; time periods below are shaded
-                light green.
-              </p>
-              <HomelessnessTrendChart points={trendPoints} />
+              <h2 className="section-heading">
+                How has the number of {subject} {activeTrendMeasure.axisLabel} changed over time?
+              </h2>
+              <p className="section-subhead">Choose a measure to see its trend. Hover over a point for details.</p>
+              <FilterBar>
+                <MeasureSelect value={activeTrendMeasure.value} onChange={setTrendMeasure} options={trendMeasureOptions} />
+                <span className="trend-sync-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  By quarter, following your {periodLabel} selection and filters above
+                </span>
+              </FilterBar>
+              <div className="chart-frame-box">
+                <p className="chart-frame-label">By quarter</p>
+                <HomelessnessTrendChart
+                  points={trendPoints}
+                  measureLabel={activeTrendMeasure.label}
+                  unitLabel={activeTrendMeasure.unitLabel}
+                  axisLabel={activeTrendMeasure.axisLabel}
+                  subject={subject}
+                  selectedQuarter={trendEndQuarter}
+                />
+              </div>
             </>
           )}
           <p className="section-subhead">

@@ -26,6 +26,77 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "project_type_engagement", label: "Project Type Engagement" },
 ];
 
+// The measures the run chart (HomelessnessTrendChart) can plot — one per
+// flow_type the quarterly export carries (see sankeyData.js's
+// buildFlowPeriod), so switching here is just pointing the same per-quarter
+// lookup at a different flow_type key rather than fetching anything new.
+// `unitLabel` is the short noun phrase for "X people ___" in the chart's
+// tooltips; `axisLabel` is the fuller phrase for the y-axis and section
+// heading ("How has the number of people ___ changed over time?"). `yyaOnly`
+// mirrors the "Aged Out" KPI card's own gating (see OutflowSection) — every
+// other population segment's aged_out count is always 0. `group` names the
+// <optgroup> MeasureSelect sorts each measure into (Active/Entered the
+// system/Exited the system, matching OutflowSection's own KPI card row
+// headings) — consecutive options sharing a group collapse into one
+// <optgroup>, which is what actually draws the dividing line between them.
+export const MEASURES = [
+  { value: "experienced_homelessness", label: "Active in our system", unitLabel: "active", axisLabel: "active in our system", group: "Active" },
+  {
+    value: "indiv_newly_homeless",
+    label: "Newly experiencing homelessness",
+    unitLabel: "newly homeless",
+    axisLabel: "newly experiencing homelessness",
+    group: "Entered the system",
+  },
+  {
+    value: "indiv_return_from_housed",
+    label: "Returning from housing",
+    unitLabel: "returning from housing",
+    axisLabel: "returning from housing",
+    group: "Entered the system",
+  },
+  {
+    value: "indiv_return_from_inactive",
+    label: "Returning from inactivity",
+    unitLabel: "returning from inactivity",
+    axisLabel: "returning from inactivity",
+    group: "Entered the system",
+  },
+  { value: "indiv_inactive", label: "Inactive", unitLabel: "inactive", axisLabel: "inactive", group: "Exited the system" },
+  { value: "indiv_permanently_housed", label: "Permanently housed", unitLabel: "permanently housed", axisLabel: "permanently housed", group: "Exited the system" },
+  { value: "indiv_deceased", label: "Deceased", unitLabel: "deceased", axisLabel: "deceased", group: "Exited the system" },
+  { value: "indiv_aged_out", label: "Aged Out", unitLabel: "aged out", axisLabel: "aged out", group: "Exited the system", yyaOnly: true },
+];
+
+export function MeasureSelect({ value, onChange, options = MEASURES }) {
+  // Collapse consecutive same-group options into one <optgroup> each,
+  // rather than grouping by every distinct group name globally — options
+  // are already in Active/Entered/Exited order, so this is just folding
+  // runs, and avoids re-sorting the list out of that order.
+  const groups = [];
+  for (const opt of options) {
+    const current = groups.at(-1);
+    if (current?.name === opt.group) current.items.push(opt);
+    else groups.push({ name: opt.group, items: [opt] });
+  }
+  return (
+    <label>
+      Measure
+      <select value={value} onChange={(e) => onChange(e.target.value)}>
+        {groups.map((g) => (
+          <optgroup key={g.name} label={g.name}>
+            {g.items.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export function PopulationSegmentSelect({ value, onChange }) {
   return (
     <label>
