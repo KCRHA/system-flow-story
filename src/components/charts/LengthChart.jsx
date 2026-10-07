@@ -10,7 +10,12 @@ export default function LengthChart({ rows, width = 720, height = 380 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    if (!rows?.length) return;
+    if (!rows?.length) {
+      // Clear the previous drawing: otherwise a selection with no rows (e.g. a
+      // dimension this file doesn't carry) leaves the last chart on screen.
+      d3.select(svgRef.current).selectAll("*").remove();
+      return;
+    }
     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;

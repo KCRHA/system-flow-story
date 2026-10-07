@@ -28,7 +28,12 @@ export default function CapacityUtilizationChart({ series, width = 720 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    if (!series?.length) return;
+    if (!series?.length) {
+      // Clear the previous drawing: otherwise a selection with no rows (e.g. a
+      // dimension this file doesn't carry) leaves the last chart on screen.
+      d3.select(svgRef.current).selectAll("*").remove();
+      return;
+    }
     const innerW = width - MARGIN.left - MARGIN.right;
     const rowH = ROW_LABEL_H + ROW_PLOT_H;
     const height = MARGIN.top + series.length * rowH + (series.length - 1) * ROW_GAP + MARGIN.bottom;

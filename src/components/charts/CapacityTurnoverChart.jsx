@@ -37,7 +37,12 @@ export default function CapacityTurnoverChart({ rows, width = 640 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    if (!rows?.length) return;
+    if (!rows?.length) {
+      // Clear the previous drawing: otherwise a selection with no rows (e.g. a
+      // dimension this file doesn't carry) leaves the last chart on screen.
+      d3.select(svgRef.current).selectAll("*").remove();
+      return;
+    }
     const byType = Object.fromEntries(rows.map((d) => [d.project_type, d]));
     const margin = { top: 8, right: 60, bottom: 10, left: 160 };
     const innerW = width - margin.left - margin.right;

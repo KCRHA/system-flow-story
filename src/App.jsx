@@ -133,10 +133,16 @@ export default function App() {
   // it already falls in the same one or two age tiers by definition, so
   // breaking it down further is meaningless (see FilterBar.jsx's own
   // comment on DEMOGRAPHIC_TYPES).
-  const demographicTypeOptions = useMemo(
-    () => (populationSegment === "yya" ? DEMOGRAPHIC_TYPES.filter((opt) => opt.value !== "age_category") : DEMOGRAPHIC_TYPES),
-    [populationSegment]
-  );
+  // A breakdown whose categories come from the data, but has none in it (e.g. an
+  // export with no gender alignment), is not offered rather than shown empty.
+  const demographicTypeOptions = useMemo(() => {
+    const base = populationSegment === "yya" ? DEMOGRAPHIC_TYPES.filter((opt) => opt.value !== "age_category") : DEMOGRAPHIC_TYPES;
+    if (!data) return base;
+    const fromData = ["gender_identity", "gender_alignment", "age_category"];
+    return base.filter(
+      (opt) => !fromData.includes(opt.value) || data.flowQuarterly.some((r) => r.dimension === opt.value && !HIDDEN_CATEGORIES.has(r.category))
+    );
+  }, [populationSegment, data]);
   // Same fallback pattern as `year` above — lands back on "All" whenever
   // the current selection isn't valid for the freshly chosen population
   // (i.e. Age Category was selected, then the population switched to YYA).
