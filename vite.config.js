@@ -5,5 +5,6 @@ import react from "@vitejs/plugin-react";
 // Update if the deploy target changes (e.g. a custom domain uses "/").
 export default defineConfig({
   plugins: [react()],
-  base: "/system-flow-story/",
+  // SFS_BASE overrides it, e.g. SFS_BASE=/flow/ for a build served from another path.
+  base: process.env.SFS_BASE ?? "/system-flow-story/",
 });
