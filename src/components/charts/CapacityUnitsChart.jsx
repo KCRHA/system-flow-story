@@ -8,7 +8,12 @@ export default function CapacityUnitsChart({ rows, width = 640, height = 220 }) 
   const svgRef = useRef(null);
 
   useEffect(() => {
-    if (!rows?.length) return;
+    if (!rows?.length) {
+      // Clear the previous drawing: otherwise a selection with no rows (e.g. a
+      // dimension this file doesn't carry) leaves the last chart on screen.
+      d3.select(svgRef.current).selectAll("*").remove();
+      return;
+    }
     const margin = { top: 10, right: 60, bottom: 10, left: 160 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
