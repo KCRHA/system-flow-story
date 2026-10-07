@@ -25,7 +25,43 @@ export const INSUFFICIENT_POPULATION_MARKER = "insufficient_population";
 export const PRIMARY_SUPPRESSION_MARKER = "*";
 export const SECONDARY_SUPPRESSION_MARKER = "**";
 
+// Optional, off unless the URL has ?hostData: when this page is framed by a page
+// on the same site, it asks that page for each data file instead of fetching
+// data/. It posts {type: "sfs:get", id, path} to its parent, which answers
+// {type: "sfs:file", id, ok, data} or {..., ok: false, error}. Files are asked
+// for only when needed, the same as fetching. With no answer within 60 seconds
+// it fetches data/ as usual. Lets a site serve the files from its own API (for
+// example, per signed-in user) without publishing them as static files.
+const hostData =
+  typeof window !== "undefined" && window.parent !== window && new URLSearchParams(window.location.search).has("hostData");
+const pending = new Map();
+let nextId = 0;
+if (hostData) {
+  window.addEventListener("message", (e) => {
+    if (e.source !== window.parent || e.origin !== window.location.origin) return;
+    const m = e.data;
+    if (m?.type !== "sfs:file" || !pending.has(m.id)) return;
+    const { resolve, reject, timer } = pending.get(m.id);
+    pending.delete(m.id);
+    clearTimeout(timer);
+    if (m.ok) resolve(m.data);
+    else reject(new Error(`Failed to load ${m.path ?? "file"}: ${m.error ?? "not provided"}`));
+  });
+}
+function fromHost(path) {
+  return new Promise((resolve, reject) => {
+    const id = ++nextId;
+    const timer = setTimeout(() => { pending.delete(id); resolve(undefined); }, 60000);
+    pending.set(id, { resolve, reject, timer });
+    window.parent.postMessage({ type: "sfs:get", id, path }, window.location.origin);
+  });
+}
+
 async function fetchJson(path) {
+  if (hostData) {
+    const data = await fromHost(path);
+    if (data !== undefined) return data;
+  }
   const res = await fetch(`${BASE}data/${path}`);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
   return res.json();
