@@ -8,14 +8,14 @@ export default function CapacityUnitsChart({ rows, width = 640, height = 220 }) 
   const svgRef = useRef(null);
 
   useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
     if (!rows?.length) return;
     const margin = { top: 10, right: 60, bottom: 10, left: 160 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
-    const svg = d3.select(svgRef.current);
     svg.attr("viewBox", `0 0 ${width} ${height}`);
-    svg.selectAll("*").remove();
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
     const y = d3.scaleBand().domain(rows.map((d) => d.project_type)).range([0, innerH]).padding(0.3);

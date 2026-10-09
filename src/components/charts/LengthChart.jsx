@@ -24,6 +24,10 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
   const svgRef = useRef(null);
 
   useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const container = svgRef.current.parentElement;
+    svg.selectAll("*").remove();
+    clearTooltip(container);
     if (!rows?.length) return;
     const margin = compact ? { top: 12, right: 12, bottom: 22, left: 44 } : { top: 20, right: 20, bottom: 30, left: 56 };
     const innerW = width - margin.left - margin.right;
@@ -49,13 +53,9 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
       .range([innerH, 0])
       .nice();
 
-    const svg = d3.select(svgRef.current);
     svg.attr("viewBox", `0 0 ${width} ${height}`);
-    svg.selectAll("*").remove();
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const container = svgRef.current.parentElement;
-    clearTooltip(container);
     const tooltip = createTooltip(container);
 
     // One tick per calendar year (e.g. "Jan 2024", "Jan 2025") rather than

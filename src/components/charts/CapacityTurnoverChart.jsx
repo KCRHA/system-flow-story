@@ -37,6 +37,10 @@ export default function CapacityTurnoverChart({ rows, width = 640 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const container = svgRef.current.parentElement;
+    svg.selectAll("*").remove();
+    clearTooltip(container);
     if (!rows?.length) return;
     const byType = Object.fromEntries(rows.map((d) => [d.project_type, d]));
     const margin = { top: 8, right: 60, bottom: 10, left: 160 };
@@ -50,13 +54,9 @@ export default function CapacityTurnoverChart({ rows, width = 640 }) {
     });
     const height = margin.top + cursorY - GROUP_GAP + margin.bottom;
 
-    const svg = d3.select(svgRef.current);
     svg.attr("viewBox", `0 0 ${width} ${height}`);
-    svg.selectAll("*").remove();
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const container = svgRef.current.parentElement;
-    clearTooltip(container);
     const tooltip = createTooltip(container);
 
     // One shared scale across both groups — pct_exited is already a

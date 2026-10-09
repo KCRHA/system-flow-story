@@ -40,6 +40,10 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const container = svgRef.current.parentElement;
+    svg.selectAll("*").remove();
+    clearTooltip(container);
     if (!rows?.length) return;
     const margin = { top: 20, right: 20, bottom: 50, left: 50 };
     const innerW = width - margin.left - margin.right;
@@ -59,13 +63,9 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       .range([innerH, 0])
       .nice();
 
-    const svg = d3.select(svgRef.current);
     svg.attr("viewBox", `0 0 ${width} ${height}`);
-    svg.selectAll("*").remove();
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const container = svgRef.current.parentElement;
-    clearTooltip(container);
     const tooltip = createTooltip(container);
 
     g.append("g")

@@ -28,17 +28,17 @@ export default function CapacityUtilizationChart({ series, width = 720 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const container = svgRef.current.parentElement;
+    svg.selectAll("*").remove();
+    clearTooltip(container);
     if (!series?.length) return;
     const innerW = width - MARGIN.left - MARGIN.right;
     const rowH = ROW_LABEL_H + ROW_PLOT_H;
     const height = MARGIN.top + series.length * rowH + (series.length - 1) * ROW_GAP + MARGIN.bottom;
 
-    const svg = d3.select(svgRef.current);
     svg.attr("viewBox", `0 0 ${width} ${height}`);
-    svg.selectAll("*").remove();
 
-    const container = svgRef.current.parentElement;
-    clearTooltip(container);
     const tooltip = createTooltip(container);
 
     const allQuarters = (series[0]?.points ?? []).map((p) => new Date(p.quarter));
