@@ -87,6 +87,19 @@ export default function App() {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDemographicType, setSelectedDemographicType] = useState("overall");
   const [selectedDemographicCategory, setSelectedDemographicCategory] = useState("Overall");
+  // The end of OutflowSection's own quarter/month drill-down, bubbled up via
+  // its onPeriodEndMonthChange (see that component's own comment) — null in
+  // its Full Year view. LengthSection's "by last housing status" small
+  // multiples use this to end their trailing window at the same point
+  // Outflow's own KPI cards/run chart already do, instead of always running
+  // to the selected Year's end.
+  const [periodEndMonth, setPeriodEndMonth] = useState(null);
+  // The exact month/quarter OutflowSection's own pills have drilled into
+  // (both null in its Full Year view) — see its onSelectedPeriodChange
+  // comment. LengthSection's headline KPI card uses this to re-scope to the
+  // same period every other KPI card on the page already does, instead of
+  // always showing the selected Year's pooled number.
+  const [selectedPeriod, setSelectedPeriod] = useState({ quarter: null, month: null });
 
   useEffect(() => {
     loadDashboardData().then(setData).catch(setError);
@@ -223,9 +236,15 @@ export default function App() {
         demographicCategoryOptions={demographicCategories}
         filterDimension={filterDimension}
         filterCategory={filterCategory}
+        onPeriodEndMonthChange={setPeriodEndMonth}
+        onSelectedPeriodChange={setSelectedPeriod}
       />
       <LengthSection
         lengthRows={data.length}
+        lengthByExitRows={data.lengthByExit}
+        lengthHeadlineRows={data.lengthHeadline}
+        lengthHeadlineMonthlyRows={data.lengthHeadlineMonthly}
+        lengthHeadlineQuarterlyRows={data.lengthHeadlineQuarterly}
         returnCohortRows={data.returnCohorts}
         populationSegment={populationSegment}
         demographicType={demographicType}
@@ -233,6 +252,9 @@ export default function App() {
         filterDimension={filterDimension}
         filterCategory={filterCategory}
         year={year}
+        periodEndMonth={periodEndMonth}
+        selectedQuarter={selectedPeriod.quarter}
+        selectedMonth={selectedPeriod.month}
       />
       <CapacitySection
         capacityRows={data.capacity}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import KpiCard from "../KpiCard.jsx";
 import InfoIcon from "../InfoIcon.jsx";
 import QuarterPills from "../charts/QuarterPills.jsx";
@@ -9,6 +9,8 @@ import FilterBar, { PopulationSegmentSelect, YearSelect, DemographicTypeSelect, 
 import { filterRows, distinctValues, resolveCell, INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod } from "../../lib/sankeyData.js";
 import { subjectFor } from "../../lib/demographics.js";
+import { trendDirectionFor, trendPillText } from "../../lib/trend.js";
+import { formatMonthLabel, formatQuarterLabel, quarterAbbrevLabel } from "../../lib/periodLabels.js";
 
 // Plain-text definitions for every flow-type term shown in this section's
 // KPI cards and sankey, for the section header's definitions popover —
@@ -99,69 +101,6 @@ const KPI_CARD_DESCRIPTION = {
   deceased: "Exit destination recorded as deceased",
 };
 
-// Same UTC-safe parsing as QuarterPills/ReturnCohortChart's quarterLabel —
-// "YYYY-MM-DD" parses as UTC midnight, so reading it back with local-time
-// getters can shift the quarter/year for anyone west of UTC.
-function formatQuarterLabel(quarter) {
-  const d = new Date(quarter);
-  const q = Math.floor(d.getUTCMonth() / 3) + 1;
-  return `Q${q} ${d.getUTCFullYear()}`;
-}
-
-// Same as formatQuarterLabel but without the year — for the "Months in Q2:"
-// label above the scoped month-pills row, where the year is already shown
-// elsewhere on screen.
-function quarterAbbrevLabel(quarter) {
-  return `Q${Math.floor(new Date(quarter).getUTCMonth() / 3) + 1}`;
-}
-
-function formatMonthLabel(month) {
-  const d = new Date(month);
-  return `${d.toLocaleString("en-US", { month: "long", timeZone: "UTC" })} ${d.getUTCFullYear()}`;
-}
-
-// "up"/"down"/"flat" if `current` is (or must be) higher/lower/equal to
-// `previous`; null if there's no previous period to compare against at all.
-//
-// Suppression only ever hides a NONZERO value below the threshold (see
-// suppression.py) — a true zero is never suppressed. So a suppressed
-// previous cell's real value is guaranteed to be in [1, threshold - 1],
-// always > 0, even without knowing the exact number. A visible
-// (marker-free) current value is therefore guaranteed higher than that
-// ONLY if it's itself nonzero (which, being unsuppressed, means it's at
-// or above the threshold); a visible current value of exactly 0 is below
-// every possible hidden previous value, i.e. "down". The reverse (current
-// suppressed) never needs handling here: KpiCard doesn't render an arrow
-// next to a suppressed current value at all.
-function trendDirectionFor(current, previous) {
-  if (!current || !previous || current.marker) return null;
-  if (previous.marker) return current.value > 0 ? "up" : "down";
-  if (current.value > previous.value) return "up";
-  if (current.value < previous.value) return "down";
-  return "flat";
-}
-
-// Short, always-visible text for a KPI card's trend pill (see KpiCard's
-// `trendText` prop) — covers every case trendDirectionFor above can produce
-// an arrow for, condensed to pill length rather than a full sentence:
-// - both sides known and different: an exact percent ("12% vs. Q1 2026").
-// - both sides known and equal: called out as unchanged, not a 0% change.
-// - a real (non-suppressed) previous value of 0: "New", no percent — percent
-//   change from zero is undefined.
-// - a suppressed previous value: no percent, naming that side as suppressed
-//   rather than implying a precise number (the exact prior count isn't
-//   knowable, only that it's under the suppression threshold — see
-//   trendDirectionFor's comment on why direction alone is still safe to
-//   state).
-function trendPillText(current, previous, previousLabel) {
-  if (!current || !previous || current.marker || !previousLabel) return null;
-  if (previous.marker) return `vs. fewer than 11 in ${previousLabel}`;
-  if (current.value === previous.value) return `No change vs. ${previousLabel}`;
-  if (!previous.value) return `New vs. ${previousLabel}`;
-  const percent = Math.round((Math.abs(current.value - previous.value) / previous.value) * 100);
-  return `${percent}% vs. ${previousLabel}`;
-}
-
 // `cell`'s share of `total` ("12.3%"), for the inflow/outflow cards that
 // show what fraction of everyone who experienced homelessness this period
 // fell into that specific bucket. null whenever either side is suppressed
@@ -190,6 +129,8 @@ export default function OutflowSection({
   demographicCategoryOptions,
   filterDimension,
   filterCategory,
+  onPeriodEndMonthChange,
+  onSelectedPeriodChange,
 }) {
   const [selectedQuarter, setSelectedQuarter] = useState(null); // null = full year
   const [selectedMonth, setSelectedMonth] = useState(null); // null = no month pill active
@@ -201,7 +142,7 @@ export default function OutflowSection({
   // otherwise says plain "people" (this section's own header, the run
   // chart's heading/y-axis/hover panel) names who's actually being measured
   // instead.
-  const subject = subjectFor(demographicType, demographicCategory);
+  const subject = subjectFor(populationSegment, demographicType, demographicCategory);
 
   const scopedQuarterly = useMemo(
     () => filterRows(flowQuarterlyRows, { populationSegment, dimension: filterDimension, category: filterCategory }),
@@ -241,6 +182,31 @@ export default function OutflowSection({
   const quarter =
     selectedQuarter && selectedQuarter.slice(0, 4) === String(year) && allQuarters.includes(selectedQuarter) ? selectedQuarter : null;
   const month = selectedMonth && selectedMonth.slice(0, 4) === String(year) && allMonths.includes(selectedMonth) ? selectedMonth : null;
+
+  // The last calendar month this section's own quarter/month pills resolve
+  // to — the selected month itself, the last real month within the
+  // selected quarter (monthsInQuarter, not a naive +2 — same reasoning as
+  // trailingMonths below: a trailing partial quarter can have fewer than
+  // 3 months of data), or null in the Full Year view. Reported up to
+  // App.jsx (see onPeriodEndMonthChange) so LengthSection's "by last
+  // housing status" small multiples can end their own trailing window at
+  // the same point instead of always running to the selected Year's end —
+  // this is the one piece of this section's own drill-down state another
+  // section needs, so it's bubbled up rather than lifting the whole
+  // quarter/month pill state (which stays local to this section, same as
+  // ever) to App.jsx.
+  const periodEndMonth = month ?? (quarter ? monthsInQuarter(scopedMonthly, quarter).at(-1) ?? null : null);
+  useEffect(() => {
+    onPeriodEndMonthChange?.(periodEndMonth);
+  }, [periodEndMonth, onPeriodEndMonthChange]);
+  // The exact granularity/value selected (as opposed to periodEndMonth
+  // above, which only reports where a trailing window should end) — lets
+  // LengthSection's headline KPI card re-scope to the same month/quarter
+  // the reader actually picked, not just "ending at" it, via its own
+  // dashboard_length_headline_monthly/_quarterly tables.
+  useEffect(() => {
+    onSelectedPeriodChange?.({ quarter, month });
+  }, [quarter, month, onSelectedPeriodChange]);
 
   // Quarter and month pills are mutually exclusive: picking one always
   // clears the other (and "Full Year" — selectQuarter(null) — clears both),
@@ -741,8 +707,8 @@ export default function OutflowSection({
               <hr className="definitions-divider" />
             </>
           )}
-          <h2 className="section-heading">How did people's status change from the start to the end of the period?</h2>
-          <p className="section-subhead">Each band shows the number of people who moved from one status to another.</p>
+          <h2 className="section-heading">How did the status of {subject} change from the start to the end of the period?</h2>
+          <p className="section-subhead">Each band shows the number of {subject} who moved from one status to another.</p>
           <FlowSankeyChart data={period} periodLabel={periodLabel} isFullYear={!quarter && !month} populationSegment={populationSegment} />
           <h3 className="kpi-group-heading">What this shows</h3>
           <p className="chart-analysis" style={{ marginBottom: 0 }}>

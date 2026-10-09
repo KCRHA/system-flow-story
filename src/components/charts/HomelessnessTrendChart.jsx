@@ -227,7 +227,7 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
     function panelHtml(p, index) {
       const isSelected = p.quarter === selectedQuarter;
       const label = quarterLabel(p.date) + (isSelected ? " (selected)" : "");
-      const lines = [`<div style="font-weight:700">${label}</div>`, `<div>${p.value.toLocaleString()} ${subject} ${unitLabel}</div>`];
+      const lines = [`<div style="font-weight:700">${label}</div>`, `<div>${p.value.toLocaleString()} ${subject} were ${unitLabel}</div>`];
       if (median != null) {
         const delta = Math.round(p.value - median);
         lines.push(delta === 0 ? `<div>At the median</div>` : `<div>${Math.abs(delta).toLocaleString()} ${delta > 0 ? "above" : "below"} the median</div>`);

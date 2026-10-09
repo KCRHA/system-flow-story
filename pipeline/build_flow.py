@@ -3,7 +3,6 @@ dimension, category, flow_type). Sourced from episode_systemwide (inflow,
 outflow, active/status, CE) joined to episode_ce for CE dates, plus an
 enrollment-level table for the resource-access flow types.
 """
-import numpy as np
 import pandas as pd
 
 from .config import (
@@ -13,7 +12,6 @@ from .config import (
     OUTFLOW_TYPE_MAP,
     POPULATION_SEGMENTS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
-    PROJECT_ENGAGEMENT_GROUPS,
     RACE_DIMENSIONS,
     RESOURCE_PROJECT_TYPE_GROUPS,
 )
@@ -22,19 +20,23 @@ from .config import (
 # same rationale as export.py's identical constant: sourced from
 # DIMENSION_COLUMNS so it can't drift out of sync with config.py.
 _RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
+from .period_dimensions import (
+    _BINARY_CATEGORIES,
+    EXTENDED_DIMENSIONS as FLOW_DIMENSIONS,
+    PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
+    _group_enrollments_by_dimension,
+    _project_engagement_category,
+    _unsheltered_in_period_category,
+)
 from .population import filter_population, filter_population_enrollment
 
-# dashboard_flow_monthly/yearly/quarterly's own dimension list, layered on
-# top of config.DIMENSIONS with "unsheltered_in_period" and the
-# project_engaged_* dimensions — see config.py's own comments on DIMENSIONS/
-# PROJECT_ENGAGEMENT_GROUPS for why these can't live in the list every other
-# build_*.py module shares. Only the three build_flow_*_rows functions below
+# dashboard_flow_monthly/yearly/quarterly's own dimension list — see
+# period_dimensions.py's EXTENDED_DIMENSIONS (aliased here as FLOW_DIMENSIONS,
+# this module's original name for it, now also shared by build_length.py/
+# build_length_by_exit.py). Only the three build_flow_*_rows functions below
 # use this; build_resource_access_rows deliberately keeps using plain
 # DIMENSIONS (it already has its own, differently-grouped project-type
 # breakdown — RESOURCE_PROJECT_TYPE_GROUPS — and doesn't need this one too).
-FLOW_DIMENSIONS = [*DIMENSIONS, "unsheltered_in_period", *PROJECT_ENGAGEMENT_DIMENSIONS]
-
-_BINARY_CATEGORIES = ["Included", "Not Included"]
 
 
 def _all_categories(df: pd.DataFrame, dimension: str, category_col_map: dict) -> list:
@@ -477,70 +479,10 @@ def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.S
 # "unsheltered_in_period" (and, for the same reason, every project_engaged_*
 # dimension) needs a third resolution strategy, distinct from both
 # EPISODE_SCOPED_CATEGORY_DIMENSIONS' "pick this period's latest row" and
-# the plain whole-window snapshot: whether a person was EVER Unsheltered (or
-# EVER enrolled in a matching project type) at any point in the period being
-# built, an OR across every row/enrollment they have in it, not a single
-# row's value — "did this person experience unsheltered homelessness" or
-# "was this person engaged with Emergency Shelter" this month/quarter/year
-# is itself an inherently period-level question, unlike age_category's or
-# household_type's single current value. See _unsheltered_in_period_category
-# and _project_engagement_category below.
-PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = ["unsheltered_in_period", *PROJECT_ENGAGEMENT_DIMENSIONS]
-
-
-def _unsheltered_in_period_category(period_df: pd.DataFrame) -> pd.Series:
-    """PersonalID -> "Included"/"Not Included", true if ANY of the person's
-    rows within `period_df` (this month's, quarter's, or year's own episode
-    rows — unfiltered by population, same contract as
-    _person_category_for_period) has LastShelterStatusInTimeframe ==
-    "Unsheltered". A person with no recorded shelter status at all in the
-    period (about 1% of active_df most months — episode_systemwide can
-    carry a null LastShelterStatusInTimeframe when no ClientShelterStatus
-    event has landed yet) simply isn't Unsheltered by this definition and
-    falls to "Not Included", the same as anyone confirmed Sheltered/
-    Temporarily Housed — a deliberate choice (not every other dimension's
-    explicit-"Unknown"-bucket pattern) so this stays a clean two-category
-    partition without a third bucket to suppress and hide from the
-    frontend."""
-    ids = period_df["PersonalID"].unique()
-    unsheltered_ids = set(period_df.loc[period_df["LastShelterStatusInTimeframe"] == "Unsheltered", "PersonalID"])
-    return pd.Series(np.where(pd.Index(ids).isin(unsheltered_ids), "Included", "Not Included"), index=ids)
-
-
-def _project_engagement_category(period_df: pd.DataFrame, group_enrollments: pd.DataFrame, period_start, period_end) -> pd.Series:
-    """PersonalID -> "Included"/"Not Included" for one project_engaged_*
-    dimension, true if the person has ANY All_Program_Enrollments row in
-    `group_enrollments` (already restricted to that dimension's HUD
-    ProjectTypeCodes — see config.py's PROJECT_ENGAGEMENT_GROUPS) whose
-    [ProjectStartDate, ProjectExitDate] span overlaps ANY part of
-    [period_start, period_end] — a null ProjectExitDate (still enrolled)
-    always counts as overlapping. Same OR-across-the-period contract as
-    _unsheltered_in_period_category, just resolved against enrollment-level
-    project type instead of episode_systemwide's own per-row shelter
-    status, since project type has no episode_systemwide equivalent at all.
-
-    `ids` (the population this gets reindexed against) comes from
-    `period_df`, same as _unsheltered_in_period_category — every
-    episode_systemwide PersonalID active/inflowing/outflowing this period,
-    not `group_enrollments`' own PersonalIDs, so someone with zero matching
-    enrollments still gets an explicit "Not Included" row rather than being
-    silently absent."""
-    ids = period_df["PersonalID"].unique()
-    overlapping = group_enrollments[
-        (group_enrollments["ProjectStartDate"] <= period_end)
-        & (group_enrollments["ProjectExitDate"].isna() | (group_enrollments["ProjectExitDate"] >= period_start))
-    ]
-    engaged_ids = set(overlapping["PersonalID"])
-    return pd.Series(np.where(pd.Index(ids).isin(engaged_ids), "Included", "Not Included"), index=ids)
-
-
-def _group_enrollments_by_dimension(enrollments: pd.DataFrame) -> dict:
-    """One {dimension: pre-filtered enrollments} entry per
-    PROJECT_ENGAGEMENT_GROUPS dimension, computed once per builder call (not
-    per period) since the ProjectTypeCode filter itself doesn't depend on
-    which period is being built — only the date-overlap check in
-    _project_engagement_category does."""
-    return {dim: enrollments[enrollments["ProjectTypeCode"].isin(codes)] for dim, codes in PROJECT_ENGAGEMENT_GROUPS.items()}
+# the plain whole-window snapshot — see period_dimensions.py's
+# PERIOD_AGGREGATE_CATEGORY_DIMENSIONS/_unsheltered_in_period_category/
+# _project_engagement_category (imported above), shared with
+# build_length.py/build_length_by_exit.py now too.
 
 
 # The subset of PARTITION_CATEGORY_DIMENSIONS that really is safe to

@@ -18,6 +18,12 @@ from . import connection
 from .build_capacity import build_capacity_quarterly_rows, build_capacity_rows, build_capacity_yearly_rows
 from .build_flow import build_flow_quarterly_rows, build_flow_rows, build_flow_yearly_rows, build_resource_access_rows
 from .build_length import build_length_rows
+from .build_length_by_exit import (
+    build_length_by_exit_rows,
+    build_length_headline_monthly_rows,
+    build_length_headline_quarterly_rows,
+    build_length_headline_rows,
+)
 from .build_return_cohorts import build_return_cohort_rows
 from .config import (
     DIMENSION_COLUMNS,
@@ -34,6 +40,20 @@ from .config import (
 # DIMENSION_COLUMNS so this can't silently drift out of sync with config.py's
 # own RACE_DIMENSIONS -> column-name mapping.
 RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
+
+# Both groups of dimensions overlap internally (a person can be "Included"
+# in more than one race_* dimension, or more than one project_engaged_*
+# dimension) — see apply_race_crossdim_suppression's own docstring for the
+# cross-dimension inclusion-exclusion leak this opens up. Passed to that
+# function as ONE combined list, not two separate RACE_DIMENSIONS/
+# PROJECT_ENGAGEMENT_DIMENSIONS calls: the function only compares pairs
+# within whatever list it's given, so two separate calls would check
+# race-vs-race and project-vs-project overlaps but silently miss a
+# race_* dimension paired with a project_engaged_* one — a real,
+# verified disclosure gap (e.g. race_black + project_engaged_ce - overall
+# landing under SUPPRESSION_THRESHOLD) caught by auditing the actual
+# exported JSON.
+CROSSDIM_OVERLAP_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS]
 from .demographics import compute_gender_rollups, compute_race_rollups
 from .suppression import (
     TRUE_COUNT_COL,
@@ -184,18 +204,10 @@ def main():
     # cells from unrelated demographic slices as if they were the same
     # cross-tab.
     flow_df = apply_crosstab_secondary_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "category"])
-    # The 8 race_* dimensions overlap (a person can be "Included" in more
-    # than one) — see apply_race_crossdim_suppression's own docstring for
-    # the cross-dimension inclusion-exclusion leak that opens up on its
-    # own, independent of the within-dimension protection already applied
-    # above.
-    flow_df = apply_race_crossdim_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS)
-    # The 5 project_engaged_* dimensions overlap the same way the race_*
-    # ones do (see config.py's PROJECT_ENGAGEMENT_GROUPS comment) — same
-    # cross-dimension inclusion-exclusion leak, same fix, just a separate
-    # pass since apply_race_crossdim_suppression only compares dimensions
-    # within one `race_dimensions` list against each other.
-    flow_df = apply_race_crossdim_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS)
+    # See CROSSDIM_OVERLAP_DIMENSIONS' own comment — one combined pass, not
+    # separate race_*/project_engaged_* ones, so a race-vs-project_engaged
+    # overlap pair is checked too, not just same-group pairs.
+    flow_df = apply_race_crossdim_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS)
     # A demographic category small enough (crossed with a small population
     # segment) can leave a group with literally nothing left to hide behind
     # — see apply_insufficient_population_fallback's own docstring. Rather
@@ -221,8 +233,7 @@ def main():
         flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
     )
     flow_yearly_df = apply_crosstab_secondary_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
-    flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS)
-    flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS)
+    flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS)
     flow_yearly_df = apply_insufficient_population_fallback(
         flow_yearly_df,
         period_col="year",
@@ -241,10 +252,7 @@ def main():
     )
     flow_quarterly_df = apply_crosstab_secondary_suppression(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
     flow_quarterly_df = apply_race_crossdim_suppression(
-        flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=RACE_DIMENSIONS
-    )
-    flow_quarterly_df = apply_race_crossdim_suppression(
-        flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=PROJECT_ENGAGEMENT_DIMENSIONS
+        flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS
     )
     flow_quarterly_df = apply_insufficient_population_fallback(
         flow_quarterly_df,
@@ -256,10 +264,10 @@ def main():
     flow_quarterly_violations += validate_crosstab(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
 
     # --- dashboard_length_monthly ---
-    length_df = build_length_rows(episodes_in_window)
+    length_df = build_length_rows(episodes_in_window, enrollments)
     length_df = apply_full_suppression_pipeline(length_df, group_cols=["month", "population_segment", "dimension"], count_col="count")
     length_df = apply_race_crossdim_suppression(
-        length_df, group_cols=["month", "population_segment", "dimension"], race_dimensions=RACE_DIMENSIONS, count_col="count"
+        length_df, group_cols=["month", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
     )
     # No indiv_flow_* cross-tab in this table (crosstab_group_cols is
     # unused — see apply_insufficient_population_fallback's own guard).
@@ -276,6 +284,113 @@ def main():
     # must be nulled alongside it, not left populated next to a "*"/"**".
     length_df.loc[length_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
     length_df = length_df.rename(columns={"count": "n"})
+
+    # --- dashboard_length_by_exit_monthly (split by permanently_housed/
+    # inactive/aged_out — see build_length_by_exit.py's module docstring for
+    # why the plain dashboard_length_monthly above pools everyone together
+    # in a way that was causing confusion about what it actually measured).
+    # episodes_with_lookback + window_start, not episodes_in_window: aged-out
+    # detection needs a true prior_month for the window's own first
+    # published month, same reason build_flow_rows needs it.
+    length_by_exit_df = build_length_by_exit_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_by_exit_df = apply_full_suppression_pipeline(
+        length_by_exit_df, group_cols=["month", "population_segment", "dimension", "exit_type"], count_col="count"
+    )
+    length_by_exit_df = apply_race_crossdim_suppression(
+        length_by_exit_df,
+        group_cols=["month", "population_segment", "dimension", "exit_type"],
+        race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS,
+        count_col="count",
+    )
+    # apply_insufficient_population_fallback's blanking key only recognizes
+    # a column literally named "flow_type" (see its own _key/has_flow_type —
+    # every dashboard_flow_* table already uses that name) — alias exit_type
+    # to it for this one call so blanking stays scoped to the specific
+    # exit_type that triggered it, instead of collapsing to (month,
+    # population_segment, dimension, category) alone and blanking every
+    # exit_type in that slice together.
+    length_by_exit_df = length_by_exit_df.rename(columns={"exit_type": "flow_type"})
+    length_by_exit_df = apply_insufficient_population_fallback(
+        length_by_exit_df,
+        period_col="month",
+        main_group_cols=["month", "population_segment", "dimension", "flow_type"],
+        crosstab_group_cols=[],
+        count_col="count",
+    )
+    length_by_exit_df = length_by_exit_df.rename(columns={"flow_type": "exit_type"})
+    length_by_exit_violations = validate(
+        length_by_exit_df, group_cols=["month", "population_segment", "dimension", "exit_type"], count_col="count"
+    )
+    length_by_exit_df.loc[length_by_exit_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
+    length_by_exit_df = length_by_exit_df.rename(columns={"count": "n"})
+
+    # --- dashboard_length_headline_yearly (single pooled median — see
+    # build_length_by_exit.py's own docstring for exactly what this pools) ---
+    length_headline_df = build_length_headline_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_df = apply_full_suppression_pipeline(
+        length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count"
+    )
+    length_headline_df = apply_race_crossdim_suppression(
+        length_headline_df, group_cols=["year", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
+    )
+    length_headline_df = apply_insufficient_population_fallback(
+        length_headline_df,
+        period_col="year",
+        main_group_cols=["year", "population_segment", "dimension"],
+        crosstab_group_cols=[],
+        count_col="count",
+    )
+    length_headline_violations = validate(length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count")
+    length_headline_df.loc[length_headline_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
+    length_headline_df = length_headline_df.rename(columns={"count": "n"})
+
+    # --- dashboard_length_headline_monthly / _quarterly (same pooled
+    # definition as the yearly table above, just at finer grain — powers
+    # LengthSection's headline KPI card whenever a reader drills into a
+    # specific month/quarter instead of browsing the full year) ---
+    length_headline_monthly_df = build_length_headline_monthly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_monthly_df = apply_full_suppression_pipeline(
+        length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], count_col="count"
+    )
+    length_headline_monthly_df = apply_race_crossdim_suppression(
+        length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
+    )
+    length_headline_monthly_df = apply_insufficient_population_fallback(
+        length_headline_monthly_df,
+        period_col="month",
+        main_group_cols=["month", "population_segment", "dimension"],
+        crosstab_group_cols=[],
+        count_col="count",
+    )
+    length_headline_monthly_violations = validate(
+        length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], count_col="count"
+    )
+    length_headline_monthly_df.loc[
+        length_headline_monthly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
+    ] = None
+    length_headline_monthly_df = length_headline_monthly_df.rename(columns={"count": "n"})
+
+    length_headline_quarterly_df = build_length_headline_quarterly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_quarterly_df = apply_full_suppression_pipeline(
+        length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], count_col="count"
+    )
+    length_headline_quarterly_df = apply_race_crossdim_suppression(
+        length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
+    )
+    length_headline_quarterly_df = apply_insufficient_population_fallback(
+        length_headline_quarterly_df,
+        period_col="quarter",
+        main_group_cols=["quarter", "population_segment", "dimension"],
+        crosstab_group_cols=[],
+        count_col="count",
+    )
+    length_headline_quarterly_violations = validate(
+        length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], count_col="count"
+    )
+    length_headline_quarterly_df.loc[
+        length_headline_quarterly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
+    ] = None
+    length_headline_quarterly_df = length_headline_quarterly_df.rename(columns={"count": "n"})
 
     # --- dashboard_return_cohorts ---
     return_df = build_return_cohort_rows(episodes_in_window, all_episodes, as_of=as_of)
@@ -314,7 +429,17 @@ def main():
     # periods.
     capacity_yearly_df = build_capacity_yearly_rows(performance_metrics, program_attributes)
 
-    all_violations = flow_violations + flow_yearly_violations + flow_quarterly_violations + length_violations + return_violations
+    all_violations = (
+        flow_violations
+        + flow_yearly_violations
+        + flow_quarterly_violations
+        + length_violations
+        + length_by_exit_violations
+        + length_headline_violations
+        + length_headline_monthly_violations
+        + length_headline_quarterly_violations
+        + return_violations
+    )
     if all_violations:
         print("SUPPRESSION VALIDATION FAILED:", file=sys.stderr)
         for v in all_violations:
@@ -332,6 +457,10 @@ def main():
     _write("dashboard_flow_yearly.json", _to_json_records(flow_yearly_df, []))
     _write("dashboard_flow_quarterly.json", _to_json_records(flow_quarterly_df, ["quarter"]))
     _write("dashboard_length_monthly.json", _to_json_records(length_df, ["month"]))
+    _write("dashboard_length_by_exit_monthly.json", _to_json_records(length_by_exit_df, ["month"]))
+    _write("dashboard_length_headline_yearly.json", _to_json_records(length_headline_df, []))
+    _write("dashboard_length_headline_monthly.json", _to_json_records(length_headline_monthly_df, ["month"]))
+    _write("dashboard_length_headline_quarterly.json", _to_json_records(length_headline_quarterly_df, ["quarter"]))
     _write("dashboard_return_cohorts.json", _to_json_records(return_df, ["exit_quarter"]))
     _write("dashboard_capacity_monthly.json", _to_json_records(capacity_df, ["month"]))
     _write("dashboard_capacity_quarterly.json", _to_json_records(capacity_quarterly_df, ["quarter"]))

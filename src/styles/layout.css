@@ -664,6 +664,14 @@
   background: transparent;
 }
 
+.chart-legend-swatch-band {
+  width: 14px;
+  height: 10px;
+  background: var(--swatch-color);
+  opacity: 0.35;
+  border-radius: 2px;
+}
+
 /* "By quarter, following your ... selection and filters above" — the run
    chart's (HomelessnessTrendChart) own filter-sync badge, next to its
    Measure dropdown. */
@@ -699,5 +707,68 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-dark);
+}
+
+/* Larger, navy variant of .chart-frame-label for a .chart-frame-box whose
+   title is the card's own heading rather than a small caption (see
+   LengthSection's two chart-frame-boxes) — matches the approved mockup's
+   bolder card title. */
+.chart-frame-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+/* Small-multiple row of per-exit-status LengthChart panels (see
+   LengthByExitGrid) — same auto-fit pattern as .kpi-row, just a wider
+   minmax since each cell holds a chart, not a number. Unlike other
+   small-multiple panels on the page, these aren't individually bordered —
+   the whole row shares one y-scale and sits inside the caller's own
+   .chart-frame-box (see LengthSection), matching the approved mockup's
+   single bordered card holding every exit-status panel together. */
+.length-exit-grid {
+  display: grid;
+  /* 300px, not 320px: this grid now sits inside the caller's own
+     .chart-frame-box (see LengthSection), whose own padding eats into the
+     width available here — 320px left the standard 3-panel row (every
+     population segment but Youth and Young Adults) just a few pixels short
+     of fitting on one line. */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Youth and Young Adults' 4-panel row (see LengthByExitGrid's isPairLayout):
+   a fixed 2-column grid of wider half-width panels, 2 rows of 2, instead of
+   auto-fit's 3-then-1 split, which stranded the 4th panel alone below a
+   full row of 3. */
+.length-exit-grid--pairs {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.length-exit-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bold navy per-panel title ("Permanently Housed", "Inactive", ...) —
+   bigger than the small gray .chart-frame-label this grid used to reuse for
+   it, matching the approved mockup's panel titles. */
+.length-panel-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+/* Plain (non-italic) caption under a chart-frame-box's full chart group —
+   distinct from .suppressed-note, which is italic and used for a single
+   chart's own caveat. Matches the approved mockup's matter-of-fact caption
+   style under the exit-type panel row. */
+.chart-group-caption {
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  margin: 0;
 }
 

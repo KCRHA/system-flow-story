@@ -4,7 +4,15 @@ from episode_systemwide's LengthOfTimeExperiencingHomelessness field.
 """
 import pandas as pd
 
-from .config import DIMENSIONS, DIMENSION_COLUMNS, POPULATION_SEGMENTS
+from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS
+from .period_dimensions import (
+    _BINARY_CATEGORIES,
+    EXTENDED_DIMENSIONS,
+    PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
+    _group_enrollments_by_dimension,
+    _project_engagement_category,
+    _unsheltered_in_period_category,
+)
 from .population import filter_population
 
 
@@ -12,9 +20,17 @@ def _all_categories(df: pd.DataFrame, dimension: str) -> list:
     """Every category value that appears anywhere in `df` for this
     dimension — every month/segment slice is reindexed against this full
     set so a category with zero people that slice still emits an explicit
-    n=0 row instead of being silently absent (see _stats_by_category)."""
+    n=0 row instead of being silently absent (see _stats_by_category).
+
+    unsheltered_in_period/project_engaged_* are fixed Included/Not Included
+    pairs, not data-derived like every other branch here — their
+    DIMENSION_COLUMNS value doesn't exist yet on `df` at the point this
+    runs (each is computed fresh per period — see build_length_rows below),
+    only once the per-month loop actually builds it."""
     if dimension == "overall":
         return ["Overall"]
+    if dimension in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS:
+        return _BINARY_CATEGORIES
     return sorted(df[DIMENSION_COLUMNS[dimension]].dropna().unique().tolist())
 
 
@@ -47,7 +63,10 @@ def _stats_by_category(df: pd.DataFrame, dimension: str, all_categories: list) -
     return out
 
 
-def build_length_rows(episodes: pd.DataFrame) -> pd.DataFrame:
+def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame) -> pd.DataFrame:
+    """`enrollments`: raw All_Program_Enrollments rows, used only to resolve
+    the project_engaged_* dimensions (see _project_engagement_category) —
+    same contract as build_flow.py's build_flow_rows."""
     # EpisodeOutflowType is a per-*episode* label (an episode's eventual
     # final disposition, stamped on every monthly row it spans — see
     # Episode_Systemwide notebook's process_episode()), not a per-month
@@ -71,16 +90,39 @@ def build_length_rows(episodes: pd.DataFrame) -> pd.DataFrame:
 
     # See build_flow.py's identical pattern: derived once from the full
     # window, not per-slice, so every slice reindexes against a stable set.
-    all_categories = {dimension: _all_categories(episodes, dimension) for dimension in DIMENSIONS}
+    all_categories = {dimension: _all_categories(episodes, dimension) for dimension in EXTENDED_DIMENSIONS}
+    # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
+    # across every month below — see _group_enrollments_by_dimension.
+    group_enrollments = _group_enrollments_by_dimension(enrollments)
 
     for month in months:
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
+        # unsheltered_in_period/project_engaged_* are resolved fresh per
+        # month (an OR across every row/enrollment within it — see
+        # period_dimensions.py), from month_df unfiltered by population,
+        # same contract as build_flow.py's identical per-month resolution.
+        # Mapped back onto month_df itself (via .assign, before splitting
+        # out active_df below) so the ordinary DIMENSION_COLUMNS-keyed
+        # groupby in _stats_by_category can treat them like any other
+        # standing column.
+        period_start = pd.Timestamp(month)
+        period_end = period_start + pd.offsets.MonthEnd(0)
+        period_category = {
+            "unsheltered_in_period": _unsheltered_in_period_category(month_df),
+            **{
+                dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
+                for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+        }
+        month_df = month_df.assign(
+            **{DIMENSION_COLUMNS[dim]: month_df["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
+        )
         active_df = month_df[~month_df["_is_outflow_row"]]
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(active_df, pop_label, month)
 
-            for dimension in DIMENSIONS:
+            for dimension in EXTENDED_DIMENSIONS:
                 for stat_row in _stats_by_category(pop_df, dimension, all_categories[dimension]):
                     rows.append(
                         {

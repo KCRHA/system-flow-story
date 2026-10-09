@@ -32,16 +32,50 @@ async function fetchJson(path) {
 }
 
 export async function loadDashboardData() {
-  const [flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly] = await Promise.all([
+  const [
+    flowYearly,
+    flowQuarterly,
+    length,
+    lengthByExit,
+    lengthHeadline,
+    lengthHeadlineMonthly,
+    lengthHeadlineQuarterly,
+    returnCohorts,
+    capacity,
+    capacityQuarterly,
+    capacityYearly,
+  ] = await Promise.all([
     fetchJson("dashboard_flow_yearly.json"),
     fetchJson("dashboard_flow_quarterly.json"),
     fetchJson("dashboard_length_monthly.json"),
+    fetchJson("dashboard_length_by_exit_monthly.json"),
+    fetchJson("dashboard_length_headline_yearly.json"),
+    // Finer-grain siblings of dashboard_length_headline_yearly, for
+    // LengthSection's headline KPI card to use when a reader drills into a
+    // specific month/quarter elsewhere on the page — not published by every
+    // pipeline run yet, so a missing file resolves to [] (the card falls
+    // back to the year view) instead of breaking the whole page load, same
+    // as loadMonthlyFlowForYear's own empty-is-fine fallback below.
+    fetchJson("dashboard_length_headline_monthly.json").catch(() => []),
+    fetchJson("dashboard_length_headline_quarterly.json").catch(() => []),
     fetchJson("dashboard_return_cohorts.json"),
     fetchJson("dashboard_capacity_monthly.json"),
     fetchJson("dashboard_capacity_quarterly.json"),
     fetchJson("dashboard_capacity_yearly.json"),
   ]);
-  return { flowYearly, flowQuarterly, length, returnCohorts, capacity, capacityQuarterly, capacityYearly };
+  return {
+    flowYearly,
+    flowQuarterly,
+    length,
+    lengthByExit,
+    lengthHeadline,
+    lengthHeadlineMonthly,
+    lengthHeadlineQuarterly,
+    returnCohorts,
+    capacity,
+    capacityQuarterly,
+    capacityYearly,
+  };
 }
 
 // dashboard_flow_monthly is pre-split by calendar year (see
