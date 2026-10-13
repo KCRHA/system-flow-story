@@ -400,6 +400,37 @@
   margin-top: 0;
 }
 
+/* Wide single-row variant (see KpiCard's `layout: "stat"`) — value,
+   description sentence, and trend pill share one row instead of stacking,
+   matching the approved mockup for LengthSection's return-rate headline.
+   `order` (not DOM order) places each piece, since KpiCard always renders
+   description before the value in markup regardless of layout. */
+.kpi-row-hero .kpi-card--stat {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+}
+
+.kpi-row-hero .kpi-card--stat .kpi-value-row {
+  order: 1;
+  flex-shrink: 0;
+}
+
+.kpi-row-hero .kpi-card--stat .kpi-description {
+  order: 2;
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.kpi-row-hero .kpi-card--stat .kpi-trend-pill {
+  order: 3;
+  position: static;
+  flex-shrink: 0;
+}
+
 .kpi-card {
   display: flex;
   flex-direction: column;
@@ -622,7 +653,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1rem;
-  margin: 1rem 0;
+  /* No top margin — the chart-frame-title/length-panel-title directly
+     above it already provides that gap, and stacking another 1rem on top
+     of it read as excessive empty space before the chart itself starts. */
+  margin: 0 0 0.75rem;
 }
 
 .chart-legend-item {
@@ -669,6 +703,16 @@
   height: 10px;
   background: var(--swatch-color);
   opacity: 0.35;
+  border-radius: 2px;
+}
+
+/* Small solid square — a stacked bar's own segment color at full opacity
+   (unlike "band"'s deliberately-faded shaded-range swatch), e.g.
+   ReturnCohortChart's "Stayed housed"/"Returned within six months" legend. */
+.chart-legend-swatch-square {
+  width: 10px;
+  height: 10px;
+  background: var(--swatch-color);
   border-radius: 2px;
 }
 

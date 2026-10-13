@@ -44,3 +44,18 @@ export function trendPillText(current, previous, previousLabel) {
   const percent = Math.round((Math.abs(current.value - previous.value) / previous.value) * 100);
   return `${percent}% vs. ${previousLabel}`;
 }
+
+// Percentage-point variant of trendPillText above, for a KPI card whose
+// `value` is already a rate (0-100, e.g. ReturnCohortChart's pct_returned
+// expressed as a percent) rather than a raw count — "X pts" is the right
+// comparison for a rate, since a percent-change-of-a-percent would conflate
+// a 2pt rise from 20% to 22% with a 10% relative increase. Direction still
+// comes from trendDirectionFor above (a plain numeric comparison works the
+// same regardless of what the value represents).
+export function trendPillTextPoints(current, previous, previousLabel) {
+  if (!current || !previous || current.marker || !previousLabel) return null;
+  if (previous.marker) return `vs. fewer than 11 in ${previousLabel}`;
+  const points = Math.round(current.value - previous.value);
+  if (points === 0) return `No change vs. ${previousLabel}`;
+  return `${Math.abs(points)} pts vs. ${previousLabel}`;
+}

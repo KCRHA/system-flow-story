@@ -35,7 +35,13 @@ import InfoIcon from "./InfoIcon.jsx";
 // term on hover (see InfoIcon's "dark" variant) — distinct from the
 // section header's own "Show definitions" glossary, which lists every term
 // at once rather than one at a time next to its card.
-export default function KpiCard({ label, value, marker, percent, description, trendDirection, trendText, goodDirection, info }) {
+// `layout: "stat"` switches to a wide, single-row layout — value, then
+// description, then the trend pill, all side by side instead of stacked —
+// for a lone headline card whose description is the sentence doing the
+// explaining rather than a short label above the number (see LengthSection's
+// return-rate card). Only meaningful inside .kpi-row-hero; every other card
+// keeps the default stacked layout.
+export default function KpiCard({ label, value, marker, percent, description, trendDirection, trendText, goodDirection, info, layout }) {
   const tone = !trendDirection
     ? null
     : trendDirection === "flat" || goodDirection == null
@@ -46,23 +52,25 @@ export default function KpiCard({ label, value, marker, percent, description, tr
   const pillClass = tone === "good" ? "positive" : tone === "bad" ? "concerning" : "neutral";
 
   return (
-    <div className="kpi-card">
-      <div className="kpi-label-row">
-        <div className="kpi-label">{label}</div>
-        {info && (
-          <InfoIcon label={`About ${label}`} variant="dark">
-            <p className="info-icon-popover-title">{info.title}</p>
-            <p>{info.body}</p>
-            {info.linkHref && (
-              <p>
-                <a href={info.linkHref} target="_blank" rel="noreferrer">
-                  {info.linkLabel ?? "See full definitions"}
-                </a>
-              </p>
-            )}
-          </InfoIcon>
-        )}
-      </div>
+    <div className={`kpi-card${layout === "stat" ? " kpi-card--stat" : ""}`}>
+      {(label || info) && (
+        <div className="kpi-label-row">
+          <div className="kpi-label">{label}</div>
+          {info && (
+            <InfoIcon label={`About ${label}`} variant="dark">
+              <p className="info-icon-popover-title">{info.title}</p>
+              <p>{info.body}</p>
+              {info.linkHref && (
+                <p>
+                  <a href={info.linkHref} target="_blank" rel="noreferrer">
+                    {info.linkLabel ?? "See full definitions"}
+                  </a>
+                </p>
+              )}
+            </InfoIcon>
+          )}
+        </div>
+      )}
       {description && <p className="kpi-description">{description}</p>}
       <div className="kpi-value-row">
         {marker ? (

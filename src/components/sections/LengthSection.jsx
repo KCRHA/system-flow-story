@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import KpiCard from "../KpiCard.jsx";
+import ChartLegend from "../ChartLegend.jsx";
 import LengthByExitGrid from "../charts/LengthByExitGrid.jsx";
 import ReturnCohortChart from "../charts/ReturnCohortChart.jsx";
 import { filterRows, distinctValues } from "../../lib/loadData.js";
 import { subjectFor } from "../../lib/demographics.js";
-import { trendDirectionFor, trendPillText } from "../../lib/trend.js";
+import { trendDirectionFor, trendPillText, trendPillTextPoints } from "../../lib/trend.js";
 import { formatMonthLabel, formatQuarterLabel } from "../../lib/periodLabels.js";
 
 export default function LengthSection({
@@ -68,6 +69,36 @@ export default function LengthSection({
         .slice(-8),
     [returnCohortRows, populationSegment, filterDimension, filterCategory, year]
   );
+
+  // The return-rate headline card is a standalone "most recent quarter"
+  // snapshot, not tied to the Year/quarter/month drill-down the way the
+  // length headline above is — it says so explicitly ("the most recent
+  // quarter with six months of follow-up"), so it's built from every
+  // window_complete cohort rather than scopedReturns' Year-capped, 8-quarter
+  // window. Compared against the quarter right before it — headlineReturnRows
+  // is already sorted ascending and window_complete-only, so the second-to-
+  // last row is exactly that.
+  const headlineReturnRows = useMemo(
+    () =>
+      filterRows(returnCohortRows, { populationSegment, dimension: filterDimension, category: filterCategory })
+        .filter((r) => r.window_complete)
+        .sort((a, b) => a.exit_quarter.localeCompare(b.exit_quarter)),
+    [returnCohortRows, populationSegment, filterDimension, filterCategory]
+  );
+  const latestReturnCohort = headlineReturnRows.at(-1);
+  const previousReturnCohort = headlineReturnRows.at(-2);
+  // pct_returned is always null exactly when suppression_marker or
+  // return_suppression_marker is set (see pipeline/suppression.py) — one
+  // marker covers both cases for the headline cell.
+  const returnRateCell = (row) =>
+    row && {
+      value: row.pct_returned != null ? row.pct_returned * 100 : null,
+      marker: row.suppression_marker || row.return_suppression_marker,
+    };
+  const returnRateCurrent = returnRateCell(latestReturnCohort);
+  const returnRatePrevious = returnRateCell(previousReturnCohort);
+  const returnRatePreviousLabel = previousReturnCohort ? formatQuarterLabel(previousReturnCohort.exit_quarter) : null;
+  const latestReturnQuarterLabel = latestReturnCohort ? formatQuarterLabel(latestReturnCohort.exit_quarter) : null;
 
   // The headline KPI card's universe matches whatever month/quarter/year
   // OutflowSection's own pills have drilled into (selectedMonth ??
@@ -191,16 +222,47 @@ export default function LengthSection({
         <p className="chart-frame-title">Days experiencing homelessness, by last housing status</p>
         <LengthByExitGrid byExitRows={scopedByExit} stillActiveRows={scopedLength} populationSegment={populationSegment} />
       </div>
-      <h3 className="kpi-group-heading">Returning to homelessness after exiting</h3>
+      <h3 className="kpi-group-heading">What this shows</h3>
       <p className="chart-analysis">
-        A related question: of {subject} who exit to permanent housing, how many return to homelessness within six
-        months? Shown are the last two years of exit cohorts old enough that we can measure this accurately. More
-        recent exits haven't had six months to potentially return yet.
+        The time people are active in our system varies widely. Some people exit quickly, while others stay engaged
+        for a long time as they wait for housing resources. A longer time isn't always a bad sign, since connecting
+        people to housing takes time and staying engaged is better than losing contact. The goal is for people to
+        stay connected until they're housed, and for that time to be as short as possible.
       </p>
+      <hr className="definitions-divider" />
+      <h2 className="section-heading">Do people who exit our system to permanent housing stay housed?</h2>
+      <p className="section-subhead">Follows people for six months after they exit our system to permanent housing.</p>
+      {latestReturnCohort ? (
+        <div className="kpi-row kpi-row-hero">
+          <KpiCard
+            layout="stat"
+            value={returnRateCurrent.marker ? undefined : returnRateCurrent.value != null ? `${Math.round(returnRateCurrent.value)}%` : undefined}
+            marker={returnRateCurrent.marker}
+            description={`returned to homelessness within six months, among ${subject} who exited our system to permanent housing in ${latestReturnQuarterLabel} (the most recent quarter with six months of follow-up)`}
+            trendDirection={trendDirectionFor(returnRateCurrent, returnRatePrevious)}
+            trendText={trendPillTextPoints(returnRateCurrent, returnRatePrevious, returnRatePreviousLabel)}
+            goodDirection="down"
+          />
+        </div>
+      ) : (
+        <p className="chart-note">No data for this selection.</p>
+      )}
       <div className="chart-frame-box">
-        <p className="chart-frame-label">Returned to Homelessness within 6 Months</p>
+        <p className="chart-frame-title">People who exited our system to permanent housing, by quarter of exit</p>
+        <ChartLegend
+          items={[
+            { kind: "square", color: "var(--chart-2)", label: "Stayed housed" },
+            { kind: "square", color: "var(--chart-3)", label: "Returned within six months" },
+          ]}
+        />
         <ReturnCohortChart rows={scopedReturns} />
+        <p className="chart-group-caption">Recent quarters appear once six months have passed.</p>
       </div>
+      <h3 className="kpi-group-heading">What this shows</h3>
+      <p className="chart-analysis">
+        A return means someone who exited our system to permanent housing became active in our system again within
+        six months. Fewer returns suggest housing placements are lasting.
+      </p>
     </section>
   );
 }

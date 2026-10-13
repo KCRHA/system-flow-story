@@ -32,7 +32,7 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
     const margin = compact ? { top: 12, right: 12, bottom: 22, left: 44 } : { top: 20, right: 20, bottom: 30, left: 56 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
-    const tickFontSize = compact ? 9 : 11;
+    const tickFontSize = 11;
     const yTicks = compact ? 2 : 3;
 
     const parsed = rows
@@ -62,10 +62,13 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
     // an arbitrary evenly-spaced count — matches the approved mockup's
     // sparser x-axis and reads more naturally for a ~2-year trailing window
     // than mid-year tick labels would.
+    // Grey tick text (not d3's default black) on both axes — less jarring
+    // against the rest of the dashboard's muted secondary-text color.
     g.append("g")
       .attr("transform", `translate(0,${innerH})`)
       .call(d3.axisBottom(x).ticks(d3.utcYear.every(1)).tickFormat(d3.utcFormat("%b %Y")))
-      .attr("font-size", tickFontSize);
+      .attr("font-size", tickFontSize)
+      .call((axisG) => axisG.selectAll("text").attr("fill", "var(--text-gray)"));
 
     // Full-width gridlines (not just tick marks) at each y-tick, matching
     // HomelessnessTrendChart's own axis convention — the domain line itself
@@ -74,6 +77,7 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
       .call(d3.axisLeft(y).ticks(yTicks).tickSize(-innerW))
       .attr("font-size", tickFontSize)
       .call((axisG) => axisG.selectAll(".tick line").attr("stroke", "var(--gray-light)").attr("stroke-opacity", 0.7))
+      .call((axisG) => axisG.selectAll("text").attr("fill", "var(--text-gray)"))
       .call((axisG) => axisG.select(".domain").remove());
 
     if (yAxisLabel) {
@@ -93,10 +97,22 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
     // connecting across a suppressed gap would draw a smooth, confident line
     // through months whose real value is unknown (see
     // HomelessnessTrendChart's own line generator for the same convention).
-    const defined = (d) => !d.suppression_marker;
+    //
+    // median_days == null also has to count as "no data" here, same as a
+    // suppressed month, even when suppression_marker itself is unset — a
+    // true n=0 (nobody in this bucket that month) is never suppressed (see
+    // pipeline/suppression.py: "a true zero can't identify a person"), but
+    // there's still no median/p25/p75 to plot. Without this check, +null
+    // coerces to 0 in d3's scale, so this read as a real "everyone exited
+    // in 0 days" point — a filled dot sitting on the axis, the band
+    // collapsed flat there, and a tooltip claiming "0-0 days" for a month
+    // that actually had zero people, not zero duration.
+    const hasData = (d) => d.median_days != null;
+    const defined = (d) => !d.suppression_marker && hasData(d);
 
     const suppressed = parsed.filter((d) => d.suppression_marker);
-    const visible = parsed.filter((d) => !d.suppression_marker);
+    const noData = parsed.filter((d) => !d.suppression_marker && !hasData(d));
+    const visible = parsed.filter((d) => !d.suppression_marker && hasData(d));
 
     // curveMonotoneX, matching HomelessnessTrendChart's own run chart — same
     // smoothing on the band, its boundary lines, and the median line below,
@@ -122,7 +138,7 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
     const midpointDate = (a, b) => new Date((a.getTime() + b.getTime()) / 2);
     let runStart = null;
     for (let i = 0; i <= parsed.length; i++) {
-      const isVisible = i < parsed.length && !parsed[i].suppression_marker;
+      const isVisible = i < parsed.length && !parsed[i].suppression_marker && hasData(parsed[i]);
       if (isVisible && runStart == null) runStart = i;
       if (!isVisible && runStart != null) {
         const runEnd = i - 1;
@@ -188,6 +204,30 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
             ? "Population too small to safely display for this combination"
             : "Data suppressed (small cell)";
         tooltip.show(`<div style="font-weight:600">${monthFormat(d.date)}</div><div>${message}</div>`, event);
+      })
+      .on("mousemove", (event) => tooltip.move(event))
+      .on("mouseleave", () => tooltip.hide());
+
+    // A true n=0 month (nobody in this bucket at all — never suppressed,
+    // see hasData's comment above) gets its own quiet "0" mark right on the
+    // axis, rather than either a plotted point (misleadingly implying a
+    // real 0-day median) or silence (indistinguishable from the suppressed
+    // months next to it, which DO have real, hidden people behind them).
+    g.selectAll("text.no-data-mark")
+      .data(noData)
+      .join("text")
+      .attr("class", "no-data-mark")
+      .attr("x", (d) => x(d.date))
+      .attr("y", innerH - 6)
+      .attr("text-anchor", "middle")
+      .attr("font-size", tickFontSize)
+      .attr("fill", "var(--gray-mid)")
+      .text("0")
+      .on("mouseenter", (event, d) => {
+        tooltip.show(
+          `<div style="font-weight:600">${monthFormat(d.date)}</div><div>No one ${isExit ? "exited this way" : "was active this way"} this month</div>`,
+          event
+        );
       })
       .on("mousemove", (event) => tooltip.move(event))
       .on("mouseleave", () => tooltip.hide());

@@ -45,7 +45,7 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
     svg.selectAll("*").remove();
     clearTooltip(container);
     if (!rows?.length) return;
-    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const margin = { top: 10, right: 20, bottom: 34, left: 56 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
@@ -56,10 +56,17 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       .domain(parsed.map((d) => d.exit_quarter))
       .range([0, innerW])
       .padding(0.25);
+    // 1.05, not LengthChart's 1.1 — a bar chart's tallest column already
+    // has its %-label floated inside it rather than above (unlike
+    // LengthChart's line/band, which needs more headroom so a near-top
+    // point's label doesn't clip), so it needs less breathing room above
+    // it. 1.1 here left .nice() rounding the domain up a full tick past the
+    // actual max (e.g. 2400 for a true max of ~2026), wasting a visibly
+    // empty band above the tallest bar for no reason tied to the data.
     const maxExited = d3.max(parsed, (d) => (d.suppression_marker ? 0 : d.n_exited)) ?? 0;
     const y = d3
       .scaleLinear()
-      .domain([0, maxExited > 0 ? maxExited * 1.1 : 1])
+      .domain([0, maxExited > 0 ? maxExited * 1.05 : 1])
       .range([innerH, 0])
       .nice();
 
@@ -68,15 +75,38 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
 
     const tooltip = createTooltip(container);
 
+    // Rotated y-axis label, matching LengthChart's own yAxisLabel convention
+    // and the approved mockup.
+    svg
+      .append("text")
+      .attr("transform", `translate(14,${margin.top + innerH / 2}) rotate(-90)`)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 11)
+      .attr("font-weight", 600)
+      .attr("fill", "var(--text-navy)")
+      .text("Number of people");
+
+    // Horizontal quarter labels with no tick marks or axis line — matches
+    // the approved mockup (LengthChart's own axis convention, just without
+    // the y-axis's gridlines mirrored onto this one). Grey tick text (not
+    // d3's default black), same as LengthChart's own axes.
     g.append("g")
       .attr("transform", `translate(0,${innerH})`)
-      .call(d3.axisBottom(x).tickFormat(quarterLabel))
+      .call(d3.axisBottom(x).tickFormat(quarterLabel).tickSize(0))
+      .attr("font-size", 11)
+      .call((axisG) => axisG.select(".domain").remove())
       .selectAll("text")
-      .attr("transform", "rotate(-40)")
-      .style("text-anchor", "end")
-      .attr("font-size", 10);
+      .attr("dy", "0.9em")
+      .attr("fill", "var(--text-gray)");
 
-    g.append("g").call(d3.axisLeft(y).ticks(5)).attr("font-size", 11);
+    // Full-width light-gray gridlines at each y-tick, no axis line — same
+    // convention LengthChart uses for its own y-axis.
+    g.append("g")
+      .call(d3.axisLeft(y).ticks(5).tickSize(-innerW))
+      .attr("font-size", 11)
+      .call((axisG) => axisG.selectAll(".tick line").attr("stroke", "var(--gray-light)").attr("stroke-opacity", 0.7))
+      .call((axisG) => axisG.selectAll("text").attr("fill", "var(--text-gray)"))
+      .call((axisG) => axisG.select(".domain").remove());
 
     // suppression_marker hides the whole cohort (n_exited itself was too
     // small). return_suppression_marker only hides the split — n_exited is
@@ -214,14 +244,6 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
   return (
     <div>
       <svg ref={svgRef} style={{ width: "100%", height: "auto" }} />
-      <p className="suppressed-note">
-        Bar height is the number of people who exited to permanent housing that quarter, split into the{" "}
-        <span style={{ color: REMAINED_HOUSED_COLOR }}>share who remained housed</span> and the{" "}
-        <span style={{ color: RETURNED_COLOR }}>share who returned to homelessness</span> within 6 months. When too
-        few people returned to safely show that split, the bar (in{" "}
-        <span style={{ color: UNKNOWN_SPLIT_COLOR }}>gray</span>) still shows the true number who exited, marked
-        "split suppressed."
-      </p>
     </div>
   );
 }
