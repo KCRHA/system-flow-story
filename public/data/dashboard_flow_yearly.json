@@ -1814,8 +1814,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 3119.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -1823,8 +1823,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 5186.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -10427,8 +10427,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 5195.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -10436,8 +10436,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_still_active",
-    "count": 3110.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -12515,8 +12515,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 3116.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -12524,8 +12524,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 5189.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -17726,8 +17726,8 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 18.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -17735,8 +17735,8 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 45.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -24773,8 +24773,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 46.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -25295,8 +25295,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 25.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -25304,8 +25304,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 38.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -29120,8 +29120,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 57.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -29129,8 +29129,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 71.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -37733,8 +37733,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 73.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -37742,8 +37742,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 55.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -38777,8 +38777,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 61.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -38786,8 +38786,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 67.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -49379,8 +49379,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 42.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -49388,8 +49388,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 22.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -50423,8 +50423,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_deceased",
-    "count": 23.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -50432,8 +50432,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_deceased",
-    "count": 41.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -69656,8 +69656,8 @@
     "dimension": "race_multiracial",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 34.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -69665,8 +69665,8 @@
     "dimension": "race_multiracial",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 73.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -77225,8 +77225,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 31.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -77234,8 +77234,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 76.0,
+    "suppression_marker": null
   },
   {
     "year": 2021,
@@ -77747,8 +77747,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 77.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2021,
@@ -77756,8 +77756,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 30.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -92552,8 +92552,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 56.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -92561,8 +92561,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 58.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93596,8 +93596,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 50.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93605,8 +93605,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 64.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93722,8 +93722,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 94.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93731,8 +93731,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 136.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93740,8 +93740,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 67.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -93749,8 +93749,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 82.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -101165,8 +101165,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 67.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -101174,8 +101174,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 47.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -101309,8 +101309,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 73.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -101318,8 +101318,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 76.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -102209,8 +102209,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 55.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -102218,8 +102218,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 59.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -102335,8 +102335,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 144.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -102344,8 +102344,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 86.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -102857,8 +102857,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 88.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -102866,8 +102866,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 142.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -102875,8 +102875,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 86.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -102884,8 +102884,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 63.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -103253,8 +103253,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 62.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -103262,8 +103262,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 52.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -132800,8 +132800,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 14.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -132809,8 +132809,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 18.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -140369,8 +140369,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 17.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -140378,8 +140378,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 15.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -142457,8 +142457,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 20.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -142466,8 +142466,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 12.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -145814,8 +145814,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 83.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -145823,8 +145823,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 178.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -153905,8 +153905,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 82.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -153914,8 +153914,8 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 179.0,
+    "suppression_marker": null
   },
   {
     "year": 2022,
@@ -155471,8 +155471,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 184.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -155480,8 +155480,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 77.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2022,
@@ -166055,8 +166055,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 46.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -166064,8 +166064,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 27.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -167099,8 +167099,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 29.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -167108,8 +167108,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 44.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -170456,8 +170456,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 73.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -170465,8 +170465,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 84.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -179069,8 +179069,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 81.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -179078,8 +179078,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 76.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -179087,8 +179087,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 22.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -179096,8 +179096,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 19.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -180635,8 +180635,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 86.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -180644,8 +180644,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 71.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -183362,8 +183362,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 15.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -183371,8 +183371,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 30.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -191975,8 +191975,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 32.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -191984,8 +191984,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 13.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -193019,8 +193019,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 16.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -193028,8 +193028,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 29.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -204935,8 +204935,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 45.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -204944,8 +204944,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 26.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -205979,8 +205979,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 27.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -205988,8 +205988,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_deceased",
-    "count": 44.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2023,
@@ -231701,8 +231701,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 27.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -231710,8 +231710,8 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 58.0,
+    "suppression_marker": null
   },
   {
     "year": 2023,
@@ -262382,8 +262382,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 36.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -262391,8 +262391,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 60.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -270473,8 +270473,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 36.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -270482,8 +270482,8 @@
     "dimension": "project_engaged_so",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 60.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -270995,8 +270995,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 68.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -271004,8 +271004,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 28.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -288284,8 +288284,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 23.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -288293,8 +288293,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 30.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -296897,8 +296897,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 29.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -296906,8 +296906,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 24.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -297941,8 +297941,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 31.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -297950,8 +297950,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 22.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -301352,8 +301352,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 44.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -301361,8 +301361,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 85.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -308921,8 +308921,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 45.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -308930,8 +308930,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 84.0,
+    "suppression_marker": null
   },
   {
     "year": 2024,
@@ -311009,8 +311009,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 91.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -311018,8 +311018,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 38.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2024,
@@ -325904,8 +325904,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 22.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -325913,8 +325913,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 22.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -325958,8 +325958,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 88.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -325967,8 +325967,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 95.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -326876,8 +326876,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 30.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -326885,8 +326885,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 94.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -327002,8 +327002,8 @@
     "dimension": "race_white",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 64.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -327011,8 +327011,8 @@
     "dimension": "race_white",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 119.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -334445,8 +334445,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": 95.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -334454,8 +334454,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": 29.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -334517,8 +334517,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": 31.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -334526,8 +334526,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": 13.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -334571,8 +334571,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 84.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -334580,8 +334580,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 99.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -335489,8 +335489,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 34.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -335498,8 +335498,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 90.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -335561,8 +335561,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 14.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -335570,8 +335570,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 30.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -335615,8 +335615,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 101.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -335624,8 +335624,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 82.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -336137,8 +336137,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 60.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -336146,8 +336146,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 123.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -336659,8 +336659,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 128.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -336668,8 +336668,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 55.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -365036,8 +365036,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 22.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -365045,8 +365045,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 23.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -365090,8 +365090,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 30.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -365099,8 +365099,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 56.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -373649,8 +373649,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 24.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -373658,8 +373658,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 21.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -373703,8 +373703,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 32.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -373712,8 +373712,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 54.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -374657,8 +374657,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 33.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -374666,8 +374666,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 33.0,
+    "suppression_marker": null
   },
   {
     "year": 2025,
@@ -375791,8 +375791,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 59.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -375800,8 +375800,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 27.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2025,
@@ -403736,8 +403736,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 94.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -403745,8 +403745,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 108.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -412349,8 +412349,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 109.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -412358,8 +412358,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 93.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -413915,8 +413915,8 @@
     "dimension": "project_engaged_th",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 101.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -413924,8 +413924,8 @@
     "dimension": "project_engaged_th",
     "category": "Not Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 101.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -442850,8 +442850,8 @@
     "dimension": "race_black",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 28.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -442859,8 +442859,8 @@
     "dimension": "race_black",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 60.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -451463,8 +451463,8 @@
     "dimension": "project_engaged_es",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 32.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -451472,8 +451472,8 @@
     "dimension": "project_engaged_es",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 56.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -452075,8 +452075,8 @@
     "dimension": "project_engaged_housing",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 62.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -452084,8 +452084,8 @@
     "dimension": "project_engaged_housing",
     "category": "Not Included",
     "flow_type": "indiv_return_from_housed",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 65.0,
+    "suppression_marker": null
   },
   {
     "year": 2026,
@@ -453551,8 +453551,8 @@
     "dimension": "project_engaged_ce",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 65.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,
@@ -453560,8 +453560,8 @@
     "dimension": "project_engaged_ce",
     "category": "Not Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 23.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "year": 2026,

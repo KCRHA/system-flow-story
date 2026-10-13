@@ -12,7 +12,15 @@ from datetime import timedelta
 
 import pandas as pd
 
-from .config import DIMENSIONS, DIMENSION_COLUMNS, POPULATION_SEGMENTS, RETURN_WINDOW_DAYS
+from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, RETURN_WINDOW_DAYS
+from .period_dimensions import (
+    _BINARY_CATEGORIES,
+    EXTENDED_DIMENSIONS,
+    PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
+    _group_enrollments_by_dimension,
+    _project_engagement_category,
+    _unsheltered_in_period_category,
+)
 from .population import filter_population
 
 
@@ -21,19 +29,33 @@ def _all_categories(df: pd.DataFrame, dimension: str) -> list:
     dimension — every exit_month/segment slice is reindexed against this
     full set so a category with zero exits that slice still emits an
     explicit n_exited=0 row instead of being silently absent (mirrors the
-    identical fix in build_flow.py/build_length.py)."""
+    identical fix in build_flow.py/build_length.py).
+
+    unsheltered_in_period/project_engaged_* are fixed Included/Not Included
+    pairs, not data-derived like every other branch here — see
+    build_length.py's identical comment on its own _all_categories."""
     if dimension == "overall":
         return ["Overall"]
+    if dimension in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS:
+        return _BINARY_CATEGORIES
     return sorted(df[DIMENSION_COLUMNS[dimension]].dropna().unique().tolist())
 
 
-def build_return_cohort_rows(episodes_in_window: pd.DataFrame, all_episodes: pd.DataFrame, as_of: pd.Timestamp) -> pd.DataFrame:
+def build_return_cohort_rows(
+    episodes_in_window: pd.DataFrame, all_episodes: pd.DataFrame, enrollments: pd.DataFrame, as_of: pd.Timestamp
+) -> pd.DataFrame:
     """
     episodes_in_window: episode_systemwide rows whose exit month falls in the
       export window (last 5 completed years + completed months of this year).
+      Carries every monthly row an episode spans, not just exit rows — also
+      used below to resolve unsheltered_in_period across each exit cohort's
+      whole quarter, not just its members' own exit rows.
     all_episodes: episode_systemwide with no date trim — needed because a
       return can occur up to RETURN_WINDOW_DAYS after an exit near the end of
       the export window, past what that window alone would contain.
+    enrollments: raw All_Program_Enrollments rows, used only to resolve the
+      project_engaged_* dimensions (see _project_engagement_category) — same
+      contract as build_length.py's build_length_rows.
     as_of: "today" for window_complete purposes (a cohort's window is only
       complete once RETURN_WINDOW_DAYS have fully elapsed since exit_quarter
       ended — the latest possible exit date in the quarter — so every exit
@@ -62,16 +84,50 @@ def build_return_cohort_rows(episodes_in_window: pd.DataFrame, all_episodes: pd.
 
     rows: list = []
     exit_quarters = sorted(exits["exit_quarter"].unique())
-    all_categories = {dimension: _all_categories(exits, dimension) for dimension in DIMENSIONS}
+    all_categories = {dimension: _all_categories(exits, dimension) for dimension in EXTENDED_DIMENSIONS}
+    # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
+    # across every quarter below — see _group_enrollments_by_dimension.
+    group_enrollments = _group_enrollments_by_dimension(enrollments)
 
     for exit_quarter in exit_quarters:
         quarter_df = exits[exits["exit_quarter"] == exit_quarter]
+        quarter_start = pd.Period(exit_quarter, freq="Q").start_time
         # Anchored to the quarter's end, since that's the latest date any
         # exit in this quarter could have happened — anchoring to the start
         # (as the old monthly version did) would call a quarter complete up
         # to ~3 months before its late exits actually clear the window.
         quarter_end = pd.Period(exit_quarter, freq="Q").end_time.normalize()
         window_complete = (pd.Timestamp(as_of) - quarter_end).days >= RETURN_WINDOW_DAYS
+
+        # unsheltered_in_period/project_engaged_* are resolved fresh per
+        # quarter (an OR across every row/enrollment within it — see
+        # period_dimensions.py) — but "the period" here is this cohort's
+        # whole exit quarter, not just each person's own single exit row,
+        # so someone unsheltered earlier in the quarter but sheltered by
+        # their exit month still reads as Included, same as the question
+        # length/flow already ask over a month. episodes_in_window already
+        # carries every monthly row (is_exit_row above only narrowed
+        # `exits`, not the source frame), so quarter_person_rows below is
+        # every row this cohort's own members have within the quarter.
+        quarter_cohort_ids = quarter_df["PersonalID"].unique()
+        quarter_person_rows = episodes_in_window[
+            episodes_in_window["PersonalID"].isin(quarter_cohort_ids)
+            & (episodes_in_window["TimePeriodStartDate"] >= quarter_start)
+            & (episodes_in_window["TimePeriodStartDate"] <= quarter_end)
+        ]
+        period_category = {
+            "unsheltered_in_period": _unsheltered_in_period_category(quarter_person_rows),
+            **{
+                dim: _project_engagement_category(quarter_person_rows, group_enrollments[dim], quarter_start, quarter_end)
+                for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+        }
+        quarter_df = quarter_df.assign(
+            **{
+                DIMENSION_COLUMNS[dim]: quarter_df["PersonalID"].map(period_category[dim])
+                for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS
+            }
+        )
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(quarter_df, pop_label, exit_quarter)
@@ -89,7 +145,7 @@ def build_return_cohort_rows(episodes_in_window: pd.DataFrame, all_episodes: pd.
                 ]
             )
 
-            for dimension in DIMENSIONS:
+            for dimension in EXTENDED_DIMENSIONS:
                 if dimension == "overall":
                     groups = {"Overall": pop_df}
                 else:

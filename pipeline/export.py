@@ -393,7 +393,7 @@ def main():
     length_headline_quarterly_df = length_headline_quarterly_df.rename(columns={"count": "n"})
 
     # --- dashboard_return_cohorts ---
-    return_df = build_return_cohort_rows(episodes_in_window, all_episodes, as_of=as_of)
+    return_df = build_return_cohort_rows(episodes_in_window, all_episodes, enrollments, as_of=as_of)
     return_df = return_df.rename(columns={"n_exited": "count"})
     return_df = apply_full_suppression_pipeline(return_df, group_cols=["exit_quarter", "population_segment", "dimension"], count_col="count")
     return_df = apply_race_crossdim_suppression(

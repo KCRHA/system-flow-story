@@ -49028,12 +49028,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 64.0,
+    "median_days": 129.0,
+    "p25_days": 40.25,
+    "p75_days": 271.5,
+    "mean_days": 270.140625,
+    "suppression_marker": null
   },
   {
     "month": "2021-05-01",
@@ -49041,12 +49041,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 69.0,
+    "median_days": 119.0,
+    "p25_days": 57.0,
+    "p75_days": 350.0,
+    "mean_days": 248.347826087,
+    "suppression_marker": null
   },
   {
     "month": "2021-05-01",
@@ -50159,12 +50159,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 72.0,
-    "median_days": 140.0,
-    "p25_days": 81.0,
-    "p75_days": 351.0,
-    "mean_days": 286.9444444444,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-05-01",
@@ -50172,12 +50172,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 61.0,
-    "median_days": 62.0,
-    "p25_days": 34.0,
-    "p75_days": 273.0,
-    "mean_days": 225.6557377049,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-05-01",
@@ -50315,12 +50315,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 69.0,
+    "median_days": 124.0,
+    "p25_days": 43.0,
+    "p75_days": 271.0,
+    "mean_days": 251.5507246377,
+    "suppression_marker": null
   },
   {
     "month": "2021-05-01",
@@ -50328,12 +50328,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 64.0,
+    "median_days": 125.5,
+    "p25_days": 42.5,
+    "p75_days": 399.0,
+    "mean_days": 266.6875,
+    "suppression_marker": null
   },
   {
     "month": "2021-05-01",
@@ -86338,168 +86338,168 @@
     "dimension": "race_black",
     "exit_type": "inactive",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_black",
-    "exit_type": "inactive",
-    "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_black",
-    "exit_type": "aged_out",
-    "category": "Included",
-    "n": 0.0,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
+    "n": 17.0,
+    "median_days": 54.0,
+    "p25_days": 43.0,
+    "p75_days": 82.0,
+    "mean_days": 109.1764705882,
     "suppression_marker": null
   },
   {
     "month": "2021-08-01",
     "population_segment": "veterans",
     "dimension": "race_black",
-    "exit_type": "aged_out",
-    "category": "Not Included",
-    "n": 0.0,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": null
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
-    "exit_type": "permanently_housed",
-    "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "*"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
-    "exit_type": "permanently_housed",
-    "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
-    "exit_type": "inactive",
-    "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "*"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
     "exit_type": "inactive",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
-    "exit_type": "aged_out",
-    "category": "Included",
-    "n": 0.0,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": null
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_nhpi",
-    "exit_type": "aged_out",
-    "category": "Not Included",
-    "n": 0.0,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": null
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_white",
-    "exit_type": "permanently_housed",
-    "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_white",
-    "exit_type": "permanently_housed",
-    "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
-  },
-  {
-    "month": "2021-08-01",
-    "population_segment": "veterans",
-    "dimension": "race_white",
-    "exit_type": "inactive",
-    "category": "Included",
-    "n": 30.0,
+    "n": 28.0,
     "median_days": 57.0,
     "p25_days": 48.0,
-    "p75_days": 110.5,
-    "mean_days": 88.0666666667,
+    "p75_days": 114.25,
+    "mean_days": 89.0,
     "suppression_marker": null
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_black",
+    "exit_type": "aged_out",
+    "category": "Included",
+    "n": 0.0,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": null
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_black",
+    "exit_type": "aged_out",
+    "category": "Not Included",
+    "n": 0.0,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": null
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "permanently_housed",
+    "category": "Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "*"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "permanently_housed",
+    "category": "Not Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "inactive",
+    "category": "Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "*"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "inactive",
+    "category": "Not Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "aged_out",
+    "category": "Included",
+    "n": 0.0,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": null
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_nhpi",
+    "exit_type": "aged_out",
+    "category": "Not Included",
+    "n": 0.0,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": null
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_white",
+    "exit_type": "permanently_housed",
+    "category": "Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_white",
+    "exit_type": "permanently_housed",
+    "category": "Not Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
+  },
+  {
+    "month": "2021-08-01",
+    "population_segment": "veterans",
+    "dimension": "race_white",
+    "exit_type": "inactive",
+    "category": "Included",
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-08-01",
@@ -86507,12 +86507,12 @@
     "dimension": "race_white",
     "exit_type": "inactive",
     "category": "Not Included",
-    "n": 15.0,
-    "median_days": 54.0,
-    "p25_days": 45.0,
-    "p75_days": 80.0,
-    "mean_days": 113.7333333333,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-08-01",
@@ -87937,12 +87937,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "inactive",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 17.0,
+    "median_days": 50.0,
+    "p25_days": 42.0,
+    "p75_days": 56.0,
+    "mean_days": 71.0588235294,
+    "suppression_marker": null
   },
   {
     "month": "2021-08-01",
@@ -87950,12 +87950,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "inactive",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 28.0,
+    "median_days": 69.0,
+    "p25_days": 48.75,
+    "p75_days": 132.0,
+    "mean_days": 112.1428571429,
+    "suppression_marker": null
   },
   {
     "month": "2021-08-01",
@@ -95672,12 +95672,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 89.0,
+    "median_days": 77.0,
+    "p25_days": 32.0,
+    "p75_days": 191.0,
+    "mean_days": 161.2247191011,
+    "suppression_marker": null
   },
   {
     "month": "2021-09-01",
@@ -95685,12 +95685,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 116.0,
+    "median_days": 150.5,
+    "p25_days": 46.25,
+    "p75_days": 351.75,
+    "mean_days": 250.6206896552,
+    "suppression_marker": null
   },
   {
     "month": "2021-09-01",
@@ -97115,12 +97115,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 119.0,
-    "median_days": 144.0,
-    "p25_days": 50.0,
-    "p75_days": 320.0,
-    "mean_days": 223.6050420168,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-09-01",
@@ -97128,12 +97128,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 86.0,
-    "median_days": 76.0,
-    "p25_days": 36.0,
-    "p75_days": 245.25,
-    "mean_days": 195.488372093,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2021-09-01",
@@ -97271,12 +97271,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 96.0,
+    "median_days": 116.5,
+    "p25_days": 38.75,
+    "p75_days": 279.25,
+    "mean_days": 224.2291666667,
+    "suppression_marker": null
   },
   {
     "month": "2021-09-01",
@@ -97284,12 +97284,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 109.0,
+    "median_days": 108.0,
+    "p25_days": 42.0,
+    "p75_days": 296.0,
+    "mean_days": 200.871559633,
+    "suppression_marker": null
   },
   {
     "month": "2021-09-01",
@@ -233615,12 +233615,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 14.0,
+    "median_days": 163.0,
+    "p25_days": 42.25,
+    "p75_days": 354.5,
+    "mean_days": 226.4285714286,
+    "suppression_marker": null
   },
   {
     "month": "2022-09-01",
@@ -233628,12 +233628,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 30.0,
+    "median_days": 94.0,
+    "p25_days": 30.75,
+    "p75_days": 194.0,
+    "mean_days": 120.6,
+    "suppression_marker": null
   },
   {
     "month": "2022-09-01",
@@ -286616,12 +286616,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 147.0,
+    "median_days": 94.0,
+    "p25_days": 36.5,
+    "p75_days": 241.0,
+    "mean_days": 253.4353741497,
+    "suppression_marker": null
   },
   {
     "month": "2023-02-01",
@@ -286629,12 +286629,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 240.0,
+    "median_days": 180.5,
+    "p25_days": 58.75,
+    "p75_days": 492.5,
+    "mean_days": 371.4875,
+    "suppression_marker": null
   },
   {
     "month": "2023-02-01",
@@ -288059,12 +288059,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 248.0,
-    "median_days": 192.5,
-    "p25_days": 74.5,
-    "p75_days": 608.0,
-    "mean_days": 396.9798387097,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-02-01",
@@ -288072,12 +288072,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 139.0,
-    "median_days": 61.0,
-    "p25_days": 35.5,
-    "p75_days": 210.5,
-    "mean_days": 201.1582733813,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-02-01",
@@ -288215,12 +288215,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 146.0,
+    "median_days": 140.0,
+    "p25_days": 48.75,
+    "p75_days": 460.5,
+    "mean_days": 379.8219178082,
+    "suppression_marker": null
   },
   {
     "month": "2023-02-01",
@@ -288228,12 +288228,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 241.0,
+    "median_days": 137.0,
+    "p25_days": 45.0,
+    "p75_days": 371.0,
+    "mean_days": 294.4315352697,
+    "suppression_marker": null
   },
   {
     "month": "2023-02-01",
@@ -295976,12 +295976,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 71.0,
+    "median_days": 150.0,
+    "p25_days": 43.5,
+    "p75_days": 423.0,
+    "mean_days": 270.7323943662,
+    "suppression_marker": null
   },
   {
     "month": "2023-03-01",
@@ -295989,12 +295989,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 120.0,
+    "median_days": 188.5,
+    "p25_days": 57.75,
+    "p75_days": 349.0,
+    "mean_days": 275.7416666667,
+    "suppression_marker": null
   },
   {
     "month": "2023-03-01",
@@ -297341,12 +297341,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 71.0,
+    "median_days": 81.0,
+    "p25_days": 39.5,
+    "p75_days": 227.0,
+    "mean_days": 155.7887323944,
+    "suppression_marker": null
   },
   {
     "month": "2023-03-01",
@@ -297354,12 +297354,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 120.0,
+    "median_days": 200.0,
+    "p25_days": 85.75,
+    "p75_days": 469.75,
+    "mean_days": 343.75,
+    "suppression_marker": null
   },
   {
     "month": "2023-03-01",
@@ -297419,12 +297419,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 129.0,
-    "median_days": 163.0,
-    "p25_days": 67.0,
-    "p75_days": 358.0,
-    "mean_days": 283.7984496124,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-03-01",
@@ -297432,12 +297432,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 62.0,
-    "median_days": 184.0,
-    "p25_days": 43.0,
-    "p75_days": 316.25,
-    "mean_days": 253.2419354839,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-03-01",
@@ -310952,12 +310952,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 19.0,
+    "median_days": 82.0,
+    "p25_days": 42.0,
+    "p75_days": 169.5,
+    "mean_days": 205.3684210526,
+    "suppression_marker": null
   },
   {
     "month": "2023-04-01",
@@ -310965,12 +310965,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 42.0,
+    "median_days": 86.0,
+    "p25_days": 40.75,
+    "p75_days": 193.5,
+    "mean_days": 131.7857142857,
+    "suppression_marker": null
   },
   {
     "month": "2023-04-01",
@@ -312239,12 +312239,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 19.0,
+    "median_days": 99.0,
+    "p25_days": 65.5,
+    "p75_days": 302.0,
+    "mean_days": 245.0526315789,
+    "suppression_marker": null
   },
   {
     "month": "2023-04-01",
@@ -312252,12 +312252,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 42.0,
+    "median_days": 69.0,
+    "p25_days": 38.0,
+    "p75_days": 148.25,
+    "mean_days": 113.8333333333,
+    "suppression_marker": null
   },
   {
     "month": "2023-04-01",
@@ -312395,12 +312395,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 48.0,
-    "median_days": 82.5,
-    "p25_days": 46.75,
-    "p75_days": 182.25,
-    "mean_days": 165.0416666667,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-04-01",
@@ -312408,12 +312408,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 13.0,
-    "median_days": 83.0,
-    "p25_days": 27.0,
-    "p75_days": 189.0,
-    "mean_days": 116.5384615385,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-04-01",
@@ -329672,12 +329672,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 58.0,
+    "median_days": 105.0,
+    "p25_days": 39.25,
+    "p75_days": 308.0,
+    "mean_days": 240.6379310345,
+    "suppression_marker": null
   },
   {
     "month": "2023-06-01",
@@ -329685,12 +329685,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 114.0,
+    "median_days": 178.5,
+    "p25_days": 77.5,
+    "p75_days": 350.0,
+    "mean_days": 292.3070175439,
+    "suppression_marker": null
   },
   {
     "month": "2023-06-01",
@@ -331037,12 +331037,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 56.0,
+    "median_days": 83.0,
+    "p25_days": 38.75,
+    "p75_days": 150.25,
+    "mean_days": 127.3214285714,
+    "suppression_marker": null
   },
   {
     "month": "2023-06-01",
@@ -331050,12 +331050,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 116.0,
+    "median_days": 251.0,
+    "p25_days": 91.0,
+    "p75_days": 379.75,
+    "mean_days": 346.1206896552,
+    "suppression_marker": null
   },
   {
     "month": "2023-06-01",
@@ -331115,12 +331115,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 120.0,
-    "median_days": 146.0,
-    "p25_days": 64.75,
-    "p75_days": 338.25,
-    "mean_days": 285.225,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-06-01",
@@ -331128,12 +331128,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 52.0,
-    "median_days": 211.5,
-    "p25_days": 65.5,
-    "p75_days": 318.5,
-    "mean_days": 251.0192307692,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-06-01",
@@ -340904,12 +340904,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 47.0,
+    "median_days": 126.0,
+    "p25_days": 56.0,
+    "p75_days": 262.0,
+    "mean_days": 207.0425531915,
+    "suppression_marker": null
   },
   {
     "month": "2023-07-01",
@@ -340917,12 +340917,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 118.0,
+    "median_days": 194.5,
+    "p25_days": 93.5,
+    "p75_days": 409.5,
+    "mean_days": 295.2796610169,
+    "suppression_marker": null
   },
   {
     "month": "2023-07-01",
@@ -342269,12 +342269,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 51.0,
+    "median_days": 127.0,
+    "p25_days": 45.0,
+    "p75_days": 193.0,
+    "mean_days": 170.2549019608,
+    "suppression_marker": null
   },
   {
     "month": "2023-07-01",
@@ -342282,12 +342282,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 114.0,
+    "median_days": 223.5,
+    "p25_days": 82.75,
+    "p75_days": 418.25,
+    "mean_days": 314.8333333333,
+    "suppression_marker": null
   },
   {
     "month": "2023-07-01",
@@ -342347,12 +342347,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 120.0,
-    "median_days": 185.5,
-    "p25_days": 100.25,
-    "p75_days": 396.0,
-    "mean_days": 298.7583333333,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-07-01",
@@ -342360,12 +342360,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 45.0,
-    "median_days": 122.0,
-    "p25_days": 39.0,
-    "p75_days": 232.0,
-    "mean_days": 193.8444444444,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-07-01",
@@ -355880,12 +355880,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 15.0,
+    "median_days": 93.0,
+    "p25_days": 55.0,
+    "p75_days": 184.0,
+    "mean_days": 118.1333333333,
+    "suppression_marker": null
   },
   {
     "month": "2023-08-01",
@@ -355893,12 +355893,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 34.0,
+    "median_days": 117.5,
+    "p25_days": 55.5,
+    "p75_days": 302.75,
+    "mean_days": 221.0588235294,
+    "suppression_marker": null
   },
   {
     "month": "2023-08-01",
@@ -357167,12 +357167,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 17.0,
+    "median_days": 156.0,
+    "p25_days": 72.0,
+    "p75_days": 335.0,
+    "mean_days": 248.8823529412,
+    "suppression_marker": null
   },
   {
     "month": "2023-08-01",
@@ -357180,12 +357180,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 32.0,
+    "median_days": 82.0,
+    "p25_days": 48.0,
+    "p75_days": 194.75,
+    "mean_days": 158.03125,
+    "suppression_marker": null
   },
   {
     "month": "2023-08-01",
@@ -357479,12 +357479,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 36.0,
-    "median_days": 119.5,
-    "p25_days": 62.5,
-    "p75_days": 243.5,
-    "mean_days": 185.7777777778,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-08-01",
@@ -357492,12 +357492,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 13.0,
-    "median_days": 72.0,
-    "p25_days": 48.0,
-    "p75_days": 191.0,
-    "mean_days": 200.0,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-08-01",
@@ -395192,12 +395192,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 32.0,
+    "median_days": 104.0,
+    "p25_days": 52.0,
+    "p75_days": 233.5,
+    "mean_days": 156.875,
+    "suppression_marker": null
   },
   {
     "month": "2023-12-01",
@@ -395205,12 +395205,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 34.0,
+    "median_days": 209.0,
+    "p25_days": 57.0,
+    "p75_days": 363.0,
+    "mean_days": 244.2647058824,
+    "suppression_marker": null
   },
   {
     "month": "2023-12-01",
@@ -396635,12 +396635,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 34.0,
+    "median_days": 179.0,
+    "p25_days": 58.75,
+    "p75_days": 301.0,
+    "mean_days": 221.1176470588,
+    "suppression_marker": null
   },
   {
     "month": "2023-12-01",
@@ -396648,12 +396648,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 32.0,
+    "median_days": 117.5,
+    "p25_days": 47.75,
+    "p75_days": 268.0,
+    "mean_days": 181.46875,
+    "suppression_marker": null
   },
   {
     "month": "2023-12-01",
@@ -396791,12 +396791,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 39.0,
-    "median_days": 206.0,
-    "p25_days": 75.0,
-    "p75_days": 361.0,
-    "mean_days": 236.5128205128,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-12-01",
@@ -396804,12 +396804,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 27.0,
-    "median_days": 78.0,
-    "p25_days": 47.0,
-    "p75_days": 233.5,
-    "mean_days": 151.8888888889,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2023-12-01",
@@ -423428,12 +423428,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 18.0,
+    "median_days": 93.0,
+    "p25_days": 47.0,
+    "p75_days": 202.25,
+    "mean_days": 127.1111111111,
+    "suppression_marker": null
   },
   {
     "month": "2024-02-01",
@@ -423441,12 +423441,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 31.0,
+    "median_days": 79.0,
+    "p25_days": 44.5,
+    "p75_days": 129.5,
+    "mean_days": 129.0967741935,
+    "suppression_marker": null
   },
   {
     "month": "2024-02-01",
@@ -424559,12 +424559,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 16.0,
+    "median_days": 186.5,
+    "p25_days": 90.75,
+    "p75_days": 267.0,
+    "mean_days": 206.25,
+    "suppression_marker": null
   },
   {
     "month": "2024-02-01",
@@ -424572,12 +424572,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 56.0,
+    "p25_days": 35.0,
+    "p75_days": 107.0,
+    "mean_days": 90.6060606061,
+    "suppression_marker": null
   },
   {
     "month": "2024-02-01",
@@ -424871,12 +424871,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 38.0,
-    "median_days": 100.0,
-    "p25_days": 51.5,
-    "p75_days": 211.75,
-    "mean_days": 143.1842105263,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-02-01",
@@ -424884,12 +424884,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 11.0,
-    "median_days": 46.0,
-    "p25_days": 33.0,
-    "p75_days": 65.0,
-    "mean_days": 77.1818181818,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-02-01",
@@ -429044,12 +429044,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 14.0,
+    "median_days": 154.5,
+    "p25_days": 81.0,
+    "p75_days": 386.25,
+    "mean_days": 229.8571428571,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -429057,12 +429057,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 30.0,
+    "median_days": 163.0,
+    "p25_days": 70.25,
+    "p75_days": 543.5,
+    "mean_days": 305.4,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -430175,12 +430175,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 18.0,
+    "median_days": 197.5,
+    "p25_days": 104.75,
+    "p75_days": 498.5,
+    "mean_days": 318.2777777778,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -430188,12 +430188,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 26.0,
+    "median_days": 131.5,
+    "p25_days": 66.5,
+    "p75_days": 388.75,
+    "mean_days": 255.8076923077,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -430487,12 +430487,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 31.0,
-    "median_days": 192.0,
-    "p25_days": 72.5,
-    "p75_days": 522.5,
-    "mean_days": 298.1935483871,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-03-01",
@@ -430500,12 +430500,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 13.0,
-    "median_days": 125.0,
-    "p25_days": 80.0,
-    "p75_days": 291.0,
-    "mean_days": 241.2307692308,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-03-01",
@@ -430760,12 +430760,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 54.0,
+    "median_days": 189.0,
+    "p25_days": 95.75,
+    "p75_days": 494.25,
+    "mean_days": 324.3888888889,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -430773,12 +430773,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 126.0,
+    "median_days": 214.0,
+    "p25_days": 77.0,
+    "p75_days": 424.0,
+    "mean_days": 342.4365079365,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -432125,12 +432125,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 49.0,
+    "median_days": 81.0,
+    "p25_days": 46.0,
+    "p75_days": 385.0,
+    "mean_days": 251.9795918367,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -432138,12 +432138,12 @@
     "dimension": "project_engaged_so",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 131.0,
+    "median_days": 234.0,
+    "p25_days": 115.0,
+    "p75_days": 498.0,
+    "mean_days": 368.8320610687,
+    "suppression_marker": null
   },
   {
     "month": "2024-03-01",
@@ -432359,12 +432359,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 134.0,
-    "median_days": 221.5,
-    "p25_days": 91.75,
-    "p75_days": 457.0,
-    "mean_days": 368.3656716418,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-03-01",
@@ -432372,12 +432372,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 46.0,
-    "median_days": 111.0,
-    "p25_days": 51.75,
-    "p75_days": 427.25,
-    "mean_days": 245.7173913043,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-03-01",
@@ -445736,12 +445736,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 19.0,
+    "median_days": 99.0,
+    "p25_days": 33.5,
+    "p75_days": 129.0,
+    "mean_days": 118.6315789474,
+    "suppression_marker": null
   },
   {
     "month": "2024-04-01",
@@ -445749,12 +445749,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 30.0,
+    "median_days": 114.5,
+    "p25_days": 57.25,
+    "p75_days": 177.0,
+    "mean_days": 226.2333333333,
+    "suppression_marker": null
   },
   {
     "month": "2024-04-01",
@@ -447023,12 +447023,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 19.0,
+    "median_days": 132.0,
+    "p25_days": 112.0,
+    "p75_days": 200.0,
+    "mean_days": 316.2631578947,
+    "suppression_marker": null
   },
   {
     "month": "2024-04-01",
@@ -447036,12 +447036,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 30.0,
+    "median_days": 62.5,
+    "p25_days": 42.25,
+    "p75_days": 124.0,
+    "mean_days": 101.0666666667,
+    "suppression_marker": null
   },
   {
     "month": "2024-04-01",
@@ -447179,12 +447179,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 38.0,
-    "median_days": 94.5,
-    "p25_days": 47.0,
-    "p75_days": 187.5,
-    "mean_days": 207.7105263158,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-04-01",
@@ -447192,12 +447192,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 11.0,
-    "median_days": 126.0,
-    "p25_days": 56.0,
-    "p75_days": 135.5,
-    "mean_days": 104.3636363636,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-04-01",
@@ -460712,12 +460712,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 247.0,
+    "median_days": 90.0,
+    "p25_days": 31.0,
+    "p75_days": 264.5,
+    "mean_days": 200.5668016194,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -460725,12 +460725,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 280.0,
+    "median_days": 131.0,
+    "p25_days": 47.0,
+    "p75_days": 258.25,
+    "mean_days": 211.0392857143,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -461999,12 +461999,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 288.0,
-    "median_days": 161.5,
-    "p25_days": 90.0,
-    "p75_days": 321.0,
-    "mean_days": 258.4027777778,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -462012,12 +462012,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 239.0,
-    "median_days": 47.0,
-    "p25_days": 27.0,
-    "p75_days": 132.0,
-    "mean_days": 143.1422594142,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -462155,12 +462155,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 241.0,
+    "median_days": 146.0,
+    "p25_days": 48.0,
+    "p75_days": 263.0,
+    "mean_days": 198.153526971,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -462168,12 +462168,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 286.0,
+    "median_days": 89.5,
+    "p25_days": 30.25,
+    "p75_days": 228.0,
+    "mean_days": 212.8531468531,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -462584,12 +462584,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 44.0,
+    "median_days": 91.5,
+    "p25_days": 52.5,
+    "p75_days": 231.5,
+    "mean_days": 191.6818181818,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -462597,12 +462597,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 28.0,
+    "median_days": 181.5,
+    "p25_days": 58.0,
+    "p75_days": 438.25,
+    "mean_days": 289.1071428571,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -464027,12 +464027,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 31.0,
-    "median_days": 172.0,
-    "p25_days": 67.5,
-    "p75_days": 311.0,
-    "mean_days": 222.2903225806,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -464040,12 +464040,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 41.0,
-    "median_days": 93.0,
-    "p25_days": 41.0,
-    "p75_days": 274.0,
-    "mean_days": 235.0731707317,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -464105,12 +464105,12 @@
     "dimension": "project_engaged_th",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 29.0,
-    "median_days": 413.0,
-    "p25_days": 180.0,
-    "p75_days": 567.0,
-    "mean_days": 428.4137931034,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -464118,12 +464118,12 @@
     "dimension": "project_engaged_th",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 43.0,
-    "median_days": 63.0,
-    "p25_days": 38.0,
-    "p75_days": 144.5,
-    "mean_days": 95.4651162791,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-06-01",
@@ -464183,12 +464183,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 48.0,
+    "median_days": 123.0,
+    "p25_days": 61.75,
+    "p75_days": 313.75,
+    "mean_days": 229.2916666667,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -464196,12 +464196,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 24.0,
+    "median_days": 111.0,
+    "p25_days": 34.75,
+    "p75_days": 250.25,
+    "mean_days": 230.125,
+    "suppression_marker": null
   },
   {
     "month": "2024-06-01",
@@ -473816,12 +473816,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 61.0,
+    "p25_days": 35.0,
+    "p75_days": 254.0,
+    "mean_days": 158.9696969697,
+    "suppression_marker": null
   },
   {
     "month": "2024-07-01",
@@ -473829,12 +473829,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 37.0,
+    "median_days": 153.0,
+    "p25_days": 50.0,
+    "p75_days": 374.0,
+    "mean_days": 219.027027027,
+    "suppression_marker": null
   },
   {
     "month": "2024-07-01",
@@ -475259,12 +475259,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 100.0,
+    "p25_days": 48.0,
+    "p75_days": 181.0,
+    "mean_days": 150.7272727273,
+    "suppression_marker": null
   },
   {
     "month": "2024-07-01",
@@ -475272,12 +475272,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 37.0,
+    "median_days": 92.0,
+    "p25_days": 36.0,
+    "p75_days": 374.0,
+    "mean_days": 226.3783783784,
+    "suppression_marker": null
   },
   {
     "month": "2024-07-01",
@@ -475415,12 +475415,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 38.0,
-    "median_days": 144.5,
-    "p25_days": 55.5,
-    "p75_days": 352.25,
-    "mean_days": 226.3684210526,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-07-01",
@@ -475428,12 +475428,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 32.0,
-    "median_days": 85.0,
-    "p25_days": 31.75,
-    "p75_days": 205.75,
-    "mean_days": 148.375,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-07-01",
@@ -507512,12 +507512,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 41.0,
+    "median_days": 49.0,
+    "p25_days": 31.0,
+    "p75_days": 231.0,
+    "mean_days": 172.1707317073,
+    "suppression_marker": null
   },
   {
     "month": "2024-10-01",
@@ -507525,12 +507525,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 28.0,
+    "median_days": 69.5,
+    "p25_days": 32.0,
+    "p75_days": 193.75,
+    "mean_days": 154.5714285714,
+    "suppression_marker": null
   },
   {
     "month": "2024-10-01",
@@ -508799,12 +508799,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 31.0,
-    "median_days": 84.0,
-    "p25_days": 39.5,
-    "p75_days": 226.5,
-    "mean_days": 166.4838709677,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-10-01",
@@ -508812,12 +508812,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 38.0,
-    "median_days": 40.5,
-    "p25_days": 32.0,
-    "p75_days": 149.75,
-    "mean_days": 163.8421052632,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-10-01",
@@ -508955,12 +508955,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 32.0,
-    "median_days": 45.5,
-    "p25_days": 32.0,
-    "p75_days": 193.75,
-    "mean_days": 165.4375,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-10-01",
@@ -508968,12 +508968,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 37.0,
-    "median_days": 56.0,
-    "p25_days": 32.0,
-    "p75_days": 225.0,
-    "mean_days": 164.6756756757,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-10-01",
@@ -509111,12 +509111,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 39.0,
+    "median_days": 56.0,
+    "p25_days": 40.5,
+    "p75_days": 207.5,
+    "mean_days": 169.9743589744,
+    "suppression_marker": null
   },
   {
     "month": "2024-10-01",
@@ -509124,12 +509124,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 30.0,
+    "median_days": 33.0,
+    "p25_days": 31.0,
+    "p75_days": 192.75,
+    "mean_days": 158.6,
+    "suppression_marker": null
   },
   {
     "month": "2024-10-01",
@@ -518744,12 +518744,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 34.0,
+    "median_days": 105.5,
+    "p25_days": 34.25,
+    "p75_days": 245.25,
+    "mean_days": 171.2058823529,
+    "suppression_marker": null
   },
   {
     "month": "2024-11-01",
@@ -518757,12 +518757,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 23.0,
+    "median_days": 87.0,
+    "p25_days": 37.0,
+    "p75_days": 203.0,
+    "mean_days": 146.347826087,
+    "suppression_marker": null
   },
   {
     "month": "2024-11-01",
@@ -520031,12 +520031,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 24.0,
-    "median_days": 98.0,
-    "p25_days": 39.5,
-    "p75_days": 198.75,
-    "mean_days": 174.0416666667,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-11-01",
@@ -520044,12 +520044,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 33.0,
-    "median_days": 62.0,
-    "p25_days": 31.0,
-    "p75_days": 230.0,
-    "mean_days": 151.8181818182,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-11-01",
@@ -520187,12 +520187,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 25.0,
-    "median_days": 123.0,
-    "p25_days": 47.0,
-    "p75_days": 230.0,
-    "mean_days": 176.12,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-11-01",
@@ -520200,12 +520200,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 32.0,
-    "median_days": 62.5,
-    "p25_days": 31.0,
-    "p75_days": 232.5,
-    "mean_days": 149.5,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2024-11-01",
@@ -520343,12 +520343,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 36.0,
+    "median_days": 122.0,
+    "p25_days": 39.0,
+    "p75_days": 270.0,
+    "mean_days": 199.8888888889,
+    "suppression_marker": null
   },
   {
     "month": "2024-11-01",
@@ -520356,12 +520356,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 21.0,
+    "median_days": 47.0,
+    "p25_days": 30.0,
+    "p75_days": 183.0,
+    "mean_days": 94.8095238095,
+    "suppression_marker": null
   },
   {
     "month": "2024-11-01",
@@ -541208,12 +541208,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 81.0,
+    "p25_days": 48.0,
+    "p75_days": 150.0,
+    "mean_days": 149.696969697,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -541221,12 +541221,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 38.0,
+    "median_days": 116.5,
+    "p25_days": 36.0,
+    "p75_days": 253.75,
+    "mean_days": 170.9473684211,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -542651,12 +542651,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 36.0,
+    "median_days": 131.0,
+    "p25_days": 41.75,
+    "p75_days": 237.25,
+    "mean_days": 175.4444444444,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -542664,12 +542664,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 35.0,
+    "median_days": 81.0,
+    "p25_days": 36.0,
+    "p75_days": 146.0,
+    "mean_days": 146.2857142857,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -542807,12 +542807,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 41.0,
-    "median_days": 109.0,
-    "p25_days": 48.0,
-    "p75_days": 250.0,
-    "mean_days": 177.5365853659,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-01-01",
@@ -542820,12 +542820,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 30.0,
-    "median_days": 56.0,
-    "p25_days": 36.0,
-    "p75_days": 192.0,
-    "mean_days": 138.5666666667,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-01-01",
@@ -546980,12 +546980,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 22.0,
+    "median_days": 87.0,
+    "p25_days": 49.25,
+    "p75_days": 128.25,
+    "mean_days": 125.1363636364,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -546993,12 +546993,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 89.0,
+    "p25_days": 50.0,
+    "p75_days": 137.0,
+    "mean_days": 122.2424242424,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -548111,12 +548111,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 18.0,
+    "median_days": 126.5,
+    "p25_days": 67.25,
+    "p75_days": 180.0,
+    "mean_days": 193.5,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -548124,12 +548124,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 37.0,
+    "median_days": 72.0,
+    "p25_days": 48.0,
+    "p75_days": 109.0,
+    "mean_days": 89.2972972973,
+    "suppression_marker": null
   },
   {
     "month": "2025-01-01",
@@ -548423,12 +548423,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 43.0,
-    "median_days": 100.0,
-    "p25_days": 56.5,
-    "p75_days": 147.0,
-    "mean_days": 139.511627907,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-01-01",
@@ -548436,12 +548436,12 @@
     "dimension": "project_engaged_ce",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 12.0,
-    "median_days": 53.0,
-    "p25_days": 31.0,
-    "p75_days": 87.5,
-    "mean_days": 65.6666666667,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-01-01",
@@ -653528,12 +653528,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 25.0,
+    "median_days": 108.0,
+    "p25_days": 43.0,
+    "p75_days": 179.0,
+    "mean_days": 159.0,
+    "suppression_marker": null
   },
   {
     "month": "2025-11-01",
@@ -653541,12 +653541,12 @@
     "dimension": "race_black",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 25.0,
+    "median_days": 82.0,
+    "p25_days": 30.0,
+    "p75_days": 157.0,
+    "mean_days": 110.72,
+    "suppression_marker": null
   },
   {
     "month": "2025-11-01",
@@ -654815,12 +654815,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 27.0,
-    "median_days": 108.0,
-    "p25_days": 54.5,
-    "p75_days": 197.5,
-    "mean_days": 140.962962963,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-11-01",
@@ -654828,12 +654828,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 23.0,
-    "median_days": 75.0,
-    "p25_days": 27.0,
-    "p75_days": 162.0,
-    "mean_days": 127.6956521739,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2025-11-01",
@@ -654971,12 +654971,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 24.0,
+    "median_days": 125.5,
+    "p25_days": 79.5,
+    "p75_days": 182.75,
+    "mean_days": 141.0833333333,
+    "suppression_marker": null
   },
   {
     "month": "2025-11-01",
@@ -654984,12 +654984,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 26.0,
+    "median_days": 54.5,
+    "p25_days": 26.5,
+    "p75_days": 137.0,
+    "mean_days": 129.1153846154,
+    "suppression_marker": null
   },
   {
     "month": "2025-11-01",
@@ -671663,12 +671663,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 20.0,
+    "median_days": 119.0,
+    "p25_days": 75.75,
+    "p75_days": 176.0,
+    "mean_days": 146.3,
+    "suppression_marker": null
   },
   {
     "month": "2025-12-01",
@@ -671676,12 +671676,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 36.0,
+    "median_days": 85.0,
+    "p25_days": 47.0,
+    "p75_days": 162.0,
+    "mean_days": 129.2777777778,
+    "suppression_marker": null
   },
   {
     "month": "2025-12-01",
@@ -682895,12 +682895,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 13.0,
+    "median_days": 108.0,
+    "p25_days": 48.0,
+    "p75_days": 199.0,
+    "mean_days": 142.6153846154,
+    "suppression_marker": null
   },
   {
     "month": "2026-01-01",
@@ -682908,12 +682908,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 20.0,
+    "median_days": 64.0,
+    "p25_days": 29.75,
+    "p75_days": 88.25,
+    "mean_days": 96.7,
+    "suppression_marker": null
   },
   {
     "month": "2026-01-01",
@@ -732308,12 +732308,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 18.0,
+    "median_days": 221.0,
+    "p25_days": 93.25,
+    "p75_days": 319.5,
+    "mean_days": 246.5555555556,
+    "suppression_marker": null
   },
   {
     "month": "2026-06-01",
@@ -732321,12 +732321,12 @@
     "dimension": "race_white",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 36.0,
+    "median_days": 106.5,
+    "p25_days": 57.0,
+    "p75_days": 230.0,
+    "mean_days": 178.5,
+    "suppression_marker": null
   },
   {
     "month": "2026-06-01",
@@ -733439,12 +733439,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 21.0,
+    "median_days": 92.0,
+    "p25_days": 65.0,
+    "p75_days": 228.0,
+    "mean_days": 162.2380952381,
+    "suppression_marker": null
   },
   {
     "month": "2026-06-01",
@@ -733452,12 +733452,12 @@
     "dimension": "project_engaged_es",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": null,
-    "median_days": null,
-    "p25_days": null,
-    "p75_days": null,
-    "mean_days": null,
-    "suppression_marker": "**"
+    "n": 33.0,
+    "median_days": 167.0,
+    "p25_days": 61.0,
+    "p75_days": 301.0,
+    "mean_days": 225.9696969697,
+    "suppression_marker": null
   },
   {
     "month": "2026-06-01",
@@ -733595,12 +733595,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Included",
-    "n": 37.0,
-    "median_days": 167.0,
-    "p25_days": 80.0,
-    "p75_days": 301.0,
-    "mean_days": 225.8108108108,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2026-06-01",
@@ -733608,12 +733608,12 @@
     "dimension": "project_engaged_housing",
     "exit_type": "permanently_housed",
     "category": "Not Included",
-    "n": 17.0,
-    "median_days": 76.0,
-    "p25_days": 60.0,
-    "p75_days": 236.0,
-    "mean_days": 147.5882352941,
-    "suppression_marker": null
+    "n": null,
+    "median_days": null,
+    "p25_days": null,
+    "p75_days": null,
+    "mean_days": null,
+    "suppression_marker": "**"
   },
   {
     "month": "2026-06-01",
