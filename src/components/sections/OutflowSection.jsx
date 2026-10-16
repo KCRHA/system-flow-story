@@ -123,7 +123,6 @@ export default function OutflowSection({
   onYearChange,
   demographicType,
   onDemographicTypeChange,
-  demographicTypeOptions,
   demographicCategory,
   onDemographicCategoryChange,
   demographicCategoryOptions,
@@ -445,7 +444,7 @@ export default function OutflowSection({
         <FilterBar>
           <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
           <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
-          <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
+          <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} />
           <DemographicCategorySelect
             options={demographicCategoryOptions}
             value={demographicCategory}
@@ -489,7 +488,7 @@ export default function OutflowSection({
       <FilterBar>
         <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
         <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
-        <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
+        <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} />
         <DemographicCategorySelect
           options={demographicCategoryOptions}
           value={demographicCategory}

@@ -61,11 +61,23 @@ const PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS = {
 const HIDDEN_CATEGORIES = new Set(["Unknown", "Undefined"]);
 
 // Age tiers read youngest-to-oldest, not alphabetically — a plain .sort()
-// puts "Under 18" last (after "65+"), since alphabetical sort treats digits
-// before "U". Any category not in this list (there shouldn't be any once
+// would put "0 to 11"/"12 to 17" before "18 to 24" (fine) but "65 or Above"
+// right after "55 to 64" only by luck of the leading digit, not by design.
+// Any category not in this list (there shouldn't be any once
 // HIDDEN_CATEGORIES is filtered out) is dropped rather than silently
 // inserted in an arbitrary spot.
-const AGE_CATEGORY_ORDER = ["Under 18", "18 to 24", "25 to 34", "35 to 44", "45 to 54", "55 to 64", "65+"];
+const AGE_CATEGORY_ORDER = ["0 to 11", "12 to 17", "18 to 24", "25 to 34", "35 to 44", "45 to 54", "55 to 64", "65 or Above"];
+
+// The age tiers worth offering for the YYA population segment (see
+// pipeline/population.py's YYA branches: "18 to 24" outright, plus minors
+// who are their household's head of household, i.e. "0 to 11"/"12 to 17").
+// "0 to 11" is in-scope there but always nets to zero in practice (no HoH
+// that young), so it's left out here rather than offering a tier that can
+// never show a count. Scopes age_category's own options for YYA to just
+// these two instead of hiding the filter outright — the full tier list
+// would otherwise show tiers (25-34 and up) that can never have a nonzero
+// count for YYA either.
+const YYA_AGE_CATEGORIES = new Set(["12 to 17", "18 to 24"]);
 
 function resolveDemographicScope(demographicType, demographicCategory) {
   if (demographicType === "race_ethnicity") {
@@ -142,18 +154,7 @@ export default function App() {
   }, [year, monthlyFlowByYear]);
   const monthlyFlowLoading = year != null && !monthlyFlowByYear[year];
 
-  // age_category isn't offered for the YYA population segment — everyone in
-  // it already falls in the same one or two age tiers by definition, so
-  // breaking it down further is meaningless (see FilterBar.jsx's own
-  // comment on DEMOGRAPHIC_TYPES).
-  const demographicTypeOptions = useMemo(
-    () => (populationSegment === "yya" ? DEMOGRAPHIC_TYPES.filter((opt) => opt.value !== "age_category") : DEMOGRAPHIC_TYPES),
-    [populationSegment]
-  );
-  // Same fallback pattern as `year` above — lands back on "All" whenever
-  // the current selection isn't valid for the freshly chosen population
-  // (i.e. Age Category was selected, then the population switched to YYA).
-  const demographicType = demographicTypeOptions.some((opt) => opt.value === selectedDemographicType)
+  const demographicType = DEMOGRAPHIC_TYPES.some((opt) => opt.value === selectedDemographicType)
     ? selectedDemographicType
     : "overall";
 
@@ -179,10 +180,16 @@ export default function App() {
       (category) => !HIDDEN_CATEGORIES.has(category)
     );
     if (demographicType === "age_category") {
-      return AGE_CATEGORY_ORDER.filter((category) => categories.includes(category));
+      // The export carries every age tier for every population segment
+      // (categories are derived once, globally, in the pipeline — see
+      // config.py's age_category comment), so for YYA this list is
+      // narrowed to the tiers that segment can actually contain instead
+      // of showing tiers that would always be zero.
+      const order = populationSegment === "yya" ? AGE_CATEGORY_ORDER.filter((c) => YYA_AGE_CATEGORIES.has(c)) : AGE_CATEGORY_ORDER;
+      return order.filter((category) => categories.includes(category));
     }
     return categories.sort();
-  }, [data, demographicType]);
+  }, [data, demographicType, populationSegment]);
   // Same fallback pattern as `year` above — lands on the first available
   // category whenever the current selection isn't valid for the freshly
   // chosen demographic type.
@@ -230,7 +237,6 @@ export default function App() {
         onYearChange={setSelectedYear}
         demographicType={demographicType}
         onDemographicTypeChange={setSelectedDemographicType}
-        demographicTypeOptions={demographicTypeOptions}
         demographicCategory={demographicCategory}
         onDemographicCategoryChange={setSelectedDemographicCategory}
         demographicCategoryOptions={demographicCategories}
@@ -258,7 +264,6 @@ export default function App() {
       />
       <CapacitySection
         capacityRows={data.capacity}
-        capacityQuarterlyRows={data.capacityQuarterly}
         capacityYearlyRows={data.capacityYearly}
         year={year}
         demographicType={demographicType}

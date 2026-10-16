@@ -11,11 +11,12 @@ const POPULATION_SEGMENTS = [
 // this filter with these three demographic types only, even though
 // household_type exists as a full dimension in the exported data.
 //
-// age_category isn't offered for the YYA population segment (see App.jsx's
-// demographicTypeOptions) — every person in that segment already falls in
-// the same one or two age tiers by definition, so breaking it down further
-// would be meaningless (mostly one 100% category and a lot of suppressed
-// near-zero ones).
+// age_category is offered for every population segment, including YYA —
+// App.jsx's YYA_AGE_CATEGORIES narrows its *options* to the tiers YYA can
+// actually contain ("0 to 11", "12 to 17", "18 to 24") rather than hiding
+// the filter outright, since the split between minor heads of household
+// and 18-24-year-olds is real variation, not a redundant restatement of
+// the segment boundary.
 export const DEMOGRAPHIC_TYPES = [
   { value: "overall", label: "All" },
   { value: "race_ethnicity", label: "Race / Ethnicity" },

@@ -22,16 +22,6 @@
   border-top: 1px solid var(--gray-light);
 }
 
-/* The last section's last Scrolly step needs enough page height *below*
-   it to be scrolled up to scrollama's trigger line (threshold, ~60% down
-   the viewport) — with only the default 4rem bottom padding, the page
-   can run out of scroll room a bit short of that, permanently stranding
-   the final step (verified: on a 1000px-tall viewport this was ~60px
-   short). Extra bottom padding only on the last section fixes it without
-   adding padding everywhere sections already have plenty of room below. */
-.section:last-of-type {
-  padding-bottom: 30vh;
-}
 
 .intro-section {
   border-top: none;
@@ -92,6 +82,107 @@
 
 .chart-note li + li {
   margin-top: 0.25rem;
+}
+
+/* Left-aligned, full-width variant of .chart-note — for a caveat that sits
+   under a full-width row (e.g. CapacitySection's "Rapid re-housing isn't
+   included" notes) rather than under one centered chart. */
+.chart-note-left {
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  font-style: italic;
+  text-align: left;
+  margin: 0.75rem 0 1.5rem;
+}
+
+/* Three per-program-type cards (CapacitySection's "How full is each program
+   type?") — same auto-fit pattern as .kpi-row, just wider minmax since each
+   card holds its own mini chart below the headline figures. */
+.capacity-card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.capacity-card-chart {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+/* CapacitySection's "How quickly does each program type turn over?" — one
+   bordered card holding all four project-type rows, each divided from the
+   next by a hairline rule (matching the approved mockup), rather than
+   separate standalone rows. */
+.turnover-card {
+  border: 1px solid var(--gray-light);
+  border-radius: 12px;
+  margin: 1rem 0 0.5rem;
+}
+
+/* Three columns per row — label/goal, the per-unit stat, and the
+   percentage-exited bar — each roughly the width the mockup gives it. */
+.turnover-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.9fr) minmax(150px, 0.8fr) minmax(220px, 2fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.turnover-row:last-child {
+  border-bottom: none;
+}
+
+.turnover-col .length-panel-title,
+.turnover-col .kpi-value-row {
+  margin-bottom: 0.2rem;
+}
+
+/* .kpi-value's real styling lives under ".kpi-card .kpi-value" — these rows
+   aren't wrapped in a .kpi-card, so that rule never applied and the
+   households-per-unit figure rendered as plain body text. Restated here at
+   the same weight, just a touch smaller to fit this column. */
+.turnover-col .kpi-value {
+  font-family: var(--font-headline);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+.turnover-col .kpi-description {
+  margin: 0;
+}
+
+/* "No per-unit figure" (Rapid Re-Housing's stat column) — same navy weight
+   as the other columns' numeric .kpi-value, just not blown up to that size
+   since it's a phrase, not a digit. */
+.turnover-no-data {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+.turnover-bar-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-navy);
+}
+
+.turnover-bar-track {
+  height: 16px;
+  background: color-mix(in srgb, var(--color-navy) 8%, white);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.turnover-bar-fill {
+  height: 100%;
+  background: var(--chart-2);
+  border-radius: 999px;
 }
 
 /* The "current-year totals are partial" caveat under the KPI cards — dark
@@ -575,6 +666,9 @@
   .scrolly-steps {
     gap: 1.5rem;
     padding: 0;
+  }
+  .turnover-row {
+    grid-template-columns: 1fr;
   }
 }
 

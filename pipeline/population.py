@@ -62,7 +62,7 @@ def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataF
         flag_hoh = pd.to_numeric(df["FlagHeadOfHousehold"], errors="coerce")
         yya_flag = (flag_yya == 1) & ~aged_out_before
         age_tier = (df["EpisodeAgeTier"] == "18 to 24") | (
-            (df["EpisodeAgeTier"] == "Under 18") & (flag_hoh == 1)
+            df["EpisodeAgeTier"].isin(["0 to 11", "12 to 17"]) & (flag_hoh == 1)
         )
         return df[yya_flag & age_tier]
     return df  # "All"
@@ -85,13 +85,13 @@ def filter_population_enrollment(df: pd.DataFrame, pop_label: str) -> pd.DataFra
         # YYA alone is a household-level attribute — enrollments for a
         # non-HoH child in an otherwise-YYA household would satisfy it, so
         # apply the same individual-level age-tier restriction as
-        # filter_population's episode-level YYA branch. Note
-        # All_Program_Enrollments' age-tier column uses "0 to 17" for this
-        # bucket where episode_systemwide's EpisodeAgeTier uses "Under 18" —
-        # confirmed against the two tables' actual distinct values, not
-        # assumed to match.
+        # filter_population's episode-level YYA branch. AgeTierAtEnrollment
+        # and EpisodeAgeTier now share the same age-tier vocabulary (both
+        # split the old "Under 18"/"0 to 17" bucket into "0 to 11" and
+        # "12 to 17" — see the age_helpers cell shared across the source
+        # notebooks), so both branches below match the same literal values.
         age_tier = (df["AgeTierAtEnrollment"] == "18 to 24") | (
-            (df["AgeTierAtEnrollment"] == "0 to 17") & (df["HeadOfHousehold"] == "Yes")
+            df["AgeTierAtEnrollment"].isin(["0 to 11", "12 to 17"]) & (df["HeadOfHousehold"] == "Yes")
         )
         return df[(df["YYA"] == "Yes") & age_tier]
     return df  # "All"

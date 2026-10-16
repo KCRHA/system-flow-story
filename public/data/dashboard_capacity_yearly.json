@@ -34,10 +34,10 @@
     "project_type": "th",
     "enrolled": 701,
     "exited": 693,
-    "active": 1270,
-    "pct_exited": 0.5456692913,
+    "active": 1268,
+    "pct_exited": 0.5465299685,
     "units_in_system": 739.0,
-    "households_per_unit": 1.7185385656
+    "households_per_unit": 1.7158322057
   },
   {
     "year": 2022,
@@ -74,10 +74,10 @@
     "project_type": "th",
     "enrolled": 666,
     "exited": 721,
-    "active": 1243,
-    "pct_exited": 0.5800482703,
+    "active": 1241,
+    "pct_exited": 0.5809830782,
     "units_in_system": 756.0,
-    "households_per_unit": 1.6441798942
+    "households_per_unit": 1.6415343915
   },
   {
     "year": 2023,
@@ -112,12 +112,12 @@
   {
     "year": 2023,
     "project_type": "th",
-    "enrolled": 645,
+    "enrolled": 644,
     "exited": 624,
-    "active": 1167,
-    "pct_exited": 0.5347043702,
+    "active": 1164,
+    "pct_exited": 0.5360824742,
     "units_in_system": 689.0,
-    "households_per_unit": 1.6937590711
+    "households_per_unit": 1.6894049347
   },
   {
     "year": 2024,
@@ -152,12 +152,12 @@
   {
     "year": 2024,
     "project_type": "th",
-    "enrolled": 641,
+    "enrolled": 640,
     "exited": 618,
-    "active": 1184,
-    "pct_exited": 0.5219594595,
+    "active": 1180,
+    "pct_exited": 0.5237288136,
     "units_in_system": 805.0,
-    "households_per_unit": 1.4708074534
+    "households_per_unit": 1.4658385093
   },
   {
     "year": 2025,
@@ -192,12 +192,12 @@
   {
     "year": 2025,
     "project_type": "th",
-    "enrolled": 458,
+    "enrolled": 457,
     "exited": 501,
-    "active": 1024,
-    "pct_exited": 0.4892578125,
+    "active": 1019,
+    "pct_exited": 0.4916584887,
     "units_in_system": 696.0,
-    "households_per_unit": 1.4712643678
+    "households_per_unit": 1.4640804598
   },
   {
     "year": 2026,
@@ -232,11 +232,11 @@
   {
     "year": 2026,
     "project_type": "th",
-    "enrolled": 306,
-    "exited": 346,
-    "active": 829,
-    "pct_exited": 0.4173703257,
+    "enrolled": 287,
+    "exited": 322,
+    "active": 805,
+    "pct_exited": 0.4,
     "units_in_system": 606.0,
-    "households_per_unit": 1.3679867987
+    "households_per_unit": 1.3283828383
   }
 ]

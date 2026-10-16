@@ -80,17 +80,19 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 # "age_category" is native to both source tables (EpisodeAgeTier /
 # AgeTierAtEnrollment -- see the Episode_Systemwide notebook's
 # age-at-episode-start computation and population.py's YYA branch, which
-# already reads these same columns), not a derived rollup, though
-# AgeTierAtEnrollment's raw label vocabulary differs from EpisodeAgeTier's
-# for the same buckets and is normalized onto it in build_flow.py's
-# build_resource_access_rows before use. Like household_type, it's
-# episode-scoped rather than a true person-level constant (age tier can
-# differ between two of a person's own episodes over the export window) --
-# see build_flow.py's EPISODE_SCOPED_CATEGORY_DIMENSIONS, which resolves
-# both dimensions' categories fresh per period rather than from a single
-# whole-window snapshot, for the same reason. Not offered as a frontend
-# filter for the YYA population segment (see FilterBar.jsx): everyone
-# there already falls in the same one or two tiers by definition.
+# already reads these same columns), not a derived rollup. Both tables share
+# the same age-tier vocabulary (same age_helpers cell copied into each
+# source notebook, including the "Under 18"/"0 to 17" bucket now being split
+# into "0 to 11" and "12 to 17"), so build_flow.py's build_resource_access_rows
+# just copies AgeTierAtEnrollment into AgeCategory rather than relabeling it.
+# Like household_type, it's episode-scoped rather than a true person-level
+# constant (age tier can differ between two of a person's own episodes over
+# the export window) -- see build_flow.py's EPISODE_SCOPED_CATEGORY_DIMENSIONS,
+# which resolves both dimensions' categories fresh per period rather than
+# from a single whole-window snapshot, for the same reason. For the YYA
+# population segment, the frontend (see FilterBar.jsx/App.jsx) restricts this
+# filter's options to the tiers YYA can actually contain ("0 to 11",
+# "12 to 17", "18 to 24") instead of hiding it outright.
 #
 # "unsheltered_in_period" (see DIMENSION_COLUMNS' own comment) is
 # deliberately NOT included in this shared list, even though it's a real
@@ -172,13 +174,11 @@ DIMENSION_COLUMNS = {
 # of the race_*/gender_* derived columns are native to that table and must
 # be joined in from Client_Demographics on PersonalID first; HouseholdType
 # is native, just under a different name than its episode_systemwide
-# counterpart. "age_category" points at "AgeCategory" — a normalized copy
-# of the native AgeTierAtEnrollment column build_resource_access_rows adds,
-# not the raw column itself — because AgeTierAtEnrollment's own label
-# vocabulary doesn't match EpisodeAgeTier's for the same buckets (see
-# build_resource_access_rows' own comment); the raw column has to stay
-# untouched since filter_population_enrollment's YYA branch depends on its
-# literal values.
+# counterpart. "age_category" points at "AgeCategory" — a plain copy of the
+# native AgeTierAtEnrollment column build_resource_access_rows adds (see its
+# own comment), kept as a separate column rather than pointed straight at
+# AgeTierAtEnrollment so filter_population_enrollment's YYA branch can go on
+# reading the raw column regardless of what this mapping does.
 ENROLLMENT_DIMENSION_COLUMNS = {
     **DIMENSION_COLUMNS,
     "household_type": "HouseholdType",

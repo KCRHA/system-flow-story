@@ -236,7 +236,7 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     # YYA-only aged-out detection that originally lived here. See the
     # comments at each use for why: population membership for YYA is
     # month-dependent (filter_population's YYA branch — a person can
-    # become HoH, or age from "Under 18" into "18 to 24", mid-episode),
+    # become HoH, or age from "12 to 17" into "18 to 24", mid-episode),
     # so requiring a specific row to itself pass the population filter can
     # miss a real prior-active/inflow row that's population-eligible only
     # once you look across the row's own later history, not in isolation.
@@ -1054,26 +1054,16 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     enrollments["_bucket"] = enrollments["ProjectTypeCode"].apply(_resource_type_bucket)
     enrollments = enrollments.dropna(subset=["_bucket"])
 
-    # AgeTierAtEnrollment uses a different label vocabulary than
-    # episode_systemwide's EpisodeAgeTier for the same buckets — confirmed
-    # against the two tables' actual distinct values, not assumed: "0 to 17"
-    # where EpisodeAgeTier says "Under 18", "65 or Above" where it says
-    # "65+", plus an enrollment-only "Below 0" bucket for negative/bad ages
-    # that EpisodeAgeTier's own age-at-episode-start computation already
-    # folds into "Under 18" (age_at_start < 18 catches negative ages too —
-    # see Episode_Systemwide notebook). Normalized into a NEW column (not
-    # overwritten in place) so dashboard_flow_monthly's age_category
-    # dimension — which mixes these enrollment-driven resource_* rows with
-    # episode-driven rows under one dimension — carries a single clean
-    # category set instead of two overlapping ones (this bit the frontend's
-    # category dropdown directly: it showed both "65+" and "65 or Above" as
-    # separate options for what's really one bucket). Raw AgeTierAtEnrollment
-    # itself must stay untouched: filter_population_enrollment's YYA branch
-    # compares against its literal "0 to 17" value, and normalizing it away
-    # in place would silently break that population filter.
-    enrollments["AgeCategory"] = enrollments["AgeTierAtEnrollment"].replace(
-        {"0 to 17": "Under 18", "65 or Above": "65+", "Below 0": "Under 18"}
-    )
+    # AgeTierAtEnrollment and episode_systemwide's EpisodeAgeTier now share
+    # the same age-tier vocabulary (both source notebooks copy the same
+    # age_helpers cell — see population.py's YYA branches), so this is a
+    # plain copy, not a relabeling. Kept as its own column (not read
+    # straight off AgeTierAtEnrollment below) so a future vocabulary
+    # mismatch between the two tables wouldn't require touching
+    # ENROLLMENT_DIMENSION_COLUMNS or filter_population_enrollment's literal
+    # "0 to 11"/"12 to 17" comparisons, which must keep reading the raw
+    # AgeTierAtEnrollment column regardless of what this column does.
+    enrollments["AgeCategory"] = enrollments["AgeTierAtEnrollment"]
 
     from .config import ENROLLMENT_DIMENSION_COLUMNS
 
