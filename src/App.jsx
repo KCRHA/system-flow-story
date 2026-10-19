@@ -55,9 +55,11 @@ const PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS = {
 // Hidden from every demographic type's category dropdown for now — a
 // deliberate, revisitable choice (not a data error) to keep "we don't know"
 // buckets out of the filter until there's a considered way to present them.
-// Covers GenderIdentity/GenderAlignment's "Unknown" (see demographics.py)
-// and age_category's "Undefined" (EpisodeAgeTier/AgeTierAtEnrollment rows
-// with no usable birth date — see build_flow.py).
+// Covers GenderIdentity/GenderAlignment's "Unknown" (see demographics.py),
+// age_category's "Undefined" (EpisodeAgeTier/AgeTierAtEnrollment rows with
+// no usable birth date — see build_flow.py), and last_known_subregion's own
+// "Unknown" (no mappable King County subregion — see config.py's
+// last_known_subregion comment).
 const HIDDEN_CATEGORIES = new Set(["Unknown", "Undefined"]);
 
 // Age tiers read youngest-to-oldest, not alphabetically — a plain .sort()
@@ -78,6 +80,16 @@ const AGE_CATEGORY_ORDER = ["0 to 11", "12 to 17", "18 to 24", "25 to 34", "35 t
 // would otherwise show tiers (25-34 and up) that can never have a nonzero
 // count for YYA either.
 const YYA_AGE_CATEGORIES = new Set(["12 to 17", "18 to 24"]);
+
+// The age tiers worth offering for the Seniors population segment (see
+// pipeline/population.py's Senior branches: a straight age-tier membership
+// check, unlike YYA, since Seniors isn't scoped to heads of household and
+// nobody "ages out" of being a senior).
+const SENIORS_AGE_CATEGORIES = new Set(["55 to 64", "65 or Above"]);
+
+// Looked up by populationSegment in demographicCategories below — a
+// segment missing here (e.g. "all_population") offers every age tier.
+const RESTRICTED_AGE_CATEGORIES = { yya: YYA_AGE_CATEGORIES, seniors: SENIORS_AGE_CATEGORIES };
 
 function resolveDemographicScope(demographicType, demographicCategory) {
   if (demographicType === "race_ethnicity") {
@@ -182,10 +194,11 @@ export default function App() {
     if (demographicType === "age_category") {
       // The export carries every age tier for every population segment
       // (categories are derived once, globally, in the pipeline — see
-      // config.py's age_category comment), so for YYA this list is
+      // config.py's age_category comment), so for YYA/Seniors this list is
       // narrowed to the tiers that segment can actually contain instead
       // of showing tiers that would always be zero.
-      const order = populationSegment === "yya" ? AGE_CATEGORY_ORDER.filter((c) => YYA_AGE_CATEGORIES.has(c)) : AGE_CATEGORY_ORDER;
+      const restriction = RESTRICTED_AGE_CATEGORIES[populationSegment];
+      const order = restriction ? AGE_CATEGORY_ORDER.filter((c) => restriction.has(c)) : AGE_CATEGORY_ORDER;
       return order.filter((category) => categories.includes(category));
     }
     return categories.sort();

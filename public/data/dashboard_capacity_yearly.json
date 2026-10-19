@@ -1,5 +1,85 @@
 [
   {
+    "year": 2019,
+    "project_type": "es",
+    "enrolled": 21440,
+    "exited": 21138,
+    "active": 25793,
+    "pct_exited": 0.8195246772,
+    "units_in_system": 3721.0,
+    "households_per_unit": 6.9317387799
+  },
+  {
+    "year": 2019,
+    "project_type": "ph",
+    "enrolled": 1021,
+    "exited": 866,
+    "active": 5863,
+    "pct_exited": 0.1477059526,
+    "units_in_system": 5755.0,
+    "households_per_unit": 1.0187662902
+  },
+  {
+    "year": 2019,
+    "project_type": "rrh",
+    "enrolled": 2412,
+    "exited": 2269,
+    "active": 4042,
+    "pct_exited": 0.5613557645,
+    "units_in_system": 0.0,
+    "households_per_unit": null
+  },
+  {
+    "year": 2019,
+    "project_type": "th",
+    "enrolled": 865,
+    "exited": 847,
+    "active": 1507,
+    "pct_exited": 0.5620437956,
+    "units_in_system": 832.0,
+    "households_per_unit": 1.8112980769
+  },
+  {
+    "year": 2020,
+    "project_type": "es",
+    "enrolled": 13291,
+    "exited": 15394,
+    "active": 17946,
+    "pct_exited": 0.857795609,
+    "units_in_system": 4409.0,
+    "households_per_unit": 4.0703107281
+  },
+  {
+    "year": 2020,
+    "project_type": "ph",
+    "enrolled": 1079,
+    "exited": 799,
+    "active": 6076,
+    "pct_exited": 0.1315009875,
+    "units_in_system": 6007.0,
+    "households_per_unit": 1.011486599
+  },
+  {
+    "year": 2020,
+    "project_type": "rrh",
+    "enrolled": 2223,
+    "exited": 1756,
+    "active": 3996,
+    "pct_exited": 0.4394394394,
+    "units_in_system": 0.0,
+    "households_per_unit": null
+  },
+  {
+    "year": 2020,
+    "project_type": "th",
+    "enrolled": 613,
+    "exited": 706,
+    "active": 1273,
+    "pct_exited": 0.5545954438,
+    "units_in_system": 817.0,
+    "households_per_unit": 1.5581395349
+  },
+  {
     "year": 2021,
     "project_type": "es",
     "enrolled": 9714,

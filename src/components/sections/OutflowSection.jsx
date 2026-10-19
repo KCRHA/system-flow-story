@@ -359,18 +359,28 @@ export default function OutflowSection({
         In HMIS, individuals can select more than one race or ethnicity. For the most complete picture, this filter
         includes everyone who selected a given category, whether alone or in combination with another.
       </p>
-    ) : (
+    ) : demographicType === "project_type_engagement" ? (
       // Project type engagement categories can also overlap (someone can be
       // engaged with Street Outreach and Emergency Shelter in the same
       // period), same reasoning as the race/ethnicity note above, plus a
       // second thing worth calling out: "engaged" counts anyone whose
       // enrollment overlaps any part of the selected period, not just
       // enrollments still open at the period's end.
-      demographicType === "project_type_engagement" && (
+      <p>
+        A person can be engaged with more than one project type in the same period, so category totals can add up
+        to more than the overall total. "Engaged" includes anyone with an enrollment overlapping any part of the
+        selected period, not just enrollments still open at the end of it.
+      </p>
+    ) : (
+      // Unlike race/ethnicity or project type engagement, this isn't about
+      // overlapping categories — it's a data-completeness caveat, since
+      // last known subregion isn't always collected at enrollment the way
+      // the other demographics are.
+      demographicType === "last_known_subregion" && (
         <p>
-          A person can be engaged with more than one project type in the same period, so category totals can add up
-          to more than the overall total. "Engaged" includes anyone with an enrollment overlapping any part of the
-          selected period, not just enrollments still open at the end of it.
+          Some enrollments contain information about the last subregion in which a person lived. This
+          information is not available for all individuals, but it's the most complete information currently
+          available.
         </p>
       )
     );

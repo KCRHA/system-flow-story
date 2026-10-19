@@ -1,6 +1,7 @@
 const POPULATION_SEGMENTS = [
   { value: "all_population", label: "All population" },
   { value: "yya", label: "Youth and Young Adults" },
+  { value: "seniors", label: "Seniors" },
   { value: "chronic", label: "Chronically Homeless" },
   { value: "single_adults", label: "Single Adults" },
   { value: "veterans", label: "Veterans" },
@@ -11,12 +12,13 @@ const POPULATION_SEGMENTS = [
 // this filter with these three demographic types only, even though
 // household_type exists as a full dimension in the exported data.
 //
-// age_category is offered for every population segment, including YYA —
-// App.jsx's YYA_AGE_CATEGORIES narrows its *options* to the tiers YYA can
-// actually contain ("0 to 11", "12 to 17", "18 to 24") rather than hiding
-// the filter outright, since the split between minor heads of household
-// and 18-24-year-olds is real variation, not a redundant restatement of
-// the segment boundary.
+// age_category is offered for every population segment, including YYA and
+// Seniors — App.jsx's YYA_AGE_CATEGORIES/SENIORS_AGE_CATEGORIES narrow its
+// *options* to the tiers each segment can actually contain (YYA: "0 to 11",
+// "12 to 17", "18 to 24"; Seniors: "55 to 64", "65 or Above") rather than
+// hiding the filter outright, since the split within each segment's own
+// tiers is real variation, not a redundant restatement of the segment
+// boundary.
 export const DEMOGRAPHIC_TYPES = [
   { value: "overall", label: "All" },
   { value: "race_ethnicity", label: "Race / Ethnicity" },
@@ -25,6 +27,7 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "age_category", label: "Age Category" },
   { value: "unsheltered_in_period", label: "Unsheltered This Period" },
   { value: "project_type_engagement", label: "Project Type Engagement" },
+  { value: "last_known_subregion", label: "Last Known Subregion" },
 ];
 
 // The measures the run chart (HomelessnessTrendChart) can plot — one per

@@ -6,6 +6,9 @@
 // Shelter" reads as a category-error, so each gets its own natural phrasing
 // instead, matching how its own category labels actually read (see
 // App.jsx's UNSHELTERED_CATEGORY_LABELS / PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS).
+// last_known_subregion is geographic, not an identity either — "people who
+// identify as South King County" reads the same way, so it gets its own
+// clause too.
 //
 // Mirrors FilterBar's POPULATION_SEGMENTS, lowercased into the noun phrase
 // each segment reads as mid-sentence ("all_population" falls back to plain
@@ -14,6 +17,7 @@
 const POPULATION_NOUNS = {
   all_population: "people",
   yya: "youth and young adults",
+  seniors: "seniors",
   chronic: "chronically homeless people",
   single_adults: "single adults",
   veterans: "veterans",
@@ -39,6 +43,9 @@ export function subjectFor(populationSegment, demographicType, demographicCatego
   }
   if (demographicType === "project_type_engagement") {
     return `${noun} engaged with ${demographicCategory} this period`;
+  }
+  if (demographicType === "last_known_subregion") {
+    return `${noun} last known to live in ${demographicCategory}`;
   }
   return `${noun} who identify as ${demographicCategory}`;
 }

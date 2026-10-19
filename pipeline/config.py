@@ -49,6 +49,7 @@ RETURN_WINDOW_DAYS = 182
 POPULATION_SEGMENTS = {
     "all_population": "All",
     "yya": "Youth and Young Adults",
+    "seniors": "Senior",
     "chronic": "Chronic",
     "single_adults": "Single Adults",
     "veterans": "Veteran",
@@ -105,7 +106,15 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 # fixed per-row value) and has no All_Program_Enrollments equivalent at
 # all. build_flow.py adds it on top of this list locally instead — see its
 # own FLOW_DIMENSIONS.
-DIMENSIONS = ["overall", *RACE_DIMENSIONS, "gender_identity", "gender_alignment", "household_type", "age_category"]
+DIMENSIONS = [
+    "overall",
+    *RACE_DIMENSIONS,
+    "gender_identity",
+    "gender_alignment",
+    "household_type",
+    "age_category",
+    "last_known_subregion",
+]
 
 # --- Project type engagement (dashboard_flow_monthly "project_engaged_*"
 # dimensions) ---
@@ -149,6 +158,16 @@ DIMENSION_COLUMNS = {
     "gender_alignment": "GenderAlignment",  # derived — see demographics.py
     "household_type": "EpisodeHouseholdType",
     "age_category": "EpisodeAgeTier",
+    # Native client_demographic column (Client_Demographics.ipynb's own
+    # city -> subregion mapping), person-level like VeteranStatus/the
+    # race_*/gender_* rollups above, not episode-scoped. Anyone with no
+    # mappable King County subregion (last known address outside King
+    # County, in an unincorporated area, or never collected) gets NaN from
+    # that notebook — filled to "Unknown" in export.py's client_demographics
+    # load, same as GenderIdentity's own "Unknown" bucket, so this dimension
+    # still partitions cleanly for suppression. "Unknown" is then hidden
+    # from the frontend filter by App.jsx's existing HIDDEN_CATEGORIES set.
+    "last_known_subregion": "LastKnownSubregion",
     # Not a native or Client_Demographics-sourced column like the rest of
     # this map — "Included"/"Not Included" on whether any of a person's
     # episode_systemwide rows within the period being built (month/quarter/
@@ -265,7 +284,10 @@ def get_export_window(today: date | None = None) -> tuple[date, date]:
     of the current year (no partial/in-progress month). Recomputed on every
     pipeline run so the export window doesn't need a manual date update."""
     today = today or date.today()
-    start = date(today.year - 5, 1, 1)
+    # TEMPORARY: hardcoded to 2019 instead of the usual rolling
+    # today.year - 5 start (which would currently land on 2021) — revert to
+    # the rolling calculation below once this lookback is no longer needed.
+    start = date(2019, 1, 1)
     # "completed months" excludes the current, still-in-progress month
     if today.month == 1:
         end = date(today.year - 1, 12, 1)

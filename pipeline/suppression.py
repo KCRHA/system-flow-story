@@ -201,6 +201,57 @@ def apply_crosstab_secondary_suppression(df: pd.DataFrame, group_cols: list[str]
     return df
 
 
+def apply_sankey_marginal_suppression(
+    df: pd.DataFrame,
+    group_cols: list[str],
+    bucket_flow_type_groups: list[list[str]],
+    total_flow_type: str = "experienced_homelessness",
+    count_col: str = "count",
+) -> pd.DataFrame:
+    """Run AFTER apply_full_suppression_pipeline (needs its primary markers
+    and TRUE_COUNT_COL already in place) on the same df, alongside
+    apply_crosstab_secondary_suppression. `group_cols` is the period +
+    population identifier only (e.g. ["month", "population_segment"]).
+
+    The sankey's inflow buckets (already_active/newly_homeless/
+    return_from_housed/return_from_inactive, published as their indiv_*
+    flow_types) are a true partition of experienced_homelessness, and so
+    are its outflow buckets (still_active/aged_out/permanently_housed/
+    inactive/deceased) — see build_flow.py's _partition_by_individual
+    docstring. Both sets live at dimension="overall"/category="Overall",
+    exactly like experienced_homelessness's own dimension="overall" row
+    (the sankey's headline total). That's the same "exactly one suppressed
+    cell is recoverable from its siblings plus a known group total" risk
+    apply_full_suppression_pipeline's own main loop already guards against
+    for demographic categories — but flow_type is part of THAT loop's own
+    group_cols, so every indiv_* row lands in its own single-row group
+    there, and dimension=="overall" is excluded from its eligible check
+    besides (see that function's own `eligible` line). Nothing else in the
+    pipeline treats these flow_types as siblings of each other, so this
+    gets its own pass.
+
+    `total_flow_type`'s own row is folded into each bucket group as an
+    extra member, not just referenced conceptually: a small, suppressed
+    total is just as recoverable (by summing fully-visible buckets) as a
+    suppressed bucket is from a visible total, so it's equally at risk and
+    equally eligible to be the one `_pick_secondary` hides.
+    """
+    df = df.copy()
+    is_total = (df["flow_type"] == total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+    for flow_types in bucket_flow_type_groups:
+        is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+        scoped_idx = df.index[is_bucket | is_total]
+        for _, idx in df.loc[scoped_idx].groupby(group_cols, dropna=False).groups.items():
+            group = df.loc[idx]
+            primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
+            has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
+            if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
+                _pick_secondary(df, group, count_col)
+
+    df.loc[df["suppression_marker"].notna(), count_col] = pd.NA
+    return df
+
+
 def _resolve_crosstab_period(df: pd.DataFrame, period_index, count_col: str) -> None:
     """Jointly resolves every inflow_bucket ("row") and outflow_bucket
     ("column") group within one (group_cols) period at once, mutating
@@ -332,13 +383,19 @@ def apply_insufficient_population_fallback(
     main_group_cols: list[str],
     crosstab_group_cols: list[str],
     count_col: str = "count",
+    sankey_bucket_flow_type_groups: list[list[str]] = (),
+    sankey_total_flow_type: str = "experienced_homelessness",
 ) -> pd.DataFrame:
     """Run AFTER apply_full_suppression_pipeline and (if the table has
-    indiv_flow_* rows) apply_crosstab_secondary_suppression, on the same
+    indiv_flow_* rows) apply_crosstab_secondary_suppression and (if the
+    table has a sankey) apply_sankey_marginal_suppression, on the same
     df. `main_group_cols`/`crosstab_group_cols` are exactly the group_cols
     you're about to pass to validate()/validate_crosstab() — this reuses
     the identical grouping so it resolves precisely what those would
-    otherwise flag.
+    otherwise flag. `sankey_bucket_flow_type_groups`/`sankey_total_flow_type`
+    are the same arguments passed to apply_sankey_marginal_suppression/
+    validate_sankey_marginal; pass them (non-empty) only for a table that
+    has a sankey.
 
     For a main-pass group (flow_type-keyed, spans every category of one
     dimension): if unresolved, every category with a primary-suppressed
@@ -367,6 +424,15 @@ def apply_insufficient_population_fallback(
     a common race) can easily have one narrow, naturally-small crosstab
     slice (like a specific inflow reason crossed with "Deceased") without
     the category's other, unrelated numbers needing to go dark too.
+
+    For a sankey-marginal group (one of `sankey_bucket_flow_type_groups`
+    plus `sankey_total_flow_type`, all at dimension="overall"/
+    category="Overall" — see apply_sankey_marginal_suppression): if
+    unresolved, every flow_type in that specific bucket-and-total group is
+    blanked together, the same closing-off logic as the crosstab case
+    above. The sankey's OTHER bucket group for the same period (e.g.
+    outflow, when inflow is what's unresolved) shares only the total row
+    with this one and is left alone unless it independently needs it.
     """
     df = df.copy()
     if "dimension" not in df.columns or "category" not in df.columns:
@@ -410,6 +476,19 @@ def apply_insufficient_population_fallback(
                         blank_keys.add(_key(period, segment, dimension, category, flow_type))
                     blank_keys.add(_key(period, segment, dimension, category, f"indiv_{key_dict[axis_col]}"))
 
+    if sankey_bucket_flow_type_groups:
+        is_total = (
+            (df["flow_type"] == sankey_total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+        )
+        for flow_types in sankey_bucket_flow_type_groups:
+            is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+            for key, group in df[is_bucket | is_total].groupby([period_col, "population_segment"], dropna=False):
+                primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
+                if _needs_secondary(primary[TRUE_COUNT_COL]) and not _protected(group["suppression_marker"]):
+                    period, segment = key if isinstance(key, tuple) else (key,)
+                    for flow_type in group["flow_type"]:
+                        blank_keys.add(_key(period, segment, "overall", "Overall", flow_type))
+
     if not blank_keys:
         return df
 
@@ -444,6 +523,27 @@ def validate_crosstab(df: pd.DataFrame, group_cols: list[str]) -> list[str]:
             if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
                 key_dict = dict(zip([*group_cols, axis_col], key if isinstance(key, tuple) else (key,)))
                 violations.append(f"crosstab group {key_dict} needs secondary suppression but has none")
+    return violations
+
+
+def validate_sankey_marginal(
+    df: pd.DataFrame,
+    group_cols: list[str],
+    bucket_flow_type_groups: list[list[str]],
+    total_flow_type: str = "experienced_homelessness",
+) -> list[str]:
+    """Companion to apply_sankey_marginal_suppression — same hard-gate
+    contract as validate(). Call alongside it, not instead of it."""
+    violations = []
+    is_total = (df["flow_type"] == total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+    for flow_types in bucket_flow_type_groups:
+        is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+        for key, group in df[is_bucket | is_total].groupby(group_cols, dropna=False):
+            primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
+            has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
+            if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
+                key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
+                violations.append(f"sankey marginal group {key_dict} (flow_types={flow_types}) needs secondary suppression but has none")
     return violations
 
 

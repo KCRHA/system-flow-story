@@ -16,7 +16,14 @@ import pandas as pd
 
 from . import connection
 from .build_capacity import build_capacity_quarterly_rows, build_capacity_rows, build_capacity_yearly_rows
-from .build_flow import build_flow_quarterly_rows, build_flow_rows, build_flow_yearly_rows, build_resource_access_rows
+from .build_flow import (
+    INFLOW_BUCKET_KEYS,
+    OUTFLOW_BUCKET_KEYS,
+    build_flow_quarterly_rows,
+    build_flow_rows,
+    build_flow_yearly_rows,
+    build_resource_access_rows,
+)
 from .build_length import build_length_rows
 from .build_length_by_exit import (
     build_length_by_exit_rows,
@@ -61,10 +68,25 @@ from .suppression import (
     apply_full_suppression_pipeline,
     apply_insufficient_population_fallback,
     apply_race_crossdim_suppression,
+    apply_sankey_marginal_suppression,
     suppress_small_secondary_count,
     validate,
     validate_crosstab,
+    validate_sankey_marginal,
 )
+
+# The sankey's inflow buckets (already_active/newly_homeless/
+# return_from_housed/return_from_inactive) are a true partition of
+# experienced_homelessness, and so are its outflow buckets (still_active/
+# aged_out/permanently_housed/inactive/deceased) — see build_flow.py's
+# _partition_by_individual docstring. Sourced from build_flow.py's own
+# INFLOW_BUCKET_KEYS/OUTFLOW_BUCKET_KEYS (with the "indiv_" prefix those
+# flow_types are actually published under — see build_flow_rows) so this
+# can't silently drift out of sync with the sankey's real bucket set.
+SANKEY_BUCKET_FLOW_TYPE_GROUPS = [
+    [f"indiv_{key}" for key in INFLOW_BUCKET_KEYS],
+    [f"indiv_{key}" for key in OUTFLOW_BUCKET_KEYS],
+]
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "public" / "data"
 
@@ -113,11 +135,12 @@ def main():
     conn = connection.get_connection()
 
     # Client_Demographics: per-person (PersonalID) demographic rollups (the
-    # 8 race_* columns, GenderIdentity/GenderAlignment) plus VeteranStatus —
-    # joined into both episode_systemwide and All_Program_Enrollments below,
-    # neither of which carries these natively. Synapse table is singular ("client_demographic"),
-    # unlike its Looker view name / the notebook it was ported from —
-    # confirmed against INFORMATION_SCHEMA.TABLES directly, not assumed.
+    # 8 race_* columns, GenderIdentity/GenderAlignment) plus VeteranStatus and
+    # LastKnownSubregion — joined into both episode_systemwide and
+    # All_Program_Enrollments below, neither of which carries these natively.
+    # Synapse table is singular ("client_demographic"), unlike its Looker
+    # view name / the notebook it was ported from — confirmed against
+    # INFORMATION_SCHEMA.TABLES directly, not assumed.
     client_demographics = connection.query(conn, "client_demographic")
     # GenderIdentity/GenderAlignment and the 8 race_* rollup columns are all
     # computed here (once, person-level), not native Synapse columns — see
@@ -126,6 +149,14 @@ def main():
     # summary columns.
     client_demographics = compute_gender_rollups(client_demographics)
     client_demographics = compute_race_rollups(client_demographics)
+    # LastKnownSubregion (native column, Client_Demographics.ipynb's own
+    # city -> King County subregion mapping) is NaN for anyone whose last
+    # known address didn't map to a subregion (outside King County, an
+    # unincorporated area, or never collected) — filled to "Unknown" so the
+    # dimension partitions cleanly for suppression, same as GenderIdentity's
+    # own "Unknown" bucket. Hidden from the frontend filter by App.jsx's
+    # HIDDEN_CATEGORIES set, same as that bucket too.
+    client_demographics["LastKnownSubregion"] = client_demographics["LastKnownSubregion"].fillna("Unknown")
 
     # Pull with no date trim for episode_systemwide: return-cohort detection
     # needs to see up to RETURN_WINDOW_DAYS past the window's end, and the
@@ -141,7 +172,9 @@ def main():
     # without risking merging two genuinely different episode-months.
     all_episodes = all_episodes.drop_duplicates(subset=["PersonalID", "EpisodeID", "TimePeriodStartDate"])
     all_episodes = all_episodes.merge(
-        client_demographics[["PersonalID", *RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus"]],
+        client_demographics[
+            ["PersonalID", *RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus", "LastKnownSubregion"]
+        ],
         on="PersonalID",
         how="left",
     )
@@ -204,6 +237,15 @@ def main():
     # cells from unrelated demographic slices as if they were the same
     # cross-tab.
     flow_df = apply_crosstab_secondary_suppression(flow_df, group_cols=["month", "population_segment", "dimension", "category"])
+    # Separate from the crosstab pass above: protects the sankey's own
+    # inflow-buckets-sum-to-total and outflow-buckets-sum-to-total
+    # relationships (indiv_already_active + indiv_newly_homeless + ... ==
+    # experienced_homelessness), which neither the main pass (flow_type is
+    # part of its own group_cols, so these never appear as siblings of
+    # each other) nor the crosstab pass (that's a different relationship —
+    # pair cells summing to one bucket's own marginal) ever checks — see
+    # apply_sankey_marginal_suppression.
+    flow_df = apply_sankey_marginal_suppression(flow_df, group_cols=["month", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
     # See CROSSDIM_OVERLAP_DIMENSIONS' own comment — one combined pass, not
     # separate race_*/project_engaged_* ones, so a race-vs-project_engaged
     # overlap pair is checked too, not just same-group pairs.
@@ -220,9 +262,11 @@ def main():
         period_col="month",
         main_group_cols=["month", "population_segment", "dimension", "flow_type"],
         crosstab_group_cols=["month", "population_segment", "dimension", "category"],
+        sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
     flow_violations = validate(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
     flow_violations += validate_crosstab(flow_df, group_cols=["month", "population_segment", "dimension", "category"])
+    flow_violations += validate_sankey_marginal(flow_df, group_cols=["month", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
 
     # --- dashboard_flow_yearly (true distinct-person experienced_homelessness
     # and indiv_* partition per year — see build_flow_yearly_rows for why
@@ -233,15 +277,18 @@ def main():
         flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
     )
     flow_yearly_df = apply_crosstab_secondary_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
+    flow_yearly_df = apply_sankey_marginal_suppression(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
     flow_yearly_df = apply_race_crossdim_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS)
     flow_yearly_df = apply_insufficient_population_fallback(
         flow_yearly_df,
         period_col="year",
         main_group_cols=["year", "population_segment", "dimension", "flow_type"],
         crosstab_group_cols=["year", "population_segment", "dimension", "category"],
+        sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
     flow_yearly_violations = validate(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"])
     flow_yearly_violations += validate_crosstab(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
+    flow_yearly_violations += validate_sankey_marginal(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
 
     # --- dashboard_flow_quarterly (drill-down granularity for OutflowSection's
     # pills — same "can't be summed from monthly cells" rationale as yearly,
@@ -251,6 +298,9 @@ def main():
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"]
     )
     flow_quarterly_df = apply_crosstab_secondary_suppression(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
+    flow_quarterly_df = apply_sankey_marginal_suppression(
+        flow_quarterly_df, group_cols=["quarter", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS
+    )
     flow_quarterly_df = apply_race_crossdim_suppression(
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS
     )
@@ -259,9 +309,13 @@ def main():
         period_col="quarter",
         main_group_cols=["quarter", "population_segment", "dimension", "flow_type"],
         crosstab_group_cols=["quarter", "population_segment", "dimension", "category"],
+        sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
     flow_quarterly_violations = validate(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"])
     flow_quarterly_violations += validate_crosstab(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
+    flow_quarterly_violations += validate_sankey_marginal(
+        flow_quarterly_df, group_cols=["quarter", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS
+    )
 
     # --- dashboard_length_monthly ---
     length_df = build_length_rows(episodes_in_window, enrollments)

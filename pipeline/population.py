@@ -65,6 +65,11 @@ def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataF
             df["EpisodeAgeTier"].isin(["0 to 11", "12 to 17"]) & (flag_hoh == 1)
         )
         return df[yya_flag & age_tier]
+    if pop_label == "Senior":
+        # Straight age-tier membership check — unlike YYA, Seniors isn't
+        # scoped to heads of household, and there's no "aging out" of
+        # being a senior to account for.
+        return df[df["EpisodeAgeTier"].isin(["55 to 64", "65 or Above"])]
     return df  # "All"
 
 
@@ -94,4 +99,6 @@ def filter_population_enrollment(df: pd.DataFrame, pop_label: str) -> pd.DataFra
             df["AgeTierAtEnrollment"].isin(["0 to 11", "12 to 17"]) & (df["HeadOfHousehold"] == "Yes")
         )
         return df[(df["YYA"] == "Yes") & age_tier]
+    if pop_label == "Senior":
+        return df[df["AgeTierAtEnrollment"].isin(["55 to 64", "65 or Above"])]
     return df  # "All"

@@ -1038,8 +1038,8 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     ProjectStartDate..ProjectExitDate) rather than episode_systemwide —
     confirmed directly against All_Program_Enrollments_2026_01_22.ipynb's
     final columns_to_select, joined to Client_Demographics on PersonalID for
-    the race_*/gender_* rollup columns and VeteranStatus (none of which are
-    native to the enrollment table itself).
+    the race_*/gender_* rollup columns, VeteranStatus, and LastKnownSubregion
+    (none of which are native to the enrollment table itself).
 
     `enrollments` is expected raw (one row per enrollment span, no
     TimePeriodStartDate column — this table has no monthly grain of its own,
@@ -1047,7 +1047,9 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     ProjectStartDate/ProjectExitDate against the `months` list).
     """
     enrollments = enrollments.merge(
-        client_demographics[["PersonalID", *_RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus"]],
+        client_demographics[
+            ["PersonalID", *_RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus", "LastKnownSubregion"]
+        ],
         on="PersonalID",
         how="left",
     )
