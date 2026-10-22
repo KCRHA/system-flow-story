@@ -12,6 +12,7 @@ from datetime import timedelta
 
 import pandas as pd
 
+from .age import refresh_age_category
 from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, RETURN_WINDOW_DAYS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
@@ -128,6 +129,12 @@ def build_return_cohort_rows(
                 for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS
             }
         )
+        # age_category refreshed for this cohort's exit quarter before the
+        # dimension loop below reads it — see age.refresh_age_category's
+        # own docstring. Same quarter_start reference filter_population
+        # already uses just below (as exit_quarter), so a person's age
+        # bucket here and their population-segment membership agree.
+        quarter_df = refresh_age_category(quarter_df, quarter_start)
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(quarter_df, pop_label, exit_quarter)

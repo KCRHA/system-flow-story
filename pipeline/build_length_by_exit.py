@@ -26,6 +26,7 @@ logic ever changes in build_flow.py, this copy needs the same change.
 """
 import pandas as pd
 
+from .age import refresh_age_category
 from .config import DIMENSION_COLUMNS, OUTFLOW_TYPE_MAP, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
@@ -249,6 +250,10 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
         month_aged_out = month_aged_out.assign(
             **{DIMENSION_COLUMNS[dim]: month_aged_out["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
         )
+        # age_category refreshed for this month before _stats_by_category
+        # reads it below — see age.refresh_age_category's own docstring.
+        month_exit = refresh_age_category(month_exit, period_start)
+        month_aged_out = refresh_age_category(month_aged_out, period_start)
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_exit = filter_population(month_exit, pop_label, month)
@@ -376,6 +381,19 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
             combined = combined.assign(
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
+            # age_category refreshed per row, each as of ITS OWN
+            # TimePeriodStartDate (not period_start, the year's first month
+            # shared across every row) — pop_active/pop_exit/pop_aged_out
+            # each already carry the one true month their own event happened
+            # in (year-end for actives, each exit's own month, each aged-out
+            # cutoff's own month — see the filter_population calls just
+            # above, each resolved against that same month). Stamping every
+            # row's age as of the year's first month instead would disagree
+            # with that per-row membership resolution for anyone who aged
+            # into the segment later in the year, producing a nonzero cell
+            # outside the matched tier and a sum that doesn't reconcile with
+            # the segment's own n.
+            combined = refresh_age_category(combined, combined["TimePeriodStartDate"])
 
             for dimension in EXTENDED_DIMENSIONS:
                 categories = all_categories[dimension]
@@ -458,6 +476,9 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
             combined = combined.assign(
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
+            # age_category refreshed for this month before _stats_by_category
+            # reads it below — see age.refresh_age_category's own docstring.
+            combined = refresh_age_category(combined, period_start)
 
             for dimension in EXTENDED_DIMENSIONS:
                 categories = all_categories[dimension]
@@ -548,6 +569,11 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
             combined = combined.assign(
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
+            # age_category refreshed per row, each as of ITS OWN
+            # TimePeriodStartDate — same fix and same reasoning as
+            # build_length_headline_rows' own identical refresh (the yearly
+            # version of this same table).
+            combined = refresh_age_category(combined, combined["TimePeriodStartDate"])
 
             for dimension in EXTENDED_DIMENSIONS:
                 categories = all_categories[dimension]
