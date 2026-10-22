@@ -91,6 +91,17 @@ const SENIORS_AGE_CATEGORIES = new Set(["55 to 64", "65 or Above"]);
 // segment missing here (e.g. "all_population") offers every age tier.
 const RESTRICTED_AGE_CATEGORIES = { yya: YYA_AGE_CATEGORIES, seniors: SENIORS_AGE_CATEGORIES };
 
+// last_known_city filter temporarily disabled — see FilterBar.jsx's
+// DEMOGRAPHIC_TYPES and demographicCategories below.
+// The 10 King County cities worth offering for last_known_city, ranked by
+// population (highest first — see pipeline/config.py's
+// TOP_10_KING_COUNTY_CITIES, which this list mirrors) rather than
+// alphabetically, same ordering rationale as AGE_CATEGORY_ORDER above.
+// "Other" (export.py's catch-all for every city outside this list, plus
+// anyone with no known city) is deliberately left off, which is what
+// keeps it out of the dropdown — see HIDDEN_CATEGORIES' own comment.
+// const LAST_KNOWN_CITY_ORDER = ["Seattle", "Bellevue", "Kent", "Renton", "Federal Way", "Kirkland", "Redmond", "Auburn", "Sammamish", "Shoreline"];
+
 function resolveDemographicScope(demographicType, demographicCategory) {
   if (demographicType === "race_ethnicity") {
     return { dimension: RACE_ETHNICITY_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
@@ -201,6 +212,13 @@ export default function App() {
       const order = restriction ? AGE_CATEGORY_ORDER.filter((c) => restriction.has(c)) : AGE_CATEGORY_ORDER;
       return order.filter((category) => categories.includes(category));
     }
+    // last_known_city filter temporarily disabled:
+    // if (demographicType === "last_known_city") {
+    //   // Same "filter by a fixed ordered list" shape as age_category above,
+    //   // but there's no per-segment restriction to look up — just the one
+    //   // fixed, population-ranked list every segment offers in full.
+    //   return LAST_KNOWN_CITY_ORDER.filter((category) => categories.includes(category));
+    // }
     return categories.sort();
   }, [data, demographicType, populationSegment]);
   // Same fallback pattern as `year` above — lands on the first available

@@ -19,9 +19,13 @@ import InfoIcon from "./InfoIcon.jsx";
 // number, never fall back to displaying 0.
 // `percent` (e.g. "12%"), when given, renders as plain text ("12% of
 // total") to the right of the value — the caller (OutflowSection's
-// percentOfExperienced) is responsible for withholding it whenever either
-// side of the ratio is suppressed or the denominator is zero, so a marker
-// never needs to be duplicated here.
+// percentOfExperienced/percentOfExits) is responsible for withholding it
+// whenever either side of the ratio is suppressed or the denominator is
+// zero, so a marker never needs to be duplicated here. `percentLabel`
+// swaps out the trailing "of total" for a more specific phrase (e.g. "of
+// total exits" for the outflow cards, whose percent is a share of everyone
+// who exited, not everyone active) — defaults to "of total" for every
+// other card.
 // `description`, when given, is a short plain-language line shown directly
 // under the label (not on hover) — used for the outflow cards only (see
 // OutflowSection's KPI_CARD_INFO), where the mockup calls for the
@@ -41,7 +45,7 @@ import InfoIcon from "./InfoIcon.jsx";
 // explaining rather than a short label above the number (see LengthSection's
 // return-rate card). Only meaningful inside .kpi-row-hero; every other card
 // keeps the default stacked layout.
-export default function KpiCard({ label, value, marker, percent, description, trendDirection, trendText, goodDirection, info, layout }) {
+export default function KpiCard({ label, value, marker, percent, percentLabel = "of total", description, trendDirection, trendText, goodDirection, info, layout }) {
   const tone = !trendDirection
     ? null
     : trendDirection === "flat" || goodDirection == null
@@ -78,7 +82,7 @@ export default function KpiCard({ label, value, marker, percent, description, tr
         ) : (
           <>
             <span className="kpi-value">{value}</span>
-            {percent && <span className="kpi-percent-total">{percent} of total</span>}
+            {percent && <span className="kpi-percent-total">{percent} {percentLabel}</span>}
           </>
         )}
       </div>

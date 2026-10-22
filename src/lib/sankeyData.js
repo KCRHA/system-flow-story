@@ -29,6 +29,20 @@ function cellForQuarter(quarterlyRows, quarter, flowType) {
   );
 }
 
+/** Sums resolveCell's `value` across several flow_types for one quarter —
+ * for composite measures (FilterBar's MEASURES "Entered the system"/"Exited
+ * the system" totals) that have no flow_type of their own in the export,
+ * just a handful of indiv_* buckets that partition it. If any one of those
+ * components is suppressed, the true total isn't safely computable either
+ * (it could be off by however much that hidden cell actually was), so the
+ * whole sum comes back suppressed too rather than silently undercounting. */
+export function sumCellsForQuarter(quarterlyRows, quarter, flowTypes) {
+  const cells = flowTypes.map((flowType) => cellForQuarter(quarterlyRows, quarter, flowType));
+  const suppressedCell = cells.find((c) => c.marker);
+  if (suppressedCell) return { value: null, marker: suppressedCell.marker };
+  return { value: cells.reduce((sum, c) => sum + c.value, 0), marker: null };
+}
+
 function cellForMonth(monthlyRows, month, flowType) {
   return resolveCell(
     monthlyRows.find((r) => r.month === month && r.flow_type === flowType),
