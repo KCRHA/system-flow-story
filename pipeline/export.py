@@ -38,6 +38,7 @@ from .config import (
     PROJECT_TYPE_CODE_TEXT_TO_HUD,
     RACE_DIMENSIONS,
     RETURN_WINDOW_DAYS,
+    # TOP_10_KING_COUNTY_CITIES,  # last_known_city filter temporarily disabled
     get_export_window,
     month_before,
 )
@@ -138,6 +139,7 @@ def main():
     # 8 race_* columns, GenderIdentity/GenderAlignment) plus VeteranStatus and
     # LastKnownSubregion — joined into both episode_systemwide and
     # All_Program_Enrollments below, neither of which carries these natively.
+    # (LastKnownCity/last_known_city filter temporarily disabled.)
     # Synapse table is singular ("client_demographic"), unlike its Looker
     # view name / the notebook it was ported from — confirmed against
     # INFORMATION_SCHEMA.TABLES directly, not assumed.
@@ -157,6 +159,50 @@ def main():
     # own "Unknown" bucket. Hidden from the frontend filter by App.jsx's
     # HIDDEN_CATEGORIES set, same as that bucket too.
     client_demographics["LastKnownSubregion"] = client_demographics["LastKnownSubregion"].fillna("Unknown")
+    # last_known_city filter temporarily disabled.
+    # LastKnownCity (native column, the free-text city value Client_Demographics
+    # .ipynb's subregion mapping is itself derived from) has one distinct value
+    # per city ever recorded, which is too many to offer as a filter —
+    # collapsed here to just TOP_10_KING_COUNTY_CITIES, with everyone else
+    # (a smaller KC city, somewhere outside King County, or NaN/never
+    # collected) folded into a single "Other" category so the dimension
+    # still partitions cleanly for suppression. See config.py's
+    # TOP_10_KING_COUNTY_CITIES/last_known_city comments.
+    # client_demographics["LastKnownCity"] = client_demographics["LastKnownCity"].where(
+    #     client_demographics["LastKnownCity"].isin(TOP_10_KING_COUNTY_CITIES), "Other"
+    # )
+
+    # BirthDate: neither client_demographic nor episode_systemwide carries
+    # it — both source notebooks drop it before publishing to Synapse (see
+    # age.py's module docstring) — so it's pulled straight from Looker's
+    # client_model view instead, the same view/fields Episode_Systemwide's
+    # own notebook uses for its own (frozen, episode-start-only) age tier
+    # computation. Merged onto client_demographics here (not queried
+    # separately per-caller) so it rides along with VeteranStatus/
+    # LastKnownSubregion through both of this file's existing
+    # client_demographics merge sites below, and build_flow.py's
+    # build_resource_access_rows's own client_demographics merge, with no
+    # further plumbing.
+    birth_dates = connection.query_looker(
+        conn,
+        "client_model",
+        fields=["client_model.personal_id", "client_model.birth_date"],
+        filters={"client_model.deleted": "No"},
+    )
+    # Looker's inline-query CSV returns columns by field LABEL, not field id
+    # (e.g. "Client Model Personal Id"), so positional assignment — same as
+    # Episode_Systemwide's own identical birth_dates pull — rather than a
+    # rename() keyed to an exact label string this pipeline can't confirm
+    # without a live Looker credential.
+    birth_dates.columns = ["PersonalID", "BirthDate"]
+    # Parsed once, here, same as every other date column this file loads
+    # (EpisodeStartDate/TimePeriodStartDate/EpisodeEndDate below) — age.py's
+    # age_in_years() is called from inside filter_population, often once per
+    # month per population segment, so leaving BirthDate as raw strings
+    # would re-parse it from scratch (and re-warn pandas's "could not infer
+    # format" fallback) on every single one of those calls instead of once.
+    birth_dates["BirthDate"] = pd.to_datetime(birth_dates["BirthDate"], errors="coerce")
+    client_demographics = client_demographics.merge(birth_dates, on="PersonalID", how="left")
 
     # Pull with no date trim for episode_systemwide: return-cohort detection
     # needs to see up to RETURN_WINDOW_DAYS past the window's end, and the
@@ -173,7 +219,16 @@ def main():
     all_episodes = all_episodes.drop_duplicates(subset=["PersonalID", "EpisodeID", "TimePeriodStartDate"])
     all_episodes = all_episodes.merge(
         client_demographics[
-            ["PersonalID", *RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus", "LastKnownSubregion"]
+            [
+                "PersonalID",
+                *RACE_ROLLUP_COLUMNS,
+                "GenderIdentity",
+                "GenderAlignment",
+                "VeteranStatus",
+                "LastKnownSubregion",
+                "BirthDate",
+                # "LastKnownCity",  # last_known_city filter temporarily disabled
+            ]
         ],
         on="PersonalID",
         how="left",

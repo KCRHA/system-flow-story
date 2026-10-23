@@ -114,7 +114,36 @@ DIMENSIONS = [
     "household_type",
     "age_category",
     "last_known_subregion",
+    # "last_known_city",  # last_known_city filter temporarily disabled
 ]
+
+# last_known_city filter temporarily disabled — commented out along with
+# DIMENSIONS/DIMENSION_COLUMNS' own entries, export.py's LastKnownCity
+# handling, and build_flow.py's enrollment merge column.
+# The 10 King County cities with the highest population (2020 Census /
+# 2024 OFM estimates — Seattle, Bellevue, Kent, Renton, Federal Way,
+# Kirkland, Redmond, Auburn, Sammamish, Shoreline, in that order), used by
+# export.py to restrict last_known_city's raw, free-text LastKnownCity
+# value down to a fixed, small set of categories. Anyone whose last known
+# city isn't one of these ten (a smaller KC city, somewhere outside King
+# County entirely, or never collected) is collapsed to "Other" rather than
+# left as its own one-off category — unlike last_known_subregion, the raw
+# city column has no bounded set of values on its own, so without this the
+# dimension would blow up into one category per distinct city name ever
+# recorded. Order here is reused by App.jsx's LAST_KNOWN_CITY_ORDER to sort
+# the frontend dropdown by population rather than alphabetically.
+# TOP_10_KING_COUNTY_CITIES = [
+#     "Seattle",
+#     "Bellevue",
+#     "Kent",
+#     "Renton",
+#     "Federal Way",
+#     "Kirkland",
+#     "Redmond",
+#     "Auburn",
+#     "Sammamish",
+#     "Shoreline",
+# ]
 
 # --- Project type engagement (dashboard_flow_monthly "project_engaged_*"
 # dimensions) ---
@@ -168,6 +197,18 @@ DIMENSION_COLUMNS = {
     # still partitions cleanly for suppression. "Unknown" is then hidden
     # from the frontend filter by App.jsx's existing HIDDEN_CATEGORIES set.
     "last_known_subregion": "LastKnownSubregion",
+    # last_known_city filter temporarily disabled — see DIMENSIONS above and
+    # export.py's LastKnownCity handling.
+    # Also a native client_demographic column (Client_Demographics.ipynb's
+    # own free-text last-known-city value, the input to its city -> subregion
+    # mapping above), restricted in export.py's client_demographics load to
+    # TOP_10_KING_COUNTY_CITIES — everyone else (a smaller city, outside King
+    # County, or never collected) is collapsed to "Other" there, same
+    # "Unknown" bucket reasoning as last_known_subregion but a different
+    # label since this isn't a data-completeness gap for most of them, just
+    # a city outside the top 10. "Other" is hidden from the frontend filter
+    # the same way "Unknown" is — see App.jsx's LAST_KNOWN_CITY_ORDER.
+    # "last_known_city": "LastKnownCity",
     # Not a native or Client_Demographics-sourced column like the rest of
     # this map — "Included"/"Not Included" on whether any of a person's
     # episode_systemwide rows within the period being built (month/quarter/

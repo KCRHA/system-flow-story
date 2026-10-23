@@ -28,23 +28,39 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "unsheltered_in_period", label: "Unsheltered This Period" },
   { value: "project_type_engagement", label: "Project Type Engagement" },
   { value: "last_known_subregion", label: "Last Known Subregion" },
+  // { value: "last_known_city", label: "Last Known City" },  // last_known_city filter temporarily disabled
 ];
 
 // The measures the run chart (HomelessnessTrendChart) can plot — one per
 // flow_type the quarterly export carries (see sankeyData.js's
 // buildFlowPeriod), so switching here is just pointing the same per-quarter
 // lookup at a different flow_type key rather than fetching anything new.
+// The two "(total)" entries are the exception: there's no single flow_type
+// for "everyone who entered"/"everyone who exited" in the export, so instead
+// of a `value` naming one flow_type, they carry a `components` list of the
+// indiv_* flow_types that partition it — OutflowSection's trendPoints sums
+// those per quarter instead (see sankeyData.js's sumCellsForQuarter).
 // `unitLabel` is the short noun phrase for "X people ___" in the chart's
 // tooltips; `axisLabel` is the fuller phrase for the y-axis and section
 // heading ("How has the number of people ___ changed over time?"). `yyaOnly`
 // mirrors the "Aged Out" KPI card's own gating (see OutflowSection) — every
-// other population segment's aged_out count is always 0. `group` names the
-// <optgroup> MeasureSelect sorts each measure into (Active/Entered the
-// system/Exited the system, matching OutflowSection's own KPI card row
-// headings) — consecutive options sharing a group collapse into one
-// <optgroup>, which is what actually draws the dividing line between them.
+// other population segment's aged_out count is always 0 (and so doesn't
+// move the "Exited the system (total)" composite above, even though it's
+// always one of that total's components). `group` names the <optgroup>
+// MeasureSelect sorts each measure into (Active/Entered the system/Exited
+// the system, matching OutflowSection's own KPI card row headings) —
+// consecutive options sharing a group collapse into one <optgroup>, which
+// is what actually draws the dividing line between them.
 export const MEASURES = [
   { value: "experienced_homelessness", label: "Active in our system", unitLabel: "active", axisLabel: "active in our system", group: "Active" },
+  {
+    value: "total_entered_the_system",
+    label: "Entered the system (total)",
+    unitLabel: "entering the system",
+    axisLabel: "entering the system",
+    group: "Entered the system",
+    components: ["indiv_newly_homeless", "indiv_return_from_housed", "indiv_return_from_inactive"],
+  },
   {
     value: "indiv_newly_homeless",
     label: "Newly experiencing homelessness",
@@ -65,6 +81,14 @@ export const MEASURES = [
     unitLabel: "returning from inactivity",
     axisLabel: "returning from inactivity",
     group: "Entered the system",
+  },
+  {
+    value: "total_exited_the_system",
+    label: "Exited the system (total)",
+    unitLabel: "exiting the system",
+    axisLabel: "exiting the system",
+    group: "Exited the system",
+    components: ["indiv_inactive", "indiv_permanently_housed", "indiv_deceased", "indiv_aged_out"],
   },
   { value: "indiv_inactive", label: "Inactive", unitLabel: "inactive", axisLabel: "inactive", group: "Exited the system" },
   { value: "indiv_permanently_housed", label: "Permanently housed", unitLabel: "permanently housed", axisLabel: "permanently housed", group: "Exited the system" },

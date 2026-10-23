@@ -8,7 +8,8 @@
 // App.jsx's UNSHELTERED_CATEGORY_LABELS / PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS).
 // last_known_subregion is geographic, not an identity either — "people who
 // identify as South King County" reads the same way, so it gets its own
-// clause too.
+// clause too. (last_known_city would read the same way, but that filter is
+// temporarily disabled — see subjectFor below.)
 //
 // Mirrors FilterBar's POPULATION_SEGMENTS, lowercased into the noun phrase
 // each segment reads as mid-sentence ("all_population" falls back to plain
@@ -44,6 +45,7 @@ export function subjectFor(populationSegment, demographicType, demographicCatego
   if (demographicType === "project_type_engagement") {
     return `${noun} engaged with ${demographicCategory} this period`;
   }
+  // last_known_city filter temporarily disabled — was: `demographicType === "last_known_subregion" || demographicType === "last_known_city"`
   if (demographicType === "last_known_subregion") {
     return `${noun} last known to live in ${demographicCategory}`;
   }

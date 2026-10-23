@@ -7,7 +7,7 @@ import FlowSankeyChart from "../charts/FlowSankeyChart.jsx";
 import HomelessnessTrendChart from "../charts/HomelessnessTrendChart.jsx";
 import FilterBar, { PopulationSegmentSelect, YearSelect, DemographicTypeSelect, DemographicCategorySelect, MeasureSelect, MEASURES } from "../FilterBar.jsx";
 import { filterRows, distinctValues, resolveCell, INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
-import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod } from "../../lib/sankeyData.js";
+import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod, sumCellsForQuarter } from "../../lib/sankeyData.js";
 import { subjectFor } from "../../lib/demographics.js";
 import { trendDirectionFor, trendPillText } from "../../lib/trend.js";
 import { formatMonthLabel, formatQuarterLabel, quarterAbbrevLabel } from "../../lib/periodLabels.js";
@@ -101,14 +101,26 @@ const KPI_CARD_DESCRIPTION = {
   deceased: "Exit destination recorded as deceased",
 };
 
-// `cell`'s share of `total` ("12.3%"), for the inflow/outflow cards that
-// show what fraction of everyone who experienced homelessness this period
-// fell into that specific bucket. null whenever either side is suppressed
-// (a ratio involving a hidden number isn't a real percentage — see
-// suppression.py) or the total is zero (nothing to take a share of).
-function percentOfExperienced(cell, total) {
-  if (!cell || cell.marker || !total || total.marker || !total.value) return null;
-  return `${Math.round((cell.value / total.value) * 100)}%`;
+// `cell`'s share of `total` (a plain number, not a resolveCell object — see
+// totalEntries/totalExits below), for the inflow/outflow cards, which show
+// what fraction of everyone who entered (or everyone who exited) this
+// period did so for that specific reason. null whenever the cell is
+// suppressed or the total itself couldn't be computed (see sumValues
+// below) — a ratio involving a hidden number isn't a real percentage (see
+// suppression.py).
+function percentOfTotal(cell, total) {
+  if (!cell || cell.marker || !total) return null;
+  return `${Math.round((cell.value / total) * 100)}%`;
+}
+
+// Sums a set of resolveCell-shaped inflow/outflow cells into a plain
+// number, or null if any one of them is suppressed — same reasoning as
+// sankeyData.js's sumCellsForQuarter: a sum with a hidden component isn't
+// safely computable, so the whole total is withheld rather than
+// undercounted.
+function sumValues(cells) {
+  if (cells.some((c) => !c || c.marker)) return null;
+  return cells.reduce((sum, c) => sum + c.value, 0);
 }
 
 export default function OutflowSection({
@@ -333,10 +345,12 @@ export default function OutflowSection({
     () =>
       trendQuarters.map((q) => ({
         quarter: q,
-        ...resolveCell(
-          scopedQuarterly.find((r) => r.quarter === q && r.flow_type === activeTrendMeasure.value),
-          "count"
-        ),
+        ...(activeTrendMeasure.components
+          ? sumCellsForQuarter(scopedQuarterly, q, activeTrendMeasure.components)
+          : resolveCell(
+              scopedQuarterly.find((r) => r.quarter === q && r.flow_type === activeTrendMeasure.value),
+              "count"
+            )),
       })),
     [trendQuarters, scopedQuarterly, activeTrendMeasure]
   );
@@ -383,6 +397,20 @@ export default function OutflowSection({
           available.
         </p>
       )
+      // last_known_city filter temporarily disabled — same data-completeness
+      // caveat as last_known_subregion above, plus a second thing worth
+      // calling out: this filter only covers the 10 highest-population
+      // cities in King County (see config.py's TOP_10_KING_COUNTY_CITIES) —
+      // everyone else, including people last known to live in a smaller
+      // King County city or somewhere outside it entirely, falls outside
+      // these categories and isn't shown.
+      // : demographicType === "last_known_city" && (
+      //   <p>
+      //     Some enrollments contain information about the last city in which a person lived. This filter covers
+      //     only the 10 highest-population cities in King County; it does not include every city a person could
+      //     have last lived in, and this information is not available for all individuals.
+      //   </p>
+      // )
     );
 
   // The definitions popover's content (see the section header's InfoIcon) —
@@ -477,6 +505,22 @@ export default function OutflowSection({
   // counted once.
   const totalExperienced = period.experiencedHomelessness;
   const previousTotalExperienced = previousPeriod?.experiencedHomelessness ?? null;
+  // Everyone who entered this period, for the inflow cards' "% of total
+  // entries" — already_active (people who were active before the period
+  // even started) is deliberately excluded, since it isn't an entry this
+  // period at all, same as how experiencedHomelessness isn't used as the
+  // denominator here anymore.
+  const totalEntries = sumValues([period.inflow.newly_homeless, period.inflow.return_from_housed, period.inflow.return_from_inactive]);
+  // Everyone who exited this period, for the outflow cards' "% of total
+  // exits" — includes aged_out even for non-YYA segments, where it's
+  // always 0 and so never changes the sum (see MEASURES' own
+  // total_exited_the_system comment for the same reasoning).
+  const totalExits = sumValues([
+    period.outflow.inactive,
+    period.outflow.permanently_housed,
+    period.outflow.deceased,
+    period.outflow.aged_out,
+  ]);
   // Set together, for every flow_type, whenever this exact (period,
   // population, dimension, category) combination was too small to safely
   // break down at all (see suppression.py's
@@ -565,7 +609,8 @@ export default function OutflowSection({
                 label="Newly experiencing homelessness"
                 value={period.inflow.newly_homeless.value?.toLocaleString()}
                 marker={period.inflow.newly_homeless.marker}
-                percent={percentOfExperienced(period.inflow.newly_homeless, totalExperienced)}
+                percent={percentOfTotal(period.inflow.newly_homeless, totalEntries)}
+                percentLabel="of total entries"
                 trendDirection={trendDirectionFor(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless)}
                 trendText={trendPillText(period.inflow.newly_homeless, previousPeriod?.inflow?.newly_homeless, previousPeriodLabel)}
                 goodDirection="down"
@@ -575,7 +620,8 @@ export default function OutflowSection({
                 label="Returned from housed"
                 value={period.inflow.return_from_housed.value?.toLocaleString()}
                 marker={period.inflow.return_from_housed.marker}
-                percent={percentOfExperienced(period.inflow.return_from_housed, totalExperienced)}
+                percent={percentOfTotal(period.inflow.return_from_housed, totalEntries)}
+                percentLabel="of total entries"
                 trendDirection={trendDirectionFor(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed)}
                 trendText={trendPillText(period.inflow.return_from_housed, previousPeriod?.inflow?.return_from_housed, previousPeriodLabel)}
                 goodDirection="down"
@@ -585,7 +631,8 @@ export default function OutflowSection({
                 label="Returned from inactive"
                 value={period.inflow.return_from_inactive.value?.toLocaleString()}
                 marker={period.inflow.return_from_inactive.marker}
-                percent={percentOfExperienced(period.inflow.return_from_inactive, totalExperienced)}
+                percent={percentOfTotal(period.inflow.return_from_inactive, totalEntries)}
+                percentLabel="of total entries"
                 trendDirection={trendDirectionFor(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive)}
                 trendText={trendPillText(period.inflow.return_from_inactive, previousPeriod?.inflow?.return_from_inactive, previousPeriodLabel)}
                 goodDirection="down"
@@ -598,7 +645,8 @@ export default function OutflowSection({
                 label="Inactive"
                 value={period.outflow.inactive.value?.toLocaleString()}
                 marker={period.outflow.inactive.marker}
-                percent={percentOfExperienced(period.outflow.inactive, totalExperienced)}
+                percent={percentOfTotal(period.outflow.inactive, totalExits)}
+                percentLabel="of total exits"
                 description={KPI_CARD_DESCRIPTION.inactive}
                 trendDirection={trendDirectionFor(period.outflow.inactive, previousPeriod?.outflow?.inactive)}
                 trendText={trendPillText(period.outflow.inactive, previousPeriod?.outflow?.inactive, previousPeriodLabel)}
@@ -609,7 +657,8 @@ export default function OutflowSection({
                 label="Permanently housed"
                 value={period.outflow.permanently_housed.value?.toLocaleString()}
                 marker={period.outflow.permanently_housed.marker}
-                percent={percentOfExperienced(period.outflow.permanently_housed, totalExperienced)}
+                percent={percentOfTotal(period.outflow.permanently_housed, totalExits)}
+                percentLabel="of total exits"
                 description={KPI_CARD_DESCRIPTION.permanently_housed}
                 trendDirection={trendDirectionFor(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed)}
                 trendText={trendPillText(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed, previousPeriodLabel)}
@@ -620,7 +669,8 @@ export default function OutflowSection({
                 label="Deceased"
                 value={period.outflow.deceased.value?.toLocaleString()}
                 marker={period.outflow.deceased.marker}
-                percent={percentOfExperienced(period.outflow.deceased, totalExperienced)}
+                percent={percentOfTotal(period.outflow.deceased, totalExits)}
+                percentLabel="of total exits"
                 description={KPI_CARD_DESCRIPTION.deceased}
                 trendDirection={trendDirectionFor(period.outflow.deceased, previousPeriod?.outflow?.deceased)}
                 trendText={trendPillText(period.outflow.deceased, previousPeriod?.outflow?.deceased, previousPeriodLabel)}

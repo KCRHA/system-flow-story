@@ -4,6 +4,7 @@ from episode_systemwide's LengthOfTimeExperiencingHomelessness field.
 """
 import pandas as pd
 
+from .age import refresh_age_category
 from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
@@ -97,6 +98,9 @@ def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame) -> pd.D
 
     for month in months:
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
+        # age_category refreshed for this month before anything below reads
+        # it — see age.refresh_age_category's own docstring.
+        month_df = refresh_age_category(month_df, pd.Timestamp(month))
         # unsheltered_in_period/project_engaged_* are resolved fresh per
         # month (an OR across every row/enrollment within it — see
         # period_dimensions.py), from month_df unfiltered by population,

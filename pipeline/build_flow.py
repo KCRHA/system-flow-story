@@ -5,6 +5,7 @@ enrollment-level table for the resource-access flow types.
 """
 import pandas as pd
 
+from .age import refresh_age_category
 from .config import (
     DIMENSIONS,
     DIMENSION_COLUMNS,
@@ -438,17 +439,16 @@ PARTITION_CATEGORY_DIMENSIONS = [d for d in FLOW_DIMENSIONS if d != "overall"]
 # gender_alignment (client_demographics columns, genuinely constant for a
 # person regardless of which episode they're in), are themselves
 # episode-scoped: EpisodeHouseholdType/EpisodeAgeTier can differ between two
-# of a person's own episodes (a household's composition can change; a
-# person's age tier only increases, but can still cross tiers across a
-# multi-year export window). A single person_category snapshot taken once
-# across the WHOLE window — safe for every other PARTITION_CATEGORY_DIMENSIONS
-# entry, since those really are constant — would misattribute anyone whose
-# value actually changed to whichever value happened to survive
-# drop_duplicates, regardless of which period is actually being built. See
-# _person_category_for_period below, which build_flow_rows/
-# build_flow_yearly_rows/build_flow_quarterly_rows use for these two
-# instead, resolving each person's category fresh from just the period
-# being built rather than a single global snapshot.
+# of a person's own episodes (a household's composition can change; age
+# tier can too — see refresh_age_category below). A single person_category
+# snapshot taken once across the WHOLE window — safe for every other
+# PARTITION_CATEGORY_DIMENSIONS entry, since those really are constant —
+# would misattribute anyone whose value actually changed to whichever value
+# happened to survive drop_duplicates, regardless of which period is
+# actually being built. See _person_category_for_period below, which
+# build_flow_rows/build_flow_yearly_rows/build_flow_quarterly_rows use for
+# these two instead, resolving each person's category fresh from just the
+# period being built rather than a single global snapshot.
 EPISODE_SCOPED_CATEGORY_DIMENSIONS = ["household_type", "age_category"]
 
 
@@ -467,13 +467,59 @@ def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.S
     prior_month for already_active, which the caller folds in already since
     already_active_ids is intersected with period_ids first).
 
-    Picks each person's LATEST row within the period when they have more
-    than one (age only increases, so this is also the most current value;
-    for household_type this is an arbitrary-but-consistent tiebreak, same
-    as any other groupby-based pick elsewhere in this module)."""
+    Picks each person's LATEST row within `period_df` when they have more
+    than one — the caller has already run this period's rows through
+    refresh_age_category using each row's own TimePeriodStartDate (not one
+    shared period_start), so age_category can genuinely tick up between a
+    long-running episode's earlier and later rows within the same period,
+    not just differ against a separate episode that started mid-period.
+
+    This is only a safe proxy for "the category this person actually
+    qualified under" when `period_df` is the whole, population-unfiltered
+    period (as documented above) AND the dimension's own values can't
+    un-qualify someone from whatever segment is being broken down — true
+    for Senior (age only increases, so the latest row's tier is always >=
+    whatever earlier row made them Senior) but false for YYA (a bounded age
+    window — the latest row can have aged OUT of it past an earlier
+    qualifying row) and false for Family's household_type (composition can
+    change either direction mid-period). For those, callers must use
+    _segment_scoped_category below instead, which resolves these same two
+    dimensions from a specific segment's own filter_population-passing rows
+    rather than this whole-period, segment-agnostic set."""
     category_col = DIMENSION_COLUMNS[dimension]
     ordered = period_df.sort_values("TimePeriodStartDate")
     return ordered.drop_duplicates("PersonalID", keep="last").set_index("PersonalID")[category_col]
+
+
+def _segment_scoped_category(period_category: dict, segment_rows: pd.DataFrame) -> dict:
+    """`period_category`, with EPISODE_SCOPED_CATEGORY_DIMENSIONS
+    (household_type/age_category) overridden to be resolved from
+    `segment_rows` alone — one specific population segment's own
+    filter_population-passing rows for this period (the same per-month
+    union already built to get that segment's person_ids/indiv_* partition
+    — see build_flow_quarterly_rows/build_flow_yearly_rows), not every row
+    in the period regardless of segment.
+
+    Why this matters: _person_category_for_period's "pick the latest row"
+    rule is only safe when a dimension's category can't un-qualify someone
+    from the segment being broken down (see its own docstring) — true for
+    Senior, false for YYA and for Family's household_type. Picking the
+    latest row from the whole, segment-unfiltered period in those cases can
+    land on a category value that wouldn't itself pass this segment's own
+    filter_population check (e.g. a YYA member who ages out partway through
+    the quarter gets attributed to "25 to 34" — a category outside the YYA
+    segment's own valid range — even though the segment's total correctly
+    includes them via an earlier qualifying row). Resolving from
+    segment_rows instead guarantees the picked category is always one the
+    person actually qualified under for this segment, this period.
+
+    Harmless no-op for segments whose membership doesn't depend on either
+    dimension (Chronic, Veteran, Single Adults, "All"): segment_rows there
+    is just every row that passed that segment's own filter, and the
+    latest-row pick within it agrees with the whole-period version already
+    in `period_category`."""
+    segment_category = {dim: _person_category_for_period(segment_rows, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS}
+    return {**period_category, **segment_category}
 
 
 # "unsheltered_in_period" (and, for the same reason, every project_engaged_*
@@ -602,6 +648,9 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
         period_start = pd.Timestamp(month)
         period_end = period_start + pd.offsets.MonthEnd(0)
+        # age_category refreshed for this month before anything below reads
+        # it — see refresh_age_category's own docstring.
+        month_df = refresh_age_category(month_df, period_start)
         # This month's own category lookup, constant dimensions plus this
         # month's freshly-resolved episode-scoped ones — see
         # EPISODE_SCOPED_CATEGORY_DIMENSIONS — and unsheltered_in_period's/
@@ -807,6 +856,16 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
         period_start = pd.Timestamp(months[0])
         period_end = pd.Timestamp(months[-1]) + pd.offsets.MonthEnd(0)
+        # age_category refreshed per row, each as of ITS OWN TimePeriodStartDate
+        # (not period_start, the year's first month shared across every row) —
+        # otherwise someone who ages into a tier mid-year would be counted in
+        # that tier below (filter_population's per-month loop at line ~838
+        # already resolves membership against each month's own date) while
+        # still showing up under their year-start tier in the age_category
+        # breakdown, producing a nonzero cell outside the matched tier and a
+        # sum that doesn't reconcile with the segment's own total. See
+        # refresh_age_category's own docstring for the general rationale.
+        year_df = refresh_age_category(year_df, year_df["TimePeriodStartDate"])
         # This year's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
         # and, for unsheltered_in_period/project_engaged_*, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
@@ -821,10 +880,19 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
+            segment_frames = []
             for month in months:
                 month_df = year_df[year_df["TimePeriodStartDate"] == month]
                 pop_df = filter_population(month_df, pop_label, month)
                 person_ids.update(pop_df["PersonalID"])
+                segment_frames.append(pop_df)
+            # This segment's own age_category/household_type lookup — see
+            # build_flow_quarterly_rows' identical comment and
+            # _segment_scoped_category's own docstring for why the whole-
+            # year, segment-agnostic period_category isn't safe to reuse
+            # here for these two dimensions.
+            segment_rows = pd.concat(segment_frames, ignore_index=True) if segment_frames else year_df.iloc[0:0]
+            segment_category = _segment_scoped_category(period_category, segment_rows)
 
             def _add(flow_type: str, count: int, dimension: str = "overall", category: str = "Overall", extra: dict | None = None):
                 row = {
@@ -849,7 +917,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
                 counts = (
-                    period_category[dimension]
+                    segment_category[dimension]
                     .reindex(list(person_ids))
                     .value_counts()
                     .reindex(categories, fill_value=0)
@@ -875,7 +943,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
             # demographic slice.
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
@@ -939,6 +1007,11 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
         prior_month = all_months[prior_idx] if prior_idx >= 0 else None
         period_start = pd.Timestamp(months[0])
         period_end = pd.Timestamp(months[-1]) + pd.offsets.MonthEnd(0)
+        # age_category refreshed per row, each as of ITS OWN TimePeriodStartDate
+        # (not period_start, the quarter's first month shared across every
+        # row) — same fix and same reasoning as build_flow_yearly_rows' own
+        # identical refresh just above.
+        quarter_df = refresh_age_category(quarter_df, quarter_df["TimePeriodStartDate"])
         # This quarter's own category lookup — see EPISODE_SCOPED_CATEGORY_DIMENSIONS
         # and, for unsheltered_in_period/project_engaged_*, PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
         period_category = {
@@ -953,10 +1026,21 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
+            segment_frames = []
             for month in months:
                 month_df = quarter_df[quarter_df["TimePeriodStartDate"] == month]
                 pop_df = filter_population(month_df, pop_label, month)
                 person_ids.update(pop_df["PersonalID"])
+                segment_frames.append(pop_df)
+            # This segment's own age_category/household_type lookup (see
+            # _segment_scoped_category) — resolved from just the rows that
+            # passed filter_population above, not the quarter's whole,
+            # segment-agnostic period_category, so a person who ages out of
+            # a bounded window (YYA) or whose household composition changes
+            # out of Family partway through the quarter still gets
+            # attributed to a category they actually qualified under.
+            segment_rows = pd.concat(segment_frames, ignore_index=True) if segment_frames else quarter_df.iloc[0:0]
+            segment_category = _segment_scoped_category(period_category, segment_rows)
 
             def _add(flow_type: str, count: int, dimension: str = "overall", category: str = "Overall", extra: dict | None = None):
                 row = {
@@ -975,7 +1059,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
                 counts = (
-                    period_category[dimension]
+                    segment_category[dimension]
                     .reindex(list(person_ids))
                     .value_counts()
                     .reindex(categories, fill_value=0)
@@ -996,7 +1080,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
 
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
@@ -1040,6 +1124,8 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     final columns_to_select, joined to Client_Demographics on PersonalID for
     the race_*/gender_* rollup columns, VeteranStatus, and LastKnownSubregion
     (none of which are native to the enrollment table itself).
+    # LastKnownCity (last_known_city filter) temporarily commented out — see
+    # config.py/export.py for the rest of this dimension's disabled code.
 
     `enrollments` is expected raw (one row per enrollment span, no
     TimePeriodStartDate column — this table has no monthly grain of its own,
@@ -1048,7 +1134,16 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     """
     enrollments = enrollments.merge(
         client_demographics[
-            ["PersonalID", *_RACE_ROLLUP_COLUMNS, "GenderIdentity", "GenderAlignment", "VeteranStatus", "LastKnownSubregion"]
+            [
+                "PersonalID",
+                *_RACE_ROLLUP_COLUMNS,
+                "GenderIdentity",
+                "GenderAlignment",
+                "VeteranStatus",
+                "LastKnownSubregion",
+                "BirthDate",
+                # "LastKnownCity",  # last_known_city filter disabled — see config.py
+            ]
         ],
         on="PersonalID",
         how="left",
@@ -1056,15 +1151,14 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
     enrollments["_bucket"] = enrollments["ProjectTypeCode"].apply(_resource_type_bucket)
     enrollments = enrollments.dropna(subset=["_bucket"])
 
-    # AgeTierAtEnrollment and episode_systemwide's EpisodeAgeTier now share
-    # the same age-tier vocabulary (both source notebooks copy the same
-    # age_helpers cell — see population.py's YYA branches), so this is a
-    # plain copy, not a relabeling. Kept as its own column (not read
-    # straight off AgeTierAtEnrollment below) so a future vocabulary
-    # mismatch between the two tables wouldn't require touching
-    # ENROLLMENT_DIMENSION_COLUMNS or filter_population_enrollment's literal
-    # "0 to 11"/"12 to 17" comparisons, which must keep reading the raw
-    # AgeTierAtEnrollment column regardless of what this column does.
+    # Placeholder only, for all_categories' vocabulary scan just below —
+    # age.age_tier()'s label set is identical to AgeTierAtEnrollment's own
+    # (both source notebooks copy the same age_helpers cell), so copying it
+    # here is a harmless stand-in. The real, per-month values get written
+    # into this same column inside the month loop below via
+    # refresh_age_category (age as of the later of the month or
+    # ProjectStartDate — see age.py's module docstring for why the raw,
+    # frozen AgeTierAtEnrollment column can't be trusted directly).
     enrollments["AgeCategory"] = enrollments["AgeTierAtEnrollment"]
 
     from .config import ENROLLMENT_DIMENSION_COLUMNS
@@ -1084,14 +1178,31 @@ def build_resource_access_rows(enrollments: pd.DataFrame, client_demographics: p
         engaged_mask = (enrollments["ProjectStartDate"] <= month_end) & (
             enrollments["ProjectExitDate"].isna() | (enrollments["ProjectExitDate"] >= month_start)
         )
-        month_df = enrollments[engaged_mask]
-        newly_enrolled_mask = enrollments["ProjectStartDate"].between(month_start, month_end)
-        exited_mask = enrollments["ProjectExitDate"].between(month_start, month_end)
+        # age_category refreshed for this month before anything below reads
+        # it — see refresh_age_category's own docstring. Each of the three
+        # slices gets its own refresh (not one shared refresh before
+        # splitting) since they're independent row subsets of `enrollments`,
+        # not one dataframe sliced progressively.
+        month_df = refresh_age_category(
+            enrollments[engaged_mask], month_start, start_col="ProjectStartDate", category_col="AgeCategory"
+        )
+        newly_enrolled_df = refresh_age_category(
+            enrollments[enrollments["ProjectStartDate"].between(month_start, month_end)],
+            month_start,
+            start_col="ProjectStartDate",
+            category_col="AgeCategory",
+        )
+        exited_df = refresh_age_category(
+            enrollments[enrollments["ProjectExitDate"].between(month_start, month_end)],
+            month_start,
+            start_col="ProjectStartDate",
+            category_col="AgeCategory",
+        )
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
-            pop_engaged = filter_population_enrollment(month_df, pop_label)
-            pop_newly_enrolled = filter_population_enrollment(enrollments[newly_enrolled_mask], pop_label)
-            pop_exited = filter_population_enrollment(enrollments[exited_mask], pop_label)
+            pop_engaged = filter_population_enrollment(month_df, month_start, pop_label)
+            pop_newly_enrolled = filter_population_enrollment(newly_enrolled_df, month_start, pop_label)
+            pop_exited = filter_population_enrollment(exited_df, month_start, pop_label)
 
             for dimension in DIMENSIONS:
                 categories = all_categories[dimension]
