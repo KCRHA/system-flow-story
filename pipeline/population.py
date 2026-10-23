@@ -16,23 +16,32 @@ different columns for the same underlying concepts:
 
 - `filter_population_enrollment` (enrollment-level: the resource_* flow
   types in dashboard_flow_monthly, sourced from All_Program_Enrollments,
-  which already computes its own household-level YYA/chronic fields
-  directly — confirmed against All_Program_Enrollments_2026_01_22.ipynb's
-  final columns_to_select). Also requires VeteranStatus joined in from
-  Client_Demographics on PersonalID. Its YYA branch additionally restricts
-  to the individual's own age tier (see below) — YYA itself is a
-  household-level flag, so used alone it would also count non-HoH children
-  who happen to belong to a YYA household.
+  which already computes its own per-member YYA/chronic fields directly —
+  confirmed against All_Program_Enrollments_2026_01_22.ipynb's final
+  columns_to_select). Also requires VeteranStatus joined in from
+  Client_Demographics on PersonalID.
 
-Both Senior branches, and the age-tier half of both YYA branches, compute
-age fresh via age.age_tier_as_of_period() instead of reading the raw
-EpisodeAgeTier/AgeTierAtEnrollment columns — see age.py's module docstring
-for why those columns can't be trusted on their own (frozen at episode/
-enrollment start, never recalculated). Requires BirthDate joined onto `df`
-first (export.py, from Looker — see age.py). YYA's FlagYYA/AgedOutOfYYA
-check is untouched: that's a household-level flag computed upstream from
-true birthdates already, a different mechanism from the individual
-age-tier check this module recomputes.
+Both Senior branches compute age fresh via age.age_tier_as_of_period()
+instead of reading the raw EpisodeAgeTier/AgeTierAtEnrollment columns —
+see age.py's module docstring for why those columns can't be trusted on
+their own (frozen at episode/enrollment start, never recalculated).
+Requires BirthDate joined onto `df` first (export.py, from Looker — see
+age.py).
+
+YYA follows the HUD youth-household definition (DataHubDevelopment PR #290,
+2026-10): FlagYYA/YYA is now a per-member, per-month string computed
+upstream straight from birthdates — "Non-YYA" (not in a youth household),
+"YYA" (this member is themselves 12-24 in a youth household — no member of
+the household is known to be 25+), or "YYA Household Member" (this member
+is a non-youth member — age 0-11 or unknown — of an otherwise-youth
+household). This dashboard's YYA population segment is just the "YYA"
+value: individuals who are themselves the youth, per HUD's definition.
+Before PR #290, both of these flags were household-level Yes/No (same
+value for every member regardless of their own age), which is why this
+module used to pair the flag with a separately-recomputed age-tier/
+head-of-household check to approximate "is this particular row's own
+person the youth". That workaround is gone now that the upstream flag is
+already individual-level and age-precise every month.
 """
 import pandas as pd
 
@@ -60,24 +69,22 @@ def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataF
         # veteran) is already free to overlap.
         return df[df["EpisodeHouseholdType"] == "Household with Children and Adults"]
     if pop_label == "Youth and Young Adults":
-        # AgedOutOfYYA/FlagYYA/FlagHeadOfHousehold all arrive as whatever raw
-        # type the SQL driver returned (pyodbc doesn't guarantee pandas
-        # Timestamp/int64 — episode_systemwide's FlagYYA and
-        # FlagHeadOfHousehold in particular come back as the strings "0"/"1",
-        # not ints) — coerce explicitly rather than relying on the caller
-        # having already normalized every column that might end up compared
-        # here.
+        # AgedOutOfYYA arrives as whatever raw type the SQL driver returned
+        # (pyodbc doesn't guarantee pandas Timestamp) — coerce explicitly.
+        # FlagYYA itself is a string ("Non-YYA"/"YYA"/"YYA Household
+        # Member" — see module docstring) and needs no coercion.
+        #
+        # AgedOutOfYYA is redundant with FlagYYA == "YYA" in principle (the
+        # upstream per-month computation already stops returning "YYA" once
+        # someone is 25+ for the whole month — see PR #290), but kept as a
+        # defense-in-depth check consistent with build_flow.py's own
+        # AgedOutOfYYA-based "aged out" outflow detection, which reads this
+        # same column directly.
         aged_out_of_yya = pd.to_datetime(df["AgedOutOfYYA"], errors="coerce")
         month_ts = pd.Timestamp(month_start)
         aged_out_before = aged_out_of_yya.notna() & (aged_out_of_yya < month_ts)
-        flag_yya = pd.to_numeric(df["FlagYYA"], errors="coerce")
-        flag_hoh = pd.to_numeric(df["FlagHeadOfHousehold"], errors="coerce")
-        yya_flag = (flag_yya == 1) & ~aged_out_before
-        current_tier = age_tier_as_of_period(df["BirthDate"], month_ts, df["EpisodeStartDate"])
-        age_tier_match = (current_tier == "18 to 24") | (
-            current_tier.isin(["0 to 11", "12 to 17"]) & (flag_hoh == 1)
-        )
-        return df[yya_flag & age_tier_match]
+        yya_flag = (df["FlagYYA"] == "YYA") & ~aged_out_before
+        return df[yya_flag]
     if pop_label == "Senior":
         # Age-tier membership check — unlike YYA, Seniors isn't scoped to
         # heads of household, and there's no "aging out" of being a senior
@@ -101,17 +108,10 @@ def filter_population_enrollment(df: pd.DataFrame, period_start, pop_label: str)
         # HouseholdCategory's own priority order happens to favor.
         return df[df["HouseholdType"] == "Household with Children and Adults"]
     if pop_label == "Youth and Young Adults":
-        # YYA alone is a household-level attribute — enrollments for a
-        # non-HoH child in an otherwise-YYA household would satisfy it, so
-        # apply the same individual-level age-tier restriction as
-        # filter_population's episode-level YYA branch, computed fresh
-        # from BirthDate/ProjectStartDate the same way (age.py) rather than
-        # off the frozen AgeTierAtEnrollment column.
-        current_tier = age_tier_as_of_period(df["BirthDate"], pd.Timestamp(period_start), df["ProjectStartDate"])
-        age_tier_match = (current_tier == "18 to 24") | (
-            current_tier.isin(["0 to 11", "12 to 17"]) & (df["HeadOfHousehold"] == "Yes")
-        )
-        return df[(df["YYA"] == "Yes") & age_tier_match]
+        # YYA is per-member (see module docstring) — "YYA" means this
+        # enrollment's own person is themselves 12-24 in a youth household,
+        # not just that they belong to one.
+        return df[df["YYA"] == "YYA"]
     if pop_label == "Senior":
         current_tier = age_tier_as_of_period(df["BirthDate"], pd.Timestamp(period_start), df["ProjectStartDate"])
         return df[current_tier.isin(["55 to 64", "65 or Above"])]

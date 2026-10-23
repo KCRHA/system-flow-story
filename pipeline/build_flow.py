@@ -196,9 +196,9 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
       - The second signal below closes that gap directly, without relying
         on AgedOutOfYYA at all: anyone with a still-open raw row at
         `months`' own last month who nonetheless fails the population
-        filter there (FlagYYA zeroed, whether from the 25th birthday or a
-        later enrollment's own reassessment) is aged out just as surely,
-        regardless of whether AgedOutOfYYA happens to have a matching row
+        filter there (FlagYYA no longer "YYA", whether from the 25th
+        birthday or a later enrollment's own reassessment) is aged out just
+        as surely, regardless of whether AgedOutOfYYA happens to have a matching row
         inside this specific window.
     Without an explicit bucket for this, such a person would silently
     disappear from every inflow/outflow bucket instead of landing in a
@@ -212,11 +212,13 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     "was anyone ever HoH at any point in the episode"), so neither one can
     flip mid-episode. FlagYYA is the one genuinely month-varying factor:
     it's `yya_status_asof`'s reading of whichever enrollment was open that
-    month, and a single continuous episode can span multiple enrollments
-    (e.g. moving between shelter programs while staying homeless) — an
-    earlier enrollment can carry YYA=No (unset, or not yet reassessed)
-    while a later one in the SAME episode correctly carries YYA=Yes, with
-    no inflow/outflow event marking the transition. already_active_ids/
+    month, computed directly from birthdates each month (PR #290) — and a
+    single continuous episode can span multiple enrollments (e.g. moving
+    between shelter programs while staying homeless) — an earlier
+    enrollment's household can carry FlagYYA="Non-YYA" (not yet a youth
+    household) while a later one in the SAME episode correctly carries
+    FlagYYA="YYA", with no inflow/outflow event marking the transition.
+    already_active_ids/
     inflow_candidates both resolve against the raw (not population-
     filtered) episode data for exactly this reason — see their own
     comments below.
@@ -353,9 +355,9 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     # period_raw_df, not period_pop_df: same reasoning as already_active_ids
     # above — a person's genuine inflow-type row (Newly Homeless/Return
     # from Housed/Return from Inactive) can itself fail the population
-    # filter (their episode's earliest enrollment carried FlagYYA=No, not
-    # yet reassessed) even though they later become a legitimate period
-    # member via a later enrollment within the same episode. Restricted to
+    # filter (their episode's earliest enrollment carried FlagYYA="Non-YYA",
+    # not yet a youth household) even though they later become a legitimate
+    # period member via a later enrollment within the same episode. Restricted to
     # period_ids explicitly, since period_raw_df itself carries no
     # population filtering at all.
     inflow_candidates = period_raw_df[
@@ -375,10 +377,12 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     outflow_buckets = {_STILL_ACTIVE: still_active_ids, _AGED_OUT: aged_out_ids}
     # period_raw_df, not period_pop_df: mirrors inflow_candidates above — a
     # person's genuine outflow-type row can itself fail the population
-    # filter when their 25th birthday falls in the SAME month as their real
-    # exit (FlagYYA is zeroed for that exact month, per Episode_Systemwide's
-    # own AgedOutOfYYA/FlagYYA computation — see this function's docstring),
-    # which would otherwise silently drop their real exit reason even though
+    # filter if their (or their household's) FlagYYA value shifts away from
+    # "YYA" in that exact month — e.g. the household stops being a youth
+    # household the same month this person's real exit happens, per
+    # Episode_Systemwide's own per-month FlagYYA recomputation (PR #290;
+    # see this function's docstring) — which would otherwise silently drop
+    # their real exit reason even though
     # neither still_active_ids nor aged_out_ids ends up catching them either
     # (their episode has, in fact, genuinely closed). Restricted to
     # period_ids explicitly, since period_raw_df carries no population
