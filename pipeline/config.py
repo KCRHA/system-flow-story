@@ -78,16 +78,11 @@ POPULATION_SEGMENTS = {
 # so no suppression changes were needed to add them.
 RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_white", "race_hl", "race_mena", "race_multiracial"]
 
-# "age_category" is native to both source tables (EpisodeAgeTier /
-# AgeTierAtEnrollment -- see the Episode_Systemwide notebook's
-# age-at-episode-start computation and population.py's YYA branch, which
-# already reads these same columns), not a derived rollup. Both tables share
-# the same age-tier vocabulary (same age_helpers cell copied into each
-# source notebook, including the "Under 18"/"0 to 17" bucket now being split
-# into "0 to 11" and "12 to 17"), so build_flow.py's build_resource_access_rows
-# just copies AgeTierAtEnrollment into AgeCategory rather than relabeling it.
-# Like household_type, it's episode-scoped rather than a true person-level
-# constant (age tier can differ between two of a person's own episodes over
+# "age_category" is native to episode_systemwide (EpisodeAgeTier -- see the
+# Episode_Systemwide notebook's age-at-episode-start computation and
+# population.py's YYA branch, which already reads this same column), not a
+# derived rollup. Like household_type, it's episode-scoped rather than a true
+# person-level constant (age tier can differ between two of a person's own episodes over
 # the export window) -- see build_flow.py's EPISODE_SCOPED_CATEGORY_DIMENSIONS,
 # which resolves both dimensions' categories fresh per period rather than
 # from a single whole-window snapshot, for the same reason. For the YYA
@@ -97,15 +92,12 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 #
 # "unsheltered_in_period" (see DIMENSION_COLUMNS' own comment) is
 # deliberately NOT included in this shared list, even though it's a real
-# dimension in dashboard_flow_monthly/yearly/quarterly — build_length.py,
-# build_return_cohorts.py, and build_flow.py's own build_resource_access_rows
-# all iterate this exact list and expect every entry to already be a
-# standing column on their own source dataframe (episode_systemwide /
-# All_Program_Enrollments), which "unsheltered_in_period" isn't and can't
-# be (it's an OR across whichever period is currently being built, not a
-# fixed per-row value) and has no All_Program_Enrollments equivalent at
-# all. build_flow.py adds it on top of this list locally instead — see its
-# own FLOW_DIMENSIONS.
+# dimension in dashboard_flow_monthly/yearly/quarterly — build_length.py and
+# build_return_cohorts.py both iterate this exact list and expect every
+# entry to already be a standing column on episode_systemwide, which
+# "unsheltered_in_period" isn't and can't be (it's an OR across whichever
+# period is currently being built, not a fixed per-row value). build_flow.py
+# adds it on top of this list locally instead — see its own FLOW_DIMENSIONS.
 DIMENSIONS = [
     "overall",
     *RACE_DIMENSIONS,
@@ -229,22 +221,6 @@ DIMENSION_COLUMNS = {
     "project_engaged_ce": "ProjectEngagedCoordinatedEntry",
 }
 
-# All_Program_Enrollments' equivalent columns (confirmed against
-# All_Program_Enrollments_2026_01_22.ipynb's final columns_to_select — none
-# of the race_*/gender_* derived columns are native to that table and must
-# be joined in from Client_Demographics on PersonalID first; HouseholdType
-# is native, just under a different name than its episode_systemwide
-# counterpart. "age_category" points at "AgeCategory" — a plain copy of the
-# native AgeTierAtEnrollment column build_resource_access_rows adds (see its
-# own comment), kept as a separate column rather than pointed straight at
-# AgeTierAtEnrollment so filter_population_enrollment's YYA branch can go on
-# reading the raw column regardless of what this mapping does.
-ENROLLMENT_DIMENSION_COLUMNS = {
-    **DIMENSION_COLUMNS,
-    "household_type": "HouseholdType",
-    "age_category": "AgeCategory",
-}
-
 # --- Inflow / outflow / active flow_type values (dashboard_flow_monthly) ---
 INFLOW_TYPE_MAP = {
     "Newly Homeless": "newly_homeless",
@@ -257,29 +233,11 @@ OUTFLOW_TYPE_MAP = {
     "Deceased": "deceased",
 }
 
-# --- Resource access project types (dashboard_flow_monthly resource_* flow_types) ---
-RESOURCE_TYPES = ["outreach", "emergency_shelter", "transitional_housing", "rapid_rehousing", "psh", "prevention"]
-
 # HUD ProjectTypeCode legend (see Event_Systemwide_2026_01_21.ipynb header, and
 # confirmed again directly against All_Program_Enrollments_2026_01_22.ipynb,
 # which carries this same ProjectTypeCode column):
 # 0=ES-EE, 1=ES-NBN, 2=TH, 3=PSH, 4=SO, 8=Safe Haven, 9=PH-Housing Only,
 # 10=PH-Housing w/Services, 12=Prevention, 13=RRH, 14=CE
-#
-# Resource-access rollup (6 whiteboard categories) — codes 9/10 (generic
-# permanent housing outside PSH) intentionally have no bucket here: the
-# whiteboard's resource-access categories don't include a generic PH bucket
-# distinct from PSH, so those enrollments simply aren't counted in Table 1's
-# resource_* flow_types. They still roll into capacity's "ph" bucket below,
-# since Table 3 answers a different question (system-wide PH capacity).
-RESOURCE_PROJECT_TYPE_GROUPS = {
-    "outreach": [4],
-    "emergency_shelter": [0, 1, 8],
-    "transitional_housing": [2],
-    "rapid_rehousing": [13],
-    "psh": [3],
-    "prevention": [12],
-}
 
 # program_attributes.ProjectTypeCode and all_program_enrollments.ProjectTypeCode
 # store the human-readable HUD label in Synapse, not the numeric HUD code
@@ -288,7 +246,7 @@ RESOURCE_PROJECT_TYPE_GROUPS = {
 # their own kind, but ProjectTypeCode specifically is numeric in the source
 # notebooks this was ported from) — confirmed directly against both tables'
 # distinct values, which are exactly these 14 HUD labels. Map to numeric so
-# RESOURCE_PROJECT_TYPE_GROUPS/CAPACITY_PROJECT_TYPE_GROUPS below (and their
+# PROJECT_ENGAGEMENT_GROUPS/CAPACITY_PROJECT_TYPE_GROUPS below (and their
 # bucket-matching functions in build_flow.py/build_capacity.py) can stay
 # expressed in HUD codes, matching the legend comment above.
 PROJECT_TYPE_CODE_TEXT_TO_HUD = {

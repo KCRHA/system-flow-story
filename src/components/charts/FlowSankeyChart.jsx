@@ -123,20 +123,6 @@ function nodeColor(id) {
 function buildGraph({ startActive, endActive, inflow, outflow, pairs }, outflowKeys) {
   const cellFor = (id) => (id === "already_active" ? startActive : id === "still_active" ? endActive : (inflow[id] ?? outflow[id]));
 
-  // fixedValue pins each node's own bar height to its own true (or nominal,
-  // if suppressed) magnitude — d3-sankey otherwise sizes a node from the
-  // sum of its connecting links instead, which can be far smaller than the
-  // node's own printed value: a demographic slice small enough that a
-  // node's aggregate cell is still visible, but several of the individual
-  // inflow-to-outflow pairs feeding it are each separately suppressed
-  // (and so each contribute only SUPPRESSED_NOMINAL), would otherwise
-  // render a bar that looks tiny next to a much larger printed number.
-  const nodes = [
-    ...INFLOW_BUCKET_KEYS.map((id) => ({ id, label: NODE_LABELS[id], cell: cellFor(id), fixedValue: magnitude(cellFor(id)) })),
-    ...outflowKeys.map((id) => ({ id, label: NODE_LABELS[id], cell: cellFor(id), fixedValue: magnitude(cellFor(id)) })),
-  ];
-  const fixedValueById = new Map(nodes.map((n) => [n.id, n.fixedValue]));
-
   const candidateLinks = [];
   for (const inflowKey of INFLOW_BUCKET_KEYS) {
     for (const outflowKey of outflowKeys) {
@@ -144,6 +130,38 @@ function buildGraph({ startActive, endActive, inflow, outflow, pairs }, outflowK
       if (magnitude(cell) > 0) candidateLinks.push({ source: inflowKey, target: outflowKey, cell });
     }
   }
+
+  // Sum of magnitudes across every link touching `nodeId` — used below as
+  // a floor under that node's own fixedValue (see the comment there) when
+  // the node's own total is suppressed but its individual links aren't.
+  function linkSumFor(nodeId) {
+    return candidateLinks.reduce((sum, l) => (l.source === nodeId || l.target === nodeId ? sum + magnitude(l.cell) : sum), 0);
+  }
+
+  // fixedValue pins each node's own bar height to its own true (or nominal,
+  // if suppressed) magnitude — d3-sankey otherwise sizes a node from the
+  // sum of its connecting links instead, which can diverge from the node's
+  // own printed value in either direction:
+  //   - a demographic slice small enough that a node's aggregate cell is
+  //     still visible, but several of the individual inflow-to-outflow
+  //     pairs feeding it are each separately suppressed (and so each
+  //     contribute only SUPPRESSED_NOMINAL), would otherwise render a bar
+  //     that looks tiny next to a much larger printed number — using the
+  //     node's own (larger) magnitude fixes this.
+  //   - the reverse: a node whose OWN total is suppressed (so its
+  //     magnitude collapses to SUPPRESSED_NOMINAL) can still have fully
+  //     visible individual links feeding it — e.g. a "Permanently Housed"
+  //     node marked "**" with two unsuppressed inflow links summing to 40
+  //     — and using only the node's own nominal-1 magnitude would collapse
+  //     the whole bar to flat despite that known 40-person floor. Taking
+  //     the link sum as a floor here fixes that without ever requiring the
+  //     node's own suppressed number to be revealed — it's already implied
+  //     by the (public) link values and SUPPRESSED_NOMINAL for the rest.
+  const nodes = [
+    ...INFLOW_BUCKET_KEYS.map((id) => ({ id, label: NODE_LABELS[id], cell: cellFor(id), fixedValue: Math.max(magnitude(cellFor(id)), linkSumFor(id)) })),
+    ...outflowKeys.map((id) => ({ id, label: NODE_LABELS[id], cell: cellFor(id), fixedValue: Math.max(magnitude(cellFor(id)), linkSumFor(id)) })),
+  ];
+  const fixedValueById = new Map(nodes.map((n) => [n.id, n.fixedValue]));
 
   // Which nodes have at least one secondary-suppressed link touching them —
   // determines, per node, whether the secondary links or (if none are

@@ -1,6 +1,6 @@
 // "People who identify as X" (the user's specified phrasing) only reads
 // naturally for the demographic types that really are an identity a person
-// holds (race/ethnicity, gender, age). unsheltered_in_period and
+// holds (race/ethnicity, gender). unsheltered_in_period and
 // project_type_engagement are both situational categories, not identities
 // — "people who identify as Unsheltered this period" or "...as Emergency
 // Shelter" reads as a category-error, so each gets its own natural phrasing
@@ -9,7 +9,8 @@
 // last_known_subregion is geographic, not an identity either — "people who
 // identify as South King County" reads the same way, so it gets its own
 // clause too. (last_known_city would read the same way, but that filter is
-// temporarily disabled — see subjectFor below.)
+// temporarily disabled — see subjectFor below.) age_category is a range,
+// not an identity — "people aged 0 to 11" gets its own clause too.
 //
 // Mirrors FilterBar's POPULATION_SEGMENTS, lowercased into the noun phrase
 // each segment reads as mid-sentence ("all_population" falls back to plain
@@ -48,6 +49,12 @@ export function subjectFor(populationSegment, demographicType, demographicCatego
   // last_known_city filter temporarily disabled — was: `demographicType === "last_known_subregion" || demographicType === "last_known_city"`
   if (demographicType === "last_known_subregion") {
     return `${noun} last known to live in ${demographicCategory}`;
+  }
+  if (demographicType === "age_category") {
+    // Age tiers ("0 to 11", "65 or Above") are a range, not an identity —
+    // "who identify as 0 to 11" reads as a category-error, same reasoning
+    // as the other situational branches above.
+    return `${noun} aged ${demographicCategory}`;
   }
   return `${noun} who identify as ${demographicCategory}`;
 }

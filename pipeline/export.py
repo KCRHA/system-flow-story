@@ -22,7 +22,6 @@ from .build_flow import (
     build_flow_quarterly_rows,
     build_flow_rows,
     build_flow_yearly_rows,
-    build_resource_access_rows,
 )
 from .build_length import build_length_rows
 from .build_length_by_exit import (
@@ -44,7 +43,7 @@ from .config import (
 )
 
 # The 8 derived race_* columns (see demographics.py's compute_race_rollups),
-# reused at both client_demographics merge sites below — sourced from
+# reused at the client_demographics merge below — sourced from
 # DIMENSION_COLUMNS so this can't silently drift out of sync with config.py's
 # own RACE_DIMENSIONS -> column-name mapping.
 RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
@@ -172,38 +171,6 @@ def main():
     #     client_demographics["LastKnownCity"].isin(TOP_10_KING_COUNTY_CITIES), "Other"
     # )
 
-    # BirthDate: neither client_demographic nor episode_systemwide carries
-    # it — both source notebooks drop it before publishing to Synapse (see
-    # age.py's module docstring) — so it's pulled straight from Looker's
-    # client_model view instead, the same view/fields Episode_Systemwide's
-    # own notebook uses for its own (frozen, episode-start-only) age tier
-    # computation. Merged onto client_demographics here (not queried
-    # separately per-caller) so it rides along with VeteranStatus/
-    # LastKnownSubregion through both of this file's existing
-    # client_demographics merge sites below, and build_flow.py's
-    # build_resource_access_rows's own client_demographics merge, with no
-    # further plumbing.
-    birth_dates = connection.query_looker(
-        conn,
-        "client_model",
-        fields=["client_model.personal_id", "client_model.birth_date"],
-        filters={"client_model.deleted": "No"},
-    )
-    # Looker's inline-query CSV returns columns by field LABEL, not field id
-    # (e.g. "Client Model Personal Id"), so positional assignment — same as
-    # Episode_Systemwide's own identical birth_dates pull — rather than a
-    # rename() keyed to an exact label string this pipeline can't confirm
-    # without a live Looker credential.
-    birth_dates.columns = ["PersonalID", "BirthDate"]
-    # Parsed once, here, same as every other date column this file loads
-    # (EpisodeStartDate/TimePeriodStartDate/EpisodeEndDate below) — age.py's
-    # age_in_years() is called from inside filter_population, often once per
-    # month per population segment, so leaving BirthDate as raw strings
-    # would re-parse it from scratch (and re-warn pandas's "could not infer
-    # format" fallback) on every single one of those calls instead of once.
-    birth_dates["BirthDate"] = pd.to_datetime(birth_dates["BirthDate"], errors="coerce")
-    client_demographics = client_demographics.merge(birth_dates, on="PersonalID", how="left")
-
     # Pull with no date trim for episode_systemwide: return-cohort detection
     # needs to see up to RETURN_WINDOW_DAYS past the window's end, and the
     # length/flow builders trim to the window themselves below.
@@ -226,7 +193,6 @@ def main():
                 "GenderAlignment",
                 "VeteranStatus",
                 "LastKnownSubregion",
-                "BirthDate",
                 # "LastKnownCity",  # last_known_city filter temporarily disabled
             ]
         ],
@@ -241,8 +207,8 @@ def main():
     # episode started before the window (but is still open) reads as
     # brand-new inflow instead of already active. Never published itself
     # (window_start still gates what actually gets emitted below); every
-    # other builder (length, return cohorts, resource access) doesn't need
-    # this lookback and keeps using episodes_in_window.
+    # other builder (length, return cohorts) doesn't need this lookback and
+    # keeps using episodes_in_window.
     episodes_with_lookback = _scope_to_window(all_episodes, "TimePeriodStartDate", month_before(start), end)
 
     episode_ce = connection.query(conn, "episode_ce")
@@ -259,12 +225,11 @@ def main():
     # CAPACITY_PROJECT_TYPE_GROUPS is keyed by — see config.py.
     program_attributes["ProjectTypeCode"] = program_attributes["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
 
-    # All_Program_Enrollments — loaded ahead of build_flow_rows below, not
-    # just build_resource_access_rows, since build_flow_rows/yearly/
-    # quarterly now also need it to resolve the project_engaged_*
-    # dimensions (see build_flow.py's _project_engagement_category). Not
-    # date-scoped to the window: a long-open enrollment that started years
-    # earlier must still count as overlapping this window's periods.
+    # All_Program_Enrollments — needed by build_flow_rows/yearly/quarterly to
+    # resolve the project_engaged_* dimensions (see build_flow.py's
+    # _project_engagement_category). Not date-scoped to the window: a
+    # long-open enrollment that started years earlier must still count as
+    # overlapping this window's periods.
     enrollments = connection.query(conn, "all_program_enrollments")
     enrollments["ProjectStartDate"] = pd.to_datetime(enrollments["ProjectStartDate"])
     enrollments["ProjectExitDate"] = pd.to_datetime(enrollments["ProjectExitDate"])
@@ -273,13 +238,6 @@ def main():
 
     # --- dashboard_flow_monthly ---
     flow_df = build_flow_rows(episodes_with_lookback, episode_ce, enrollments, window_start=pd.Timestamp(start))
-
-    # All_Program_Enrollments has no monthly grain of its own (each row spans
-    # ProjectStartDate..ProjectExitDate) — build_resource_access_rows expands
-    # it against the same month list every other table uses.
-    months_in_window = sorted(episodes_in_window["TimePeriodStartDate"].unique())
-    resource_df = build_resource_access_rows(enrollments, client_demographics, months_in_window)
-    flow_df = pd.concat([flow_df, resource_df], ignore_index=True)
 
     flow_df = apply_full_suppression_pipeline(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
     # Extra pass, on top of the above: protects the indiv_flow_* cross-tab
