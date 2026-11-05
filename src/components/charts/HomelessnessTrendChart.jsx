@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
+import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
 import ChartLegend from "../ChartLegend.jsx";
 
 const ABOVE_MEDIAN_COLOR = "var(--color-navy)";
@@ -283,7 +284,14 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
 
     // Suppressed quarters get no dot or line segment — mark them at the
     // axis instead of leaving a silent gap that could read as "0 people"
-    // (a suppressed cell is never a real zero — see resolveCell).
+    // (a suppressed cell is never a real zero — see resolveCell). Only
+    // INSUFFICIENT_POPULATION_MARKER means the underlying population
+    // itself was too small to show anything for this scope — the literal
+    // "*"/"**" markers can hide a perfectly large value that's only dark
+    // because a nearby small sibling cell needed protection (see
+    // App.jsx's footnote and LengthChart/ReturnCohortChart's matching
+    // literal-marker display), so showing "too small" for those too would
+    // misrepresent what was actually hidden and why.
     g.selectAll("text.suppression-mark")
       .data(suppressed)
       .join("text")
@@ -291,9 +299,18 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
       .attr("x", (p) => x(p.date))
       .attr("y", innerH - 8)
       .attr("text-anchor", "middle")
-      .attr("font-size", 10)
+      .attr("font-size", (p) => (p.marker === INSUFFICIENT_POPULATION_MARKER ? 10 : 13))
       .attr("fill", "var(--gray-mid)")
-      .text("too small");
+      .text((p) => (p.marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : p.marker))
+      .on("mouseenter", (event, p) => {
+        const message =
+          p.marker === INSUFFICIENT_POPULATION_MARKER
+            ? "Population too small to safely display for this combination"
+            : "Data suppressed (small cell)";
+        tooltip.show(`<div style="font-weight:600">${quarterLabel(p.date)}</div><div>${message}</div>`, event);
+      })
+      .on("mousemove", (event) => tooltip.move(event))
+      .on("mouseleave", () => tooltip.hide());
   }, [points, parsed, visible, suppressed, median, medianKnown, measureLabel, unitLabel, axisLabel, subject, selectedQuarter, width, height]);
 
   return (

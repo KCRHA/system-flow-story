@@ -8,7 +8,11 @@ const MARGIN = { top: 10, right: 10, bottom: 20, left: 46 };
  * points: [{ year, month, units_in_system, pct_utilization }], oldest to
  * newest, one snapshot per year (that year's last available month) ending at
  * the selected year — so the final point always matches the card's own
- * "units as of {month}" headline figure above this chart.
+ * "units as of {month}" headline figure above this chart. Despite the
+ * `units_in_system`/`pct_utilization` field names, CapacitySection.jsx maps
+ * in beds_in_system/bed_pct_utilization here for Emergency Shelter — this
+ * component stays generic over which basis it's actually plotting, and
+ * `unitLabel` (e.g. "units" or "beds") is what makes the tooltip text match.
  *
  * Renders a small-multiple area+line: the "Capacity" line is units_in_system,
  * the "In use" area is units_in_system * pct_utilization (the implied
@@ -16,7 +20,7 @@ const MARGIN = { top: 10, right: 10, bottom: 20, left: 46 };
  * same three legend entries as CapacitySection's own ChartLegend above the
  * card row.
  */
-export default function CapacityCardChart({ points, width = 300, height = 150 }) {
+export default function CapacityCardChart({ points, unitLabel = "units", width = 300, height = 150 }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function CapacityCardChart({ points, width = 300, height = 150 })
       .on("mouseenter", (event, d) => {
         tooltip.show(
           `<div style="font-weight:600">${d.year}</div>` +
-            `<div>${d.units_in_system.toLocaleString()} units</div>` +
+            `<div>${d.units_in_system.toLocaleString()} ${unitLabel}</div>` +
             (d.pct_utilization != null ? `<div>${Math.round(d.pct_utilization * 100)}% in use</div>` : ""),
           event
         );
@@ -107,7 +111,7 @@ export default function CapacityCardChart({ points, width = 300, height = 150 })
         .attr("stroke-width", 2)
         .attr("pointer-events", "none");
     }
-  }, [points, width, height]);
+  }, [points, unitLabel, width, height]);
 
   return <svg ref={svgRef} style={{ width: "100%", height: "auto" }} />;
 }

@@ -18,6 +18,22 @@ const GOAL_TEXT = {
   ph: "Goal is for people to stay housed",
 };
 
+// Emergency Shelter is the one exception to this dashboard's usual unit/
+// household capacity basis — see pipeline/build_capacity.py's module
+// docstring. ES programs serve individuals who aren't necessarily part of a
+// fixed household the way TH/RRH/PH enrollments are, so ES reads its
+// inventory/utilization/turnover from the bed/person-based fields
+// (beds_in_system, bed_pct_utilization, people_per_bed) instead of the
+// unit/household ones (units_in_system, pct_utilization, households_per_unit)
+// every other project type still uses. Both bases exist on every row
+// regardless (see build_capacity.py) — this map is what actually picks.
+const INVENTORY_FIELD = { es: "beds_in_system", th: "units_in_system", ph: "units_in_system" };
+const UTILIZATION_FIELD = { es: "bed_pct_utilization", th: "pct_utilization", ph: "pct_utilization" };
+const PER_UNIT_FIELD = { es: "people_per_bed", th: "households_per_unit", rrh: "households_per_unit", ph: "households_per_unit" };
+const INVENTORY_UNIT_LABEL = { es: "beds", th: "units", ph: "units" };
+const PER_UNIT_LABEL = { es: "bed", th: "unit", rrh: "unit", ph: "unit" };
+const POPULATION_LABEL = { es: "people", th: "households", rrh: "households", ph: "households" };
+
 function monthAbbrev(month) {
   return new Date(month).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" });
 }
@@ -75,21 +91,28 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
   }, [scopedCapacityRows, year]);
   const cardSeries = useMemo(
     () =>
-      UNITS_AND_UTILIZATION_TYPES.map((type) => ({
-        project_type: type,
-        points: cardYears.map((y) => {
-          const monthsForYear = scopedCapacityRows
-            .filter((r) => r.project_type === type && Number(r.month.slice(0, 4)) === y)
-            .sort((a, b) => a.month.localeCompare(b.month));
-          const last = monthsForYear.at(-1);
-          return {
-            year: y,
-            month: last?.month ?? null,
-            units_in_system: last?.units_in_system ?? null,
-            pct_utilization: last?.pct_utilization ?? null,
-          };
-        }),
-      })),
+      UNITS_AND_UTILIZATION_TYPES.map((type) => {
+        const inventoryField = INVENTORY_FIELD[type];
+        const utilizationField = UTILIZATION_FIELD[type];
+        return {
+          project_type: type,
+          points: cardYears.map((y) => {
+            const monthsForYear = scopedCapacityRows
+              .filter((r) => r.project_type === type && Number(r.month.slice(0, 4)) === y)
+              .sort((a, b) => a.month.localeCompare(b.month));
+            const last = monthsForYear.at(-1);
+            // CapacityCardChart.jsx stays generic over units_in_system/
+            // pct_utilization — this is where ES's beds_in_system/
+            // bed_pct_utilization get mapped into those same field names.
+            return {
+              year: y,
+              month: last?.month ?? null,
+              units_in_system: last?.[inventoryField] ?? null,
+              pct_utilization: last?.[utilizationField] ?? null,
+            };
+          }),
+        };
+      }),
     [scopedCapacityRows, cardYears]
   );
 
@@ -104,7 +127,7 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
         return {
           project_type: type,
           pct_exited: row?.pct_exited ?? null,
-          households_per_unit: row?.households_per_unit ?? null,
+          per_unit: row?.[PER_UNIT_FIELD[type]] ?? null,
         };
       }),
     [scopedCapacityYearlyRows, year]
@@ -167,6 +190,7 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
           const series = cardSeries.find((s) => s.project_type === type);
           const latest = series?.points.at(-1);
           const pct = latest?.pct_utilization != null ? Math.round(latest.pct_utilization * 100) : null;
+          const unitLabel = INVENTORY_UNIT_LABEL[type];
           return (
             <div className="kpi-card capacity-card" key={type}>
               <h4 className="length-panel-title">{CARD_LABELS[type]}</h4>
@@ -174,7 +198,9 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
                 <>
                   <div className="kpi-value-row">
                     <span className="kpi-value">{Math.round(latest.units_in_system).toLocaleString()}</span>
-                    <span className="kpi-percent-total">units as of {shortMonthYearLabel(latest.month)}</span>
+                    <span className="kpi-percent-total">
+                      {unitLabel} as of {shortMonthYearLabel(latest.month)}
+                    </span>
                   </div>
                   <p className="kpi-description">
                     {pct != null ? `${pct}%` : "—"} in use in {year}
@@ -185,7 +211,7 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
                 <p className="suppressed-note">No data available.</p>
               )}
               <div className="capacity-card-chart">
-                <CapacityCardChart points={series?.points ?? []} />
+                <CapacityCardChart points={series?.points ?? []} unitLabel={unitLabel} />
               </div>
             </div>
           );
@@ -208,6 +234,8 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
       <div className="turnover-card">
         {turnoverRows.map((row) => {
           const pctExited = row.pct_exited != null ? Math.round(row.pct_exited * 100) : null;
+          const populationLabel = POPULATION_LABEL[row.project_type];
+          const perUnitLabel = PER_UNIT_LABEL[row.project_type];
           return (
             <div className="turnover-row" key={row.project_type}>
               <div className="turnover-col">
@@ -215,19 +243,19 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
                 <p className="kpi-description">{GOAL_TEXT[row.project_type]}</p>
               </div>
               <div className="turnover-col">
-                {row.households_per_unit != null ? (
+                {row.per_unit != null ? (
                   <>
                     <div className="kpi-value-row">
-                      <span className="kpi-value">{row.households_per_unit.toFixed(1)}</span>
+                      <span className="kpi-value">{row.per_unit.toFixed(1)}</span>
                     </div>
                     <p className="kpi-description">
-                      average households served per unit in {year}
+                      average {populationLabel} served per {perUnitLabel} in {year}
                       {isPartialYear && ` (through ${throughAbbrev})`}
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="turnover-no-data">No per-unit figure</p>
+                    <p className="turnover-no-data">No per-{perUnitLabel} figure</p>
                     <p className="kpi-description">See note below</p>
                   </>
                 )}
@@ -251,7 +279,8 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
 
       <h3 className="kpi-group-heading">What this shows</h3>
       <p className="chart-analysis">
-        Capacity shows how much room the system has, and turnover shows how many people each unit serves in a year.{" "}
+        Capacity shows how much room the system has, and turnover shows how many people each unit or bed serves in a
+        year.{" "}
         <strong>Permanent housing succeeds when people stay housed.</strong>{" "}
         <strong>Shelter, Transitional, and Rapid-Rehousing succeed when people move on to stable housing</strong>, so
         where people go matters as much as how many people leave. For length of stay, see the{" "}

@@ -337,7 +337,8 @@ def main():
         SELECT ProgramID, TimePeriod, TimePeriodStartDate, TimePeriodEndDate,
                MaxUnitsAvailableDuringTimeframe, EnrolledDuringTimeframe,
                UnitNightsUsedNumerator, UnitNightsAvailableDenominator,
-               MaxBedsAvailableDuringTimeframe, ExitedDuringTimeframe, ActiveEnrollmentsInTimeframe
+               MaxBedsAvailableDuringTimeframe, ExitedDuringTimeframe, ActiveEnrollmentsInTimeframe,
+               BedNightsUsedNumerator, BedNightsAvailableDenominator
         FROM program_performance_metrics
         WHERE TimePeriodStartDate >= '{start.isoformat()}' AND TimePeriodStartDate <= '{end.isoformat()}'
         """,
@@ -718,9 +719,10 @@ def main():
 
     # --- dashboard_capacity_monthly / _quarterly / _yearly (aggregate
     # inventory data, not person-level — units_in_system/beds_in_system/
-    # pct_utilization never get suppressed — but enrolled/exited/active ARE
-    # real household headcounts, and the subregion breakdown below can make
-    # one small enough to need the same primary/secondary protection every
+    # pct_utilization/bed_pct_utilization never get suppressed — but
+    # enrolled/exited/active ARE real household headcounts, and the
+    # subregion breakdown below can make one small enough to need the same
+    # primary/secondary protection every
     # person-level table gets; see _suppress_capacity_household_count) ---
     capacity_df = build_capacity_rows(performance_metrics, program_attributes, as_of=as_of)
     capacity_quarterly_df = build_capacity_quarterly_rows(performance_metrics, program_attributes, as_of=as_of)
@@ -743,13 +745,14 @@ def main():
     capacity_yearly_df, capacity_yearly_exited_violations = _suppress_capacity_household_count(capacity_yearly_df, "year", "exited")
     capacity_yearly_df, capacity_yearly_active_violations = _suppress_capacity_household_count(capacity_yearly_df, "year", "active")
     capacity_yearly_violations = capacity_yearly_enrolled_violations + capacity_yearly_exited_violations + capacity_yearly_active_violations
-    # households_per_unit/pct_exited are both derived FROM active (and
-    # pct_exited from exited too — see build_capacity.py's
+    # households_per_unit/people_per_bed/pct_exited are all derived FROM
+    # active (and pct_exited from exited too — see build_capacity.py's
     # _grouped_yearly_metrics) — nulled alongside whichever headcount(s)
     # they're built from, same reasoning as throughput_hh_per_unit above,
     # so neither ratio hands a suppressed headcount back via the
-    # units_in_system/active figure published right next to it.
+    # units_in_system/beds_in_system/active figure published right next to it.
     capacity_yearly_df.loc[capacity_yearly_df["active_suppression_marker"].notna(), "households_per_unit"] = None
+    capacity_yearly_df.loc[capacity_yearly_df["active_suppression_marker"].notna(), "people_per_bed"] = None
     capacity_yearly_df.loc[
         capacity_yearly_df["exited_suppression_marker"].notna() | capacity_yearly_df["active_suppression_marker"].notna(),
         "pct_exited",

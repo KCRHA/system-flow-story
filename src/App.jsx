@@ -259,7 +259,14 @@ export default function App() {
     //   return LAST_KNOWN_CITY_ORDER.filter((category) => categories.includes(category));
     // }
     return categories.sort();
-  }, [data, demographicType, populationSegment]);
+    // quarterlyFlowByDimension is read above (for the data-derived category
+    // branch) but intentionally omitted here: that lazy-loaded dimension
+    // data arrives after this memo's first run for a freshly-selected
+    // demographicType, and without it as a dep, React keeps serving the
+    // stale (empty) category list from before the fetch resolved — visible
+    // as a blank Category dropdown and every Year stuck "(partial year)"
+    // until something else (e.g. populationSegment) forces a recompute.
+  }, [data, demographicType, populationSegment, quarterlyFlowByDimension]);
   // Same fallback pattern as `year` above — lands on the first available
   // category whenever the current selection isn't valid for the freshly
   // chosen demographic type.

@@ -4,9 +4,19 @@ joined to program_attributes on ProgramID for the HUD ProjectTypeCode
 rollup and the Subregion breakdown.
 
 Units measure household capacity; beds measure individual-person capacity.
-This dashboard's flow metrics (Tables 1/2) are about households, so the
-unit-based fields are the default measures — beds are kept only as a
-secondary reference figure.
+This dashboard's flow metrics (Tables 1/2) are about people, and for most
+project types the unit-based fields are still the default measures here —
+beds are kept only as a secondary reference figure. Emergency Shelter (the
+"es" bucket) is the deliberate exception: ES programs serve individuals who
+aren't necessarily part of a fixed household unit the way TH/RRH/PH
+enrollments are, so its primary capacity figure is beds_in_system (not
+units_in_system) and its utilization figure is bed_pct_utilization (built
+from BedNightsUsedNumerator/BedNightsAvailableDenominator, not the
+UnitNights equivalent) and its turnover figure is people_per_bed (not
+households_per_unit). TH/RRH/PH keep the unit/household basis unchanged.
+Both bases are computed for every project type regardless (the inputs cost
+nothing extra to aggregate) — CapacitySection.jsx picks which pair of
+fields to read per project_type, see its own per-type field maps.
 
 subregion is "Overall" for most rows (the whole system — same totals this
 table always published before the subregion breakdown existed), plus one
@@ -79,9 +89,17 @@ def _grouped_rate_metrics(df: pd.DataFrame, group_cols: list[str]) -> pd.DataFra
         unit_nights_used=("UnitNightsUsedNumerator", "sum"),
         unit_nights_available=("UnitNightsAvailableDenominator", "sum"),
         beds_in_system=("MaxBedsAvailableDuringTimeframe", "sum"),
+        bed_nights_used=("BedNightsUsedNumerator", "sum"),
+        bed_nights_available=("BedNightsAvailableDenominator", "sum"),
     ).reset_index()
     grouped["throughput_hh_per_unit"] = grouped["enrolled"] / grouped["units_in_system"]
     grouped["pct_utilization"] = grouped["unit_nights_used"] / grouped["unit_nights_available"]
+    # Emergency Shelter's own utilization figure — see module docstring —
+    # same unit-nights-used/available ratio shape, just the bed-nights pair
+    # of columns instead. Computed for every project type (not just "es"),
+    # same reasoning as beds_in_system/units_in_system both always being
+    # aggregated above; CapacitySection.jsx is what actually picks it.
+    grouped["bed_pct_utilization"] = grouped["bed_nights_used"] / grouped["bed_nights_available"]
     return grouped
 
 
@@ -114,7 +132,7 @@ def _build_capacity_rows_for_period(performance_metrics: pd.DataFrame, program_a
     # household count itself to suppress, not just the throughput_hh_per_unit
     # ratio derived from it. Published nulled-with-a-marker like every
     # other suppressed count in this pipeline, not hidden.
-    return grouped[[period_col, "project_type", "subregion", "units_in_system", "enrolled", "throughput_hh_per_unit", "pct_utilization", "beds_in_system"]]
+    return grouped[[period_col, "project_type", "subregion", "units_in_system", "enrolled", "throughput_hh_per_unit", "pct_utilization", "beds_in_system", "bed_pct_utilization"]]
 
 
 def build_capacity_rows(performance_metrics: pd.DataFrame, program_attributes: pd.DataFrame, as_of: pd.Timestamp) -> pd.DataFrame:
@@ -136,6 +154,7 @@ def build_capacity_quarterly_rows(performance_metrics: pd.DataFrame, program_att
 def _grouped_yearly_metrics(df: pd.DataFrame, group_cols: list[str]) -> pd.DataFrame:
     grouped = df.groupby(group_cols).agg(
         units_in_system=("MaxUnitsAvailableDuringTimeframe", "sum"),
+        beds_in_system=("MaxBedsAvailableDuringTimeframe", "sum"),
         enrolled=("EnrolledDuringTimeframe", "sum"),
         exited=("ExitedDuringTimeframe", "sum"),
         active=("ActiveEnrollmentsInTimeframe", "sum"),
@@ -151,9 +170,14 @@ def _grouped_yearly_metrics(df: pd.DataFrame, group_cols: list[str]) -> pd.DataF
     # meaningful — you can't have more exits than people who were ever
     # there to exit.
 
-    # Households actually served per unit that year — e.g. one ES unit
+    # Households actually served per unit that year — e.g. one TH unit
     # with ~2-month average stays should show ~6 (12 months / 2).
     grouped["households_per_unit"] = (grouped["active"] / grouped["units_in_system"]).where(grouped["units_in_system"] > 0)
+    # Emergency Shelter's own turnover figure — see module docstring — same
+    # shape as households_per_unit above, just active/beds_in_system instead
+    # of active/units_in_system. Computed for every project type, same
+    # reasoning as bed_pct_utilization in _grouped_rate_metrics above.
+    grouped["people_per_bed"] = (grouped["active"] / grouped["beds_in_system"]).where(grouped["beds_in_system"] > 0)
     # Of everyone active at any point in the year, what share exited
     # within that same year (vs. still active at year-end) — the
     # "turnover rate". Structurally bounded to [0, 1] since `active` is
@@ -192,4 +216,4 @@ def build_capacity_yearly_rows(performance_metrics: pd.DataFrame, program_attrib
     grouped = _with_subregion_scopes(joined, ["TimePeriodStartDate", "project_type"], _grouped_yearly_metrics)
     grouped["year"] = grouped["TimePeriodStartDate"].apply(lambda d: pd.Timestamp(d).year)
 
-    return grouped[["year", "project_type", "subregion", "enrolled", "exited", "active", "pct_exited", "units_in_system", "households_per_unit"]]
+    return grouped[["year", "project_type", "subregion", "enrolled", "exited", "active", "pct_exited", "units_in_system", "households_per_unit", "beds_in_system", "people_per_bed"]]
