@@ -12,13 +12,21 @@ from datetime import timedelta
 
 import pandas as pd
 
-from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, RETURN_WINDOW_DAYS
+from .config import (
+    DIMENSION_COLUMNS,
+    POPULATION_SEGMENTS,
+    PROJECT_ENGAGEMENT_DIMENSIONS,
+    RETURN_WINDOW_DAYS,
+    SUBREGION_ENGAGEMENT_DIMENSIONS,
+)
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS,
     PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
     _group_enrollments_by_dimension,
+    _group_events_by_subregion,
     _project_engagement_category,
+    _subregion_engagement_category,
     _unsheltered_in_period_category,
 )
 from .population import filter_population
@@ -42,7 +50,7 @@ def _all_categories(df: pd.DataFrame, dimension: str) -> list:
 
 
 def build_return_cohort_rows(
-    episodes_in_window: pd.DataFrame, all_episodes: pd.DataFrame, enrollments: pd.DataFrame, as_of: pd.Timestamp
+    episodes_in_window: pd.DataFrame, all_episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, as_of: pd.Timestamp
 ) -> pd.DataFrame:
     """
     episodes_in_window: episode_systemwide rows whose exit month falls in the
@@ -56,6 +64,10 @@ def build_return_cohort_rows(
     enrollments: raw All_Program_Enrollments rows, used only to resolve the
       project_engaged_* dimensions (see _project_engagement_category) — same
       contract as build_length.py's build_length_rows.
+    events: raw event_systemwide rows, already filtered to ClientStatus ==
+      "Homeless" and joined to program_attributes.Subregion via ProgramID,
+      used only to resolve the engaged_in_subregion_* dimensions (see
+      _subregion_engagement_category).
     as_of: "today" for window_complete purposes (a cohort's window is only
       complete once RETURN_WINDOW_DAYS have fully elapsed since exit_quarter
       ended — the latest possible exit date in the quarter — so every exit
@@ -88,6 +100,7 @@ def build_return_cohort_rows(
     # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
     # across every quarter below — see _group_enrollments_by_dimension.
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     for exit_quarter in exit_quarters:
         quarter_df = exits[exits["exit_quarter"] == exit_quarter]
@@ -120,6 +133,10 @@ def build_return_cohort_rows(
             **{
                 dim: _project_engagement_category(quarter_person_rows, group_enrollments[dim], quarter_start, quarter_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(quarter_person_rows, group_events[dim], quarter_start, quarter_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
         quarter_df = quarter_df.assign(

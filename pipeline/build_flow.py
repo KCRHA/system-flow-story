@@ -10,13 +10,16 @@ from .config import (
     OUTFLOW_TYPE_MAP,
     POPULATION_SEGMENTS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
+    SUBREGION_ENGAGEMENT_DIMENSIONS,
 )
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS as FLOW_DIMENSIONS,
     PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
     _group_enrollments_by_dimension,
+    _group_events_by_subregion,
     _project_engagement_category,
+    _subregion_engagement_category,
     _unsheltered_in_period_category,
 )
 from .population import filter_population
@@ -97,6 +100,39 @@ def _add_inflow_outflow_flags(episodes: pd.DataFrame) -> pd.DataFrame:
     episodes["_is_inflow_row"] = time_period == start_period
     episodes["_is_outflow_row"] = (time_period == end_period) & (episodes["EpisodeOutflowType"] != "Active")
     return episodes
+
+
+def build_month_population_cache(episodes: pd.DataFrame) -> dict:
+    """{(month, pop_label): filter_population(month_df, pop_label, month)}
+    for every month present in `episodes` and every POPULATION_SEGMENTS
+    label — computed once here and shared by build_flow_yearly_rows/
+    build_flow_quarterly_rows below (see export.py, which builds this once
+    from episodes_with_lookback and passes it to both). Without this, every
+    year/quarter independently loops over its own span's months and calls
+    filter_population on each one — so a given (month, pop_label) pair gets
+    computed twice more, once by whichever year its month falls in and once
+    by whichever quarter it falls in, on top of build_flow_rows' own
+    monthly pass over that same pair. This builds it exactly once instead.
+
+    Takes the SAME `episodes` each of the three builders is independently
+    handed (episodes_with_lookback — see export.py), not a period-scoped
+    slice, so a cache entry exists for every month any of the three could
+    ever ask for, including the one lookback month before window_start
+    (harmless if never looked up — see build_flow_yearly_rows/
+    build_flow_quarterly_rows' own window_start handling).
+
+    Read-only for every consumer: build_flow_yearly_rows/
+    build_flow_quarterly_rows only ever read a cached pop_df's rows (via
+    `person_ids.update(...)` or appending it to `segment_frames` for a later
+    `pd.concat`) — neither mutates one in place — so handing out the exact
+    same DataFrame object to whichever period(s) need that month is safe."""
+    episodes = _add_inflow_outflow_flags(episodes)
+    cache = {}
+    for month in episodes["TimePeriodStartDate"].unique():
+        month_df = episodes[episodes["TimePeriodStartDate"] == month]
+        for pop_label in POPULATION_SEGMENTS.values():
+            cache[(month, pop_label)] = filter_population(month_df, pop_label, month)
+    return cache
 
 
 # Bucket keys _partition_by_individual returns, before the "indiv_" prefix
@@ -565,7 +601,7 @@ def _partition_counts_by_category(partition: dict, cat_series: pd.Series, catego
     return bucket_counts, pair_counts
 
 
-def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """episodes: episode_systemwide rows scoped to the export window, with
     the race_*/gender_* rollup columns already joined in from
     Client_Demographics. May additionally carry one lookback month before
@@ -583,6 +619,12 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
     before the window must still count as overlapping this window's
     periods. Used only to resolve the project_engaged_* dimensions (see
     _project_engagement_category); has no bearing on any other flow_type.
+
+    events: raw event_systemwide rows, already filtered to ClientStatus ==
+    "Homeless" and joined to program_attributes.Subregion via ProgramID —
+    not date-scoped to the export window, same reasoning as `enrollments`.
+    Used only to resolve the engaged_in_subregion_* dimensions (see
+    _subregion_engagement_category).
 
     episode_systemwide's own EpisodeInflowType/EpisodeOutflowType are
     computed once per *episode* (see Episode_Systemwide notebook's
@@ -635,6 +677,9 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
     # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
     # across every month below — see _group_enrollments_by_dimension.
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    # Subregion-filtered once per engaged_in_subregion_* dimension, reused
+    # across every month below — see _group_events_by_subregion.
+    group_events = _group_events_by_subregion(events)
 
     for month in months:
         prior_month = all_months[month_index[month] - 1] if month_index[month] > 0 else None
@@ -653,6 +698,10 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
             **{
                 dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(month_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
         # Broadcast this month's PERIOD_AGGREGATE_CATEGORY_DIMENSIONS
@@ -772,13 +821,21 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
     return pd.DataFrame(rows)
 
 
-def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, month_pop_cache: dict, window_start=None) -> pd.DataFrame:
     """Builds dashboard_flow_yearly: one row per (year, population_segment,
     dimension, category, flow_type) — same shape as dashboard_flow_monthly
     (month -> year), carrying:
 
     enrollments: same contract as build_flow_rows' own `enrollments` param
     — raw, not window-scoped, used only to resolve project_engaged_*.
+
+    events: same contract as build_flow_rows' own `events` param — raw, not
+    window-scoped, used only to resolve engaged_in_subregion_*.
+
+    month_pop_cache: build_month_population_cache(episodes) — see its own
+    docstring for why this is built once and shared with
+    build_flow_quarterly_rows rather than each independently recomputing
+    filter_population per month.
 
     window_start: same lookback contract as build_flow_rows — `episodes`
     may carry one extra month before window_start (see export.py's
@@ -838,6 +895,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
         for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for year, year_df in published.groupby("_year"):
@@ -865,14 +923,17 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
                 dim: _project_engagement_category(year_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
             },
+            **{
+                dim: _subregion_engagement_category(year_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
+            },
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
             segment_frames = []
             for month in months:
-                month_df = year_df[year_df["TimePeriodStartDate"] == month]
-                pop_df = filter_population(month_df, pop_label, month)
+                pop_df = month_pop_cache[(month, pop_label)]
                 person_ids.update(pop_df["PersonalID"])
                 segment_frames.append(pop_df)
             # This segment's own age_category/household_type lookup — see
@@ -949,7 +1010,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, wi
     return pd.DataFrame(rows)
 
 
-def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, month_pop_cache: dict, window_start=None) -> pd.DataFrame:
     """Builds dashboard_flow_quarterly: one row per (quarter, population_segment,
     dimension, category, flow_type) — same shape and same rationale as
     build_flow_yearly_rows (see its own docstring for why experienced_homelessness/
@@ -960,6 +1021,13 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
 
     enrollments: same contract as build_flow_rows' own `enrollments` param
     — raw, not window-scoped, used only to resolve project_engaged_*.
+
+    events: same contract as build_flow_rows' own `events` param — raw, not
+    window-scoped, used only to resolve engaged_in_subregion_*.
+
+    month_pop_cache: build_month_population_cache(episodes) — see its own
+    docstring and build_flow_yearly_rows' identical param for why this is
+    shared rather than recomputed.
 
     A quarter whose 3 calendar months aren't ALL present in the completed-
     months window (window_start onward — see get_export_window) is skipped
@@ -986,6 +1054,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
         for dimension in _CONSTANT_CATEGORY_DIMENSIONS
     }
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for quarter, quarter_df in published.groupby("_quarter"):
@@ -1010,14 +1079,17 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
                 dim: _project_engagement_category(quarter_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
             },
+            **{
+                dim: _subregion_engagement_category(quarter_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
+            },
         }
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             person_ids: set = set()
             segment_frames = []
             for month in months:
-                month_df = quarter_df[quarter_df["TimePeriodStartDate"] == month]
-                pop_df = filter_population(month_df, pop_label, month)
+                pop_df = month_pop_cache[(month, pop_label)]
                 person_ids.update(pop_df["PersonalID"])
                 segment_frames.append(pop_df)
             # This segment's own age_category/household_type lookup (see

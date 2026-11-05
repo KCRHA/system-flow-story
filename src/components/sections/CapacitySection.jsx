@@ -26,10 +26,34 @@ function shortMonthYearLabel(month) {
   return `${d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" })} ${d.getUTCFullYear()}`;
 }
 
-export default function CapacitySection({ capacityRows, capacityYearlyRows, year, demographicType }) {
+// Capacity carries one additional "subregion" row per (period, project_type)
+// beyond its default system-wide totals — see pipeline/build_capacity.py and
+// config.py's SUBREGION_DISPLAY_LABELS. Every row this component reads from
+// capacityRows/capacityYearlyRows must be scoped to exactly one subregion
+// value first (the unscoped "Overall" rows, or one specific subregion's own
+// rows), same reasoning as every other section's own dimension/category
+// filter — summing/averaging across subregion scopes afterward would double-
+// count units and mis-derive the ratio fields (see build_capacity.py's own
+// module docstring on why each scope's ratios are computed independently).
+const OVERALL_SUBREGION = "Overall";
+
+export default function CapacitySection({ capacityRows, capacityYearlyRows, year, demographicType, capacitySubregion }) {
+  const subregionScope = capacitySubregion ?? OVERALL_SUBREGION;
+  // `r.subregion ?? OVERALL_SUBREGION`, not a bare `r.subregion` compare —
+  // an export built before this column existed carries no "subregion" field
+  // at all, which must still read as the unscoped "Overall" row it always
+  // was, not silently fail to match and empty out the whole section.
+  const scopedCapacityRows = useMemo(
+    () => capacityRows.filter((r) => (r.subregion ?? OVERALL_SUBREGION) === subregionScope),
+    [capacityRows, subregionScope]
+  );
+  const scopedCapacityYearlyRows = useMemo(
+    () => capacityYearlyRows.filter((r) => (r.subregion ?? OVERALL_SUBREGION) === subregionScope),
+    [capacityYearlyRows, subregionScope]
+  );
   const yearRows = useMemo(
-    () => capacityRows.filter((r) => Number(r.month.slice(0, 4)) === year).sort((a, b) => a.month.localeCompare(b.month)),
-    [capacityRows, year]
+    () => scopedCapacityRows.filter((r) => Number(r.month.slice(0, 4)) === year).sort((a, b) => a.month.localeCompare(b.month)),
+    [scopedCapacityRows, year]
   );
   const monthsInYear = useMemo(() => [...new Set(yearRows.map((r) => r.month))].sort(), [yearRows]);
   const latestMonth = monthsInYear.at(-1);
@@ -41,20 +65,20 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
 
   // One snapshot per year (that year's last available month) from 2021
   // through the selected year, per project type — the trend each card's own
-  // mini chart plots. Built from the full capacityRows history (not
+  // mini chart plots. Built from the full scopedCapacityRows history (not
   // yearRows, which is scoped to the selected year alone), so each card
   // shows multiple years of capacity/utilization even though only the
   // selected year's headline figures are called out in text.
   const cardYears = useMemo(() => {
-    const years = [...new Set(capacityRows.map((r) => Number(r.month.slice(0, 4))))].filter((y) => y <= year);
+    const years = [...new Set(scopedCapacityRows.map((r) => Number(r.month.slice(0, 4))))].filter((y) => y <= year);
     return years.sort((a, b) => a - b);
-  }, [capacityRows, year]);
+  }, [scopedCapacityRows, year]);
   const cardSeries = useMemo(
     () =>
       UNITS_AND_UTILIZATION_TYPES.map((type) => ({
         project_type: type,
         points: cardYears.map((y) => {
-          const monthsForYear = capacityRows
+          const monthsForYear = scopedCapacityRows
             .filter((r) => r.project_type === type && Number(r.month.slice(0, 4)) === y)
             .sort((a, b) => a.month.localeCompare(b.month));
           const last = monthsForYear.at(-1);
@@ -66,7 +90,7 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
           };
         }),
       })),
-    [capacityRows, cardYears]
+    [scopedCapacityRows, cardYears]
   );
 
   // Sourced from the separate yearly export (dashboard_capacity_yearly.json),
@@ -76,30 +100,37 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
   const turnoverRows = useMemo(
     () =>
       PROJECT_TYPES.map((type) => {
-        const row = capacityYearlyRows.find((r) => r.project_type === type && r.year === year);
+        const row = scopedCapacityYearlyRows.find((r) => r.project_type === type && r.year === year);
         return {
           project_type: type,
           pct_exited: row?.pct_exited ?? null,
           households_per_unit: row?.households_per_unit ?? null,
         };
       }),
-    [capacityYearlyRows, year]
+    [scopedCapacityYearlyRows, year]
   );
 
   // Capacity is aggregate inventory/utilization data (see build_capacity.py) —
   // it has no per-person dimension/category breakdown at all, unlike
   // Outflow/Length, so a demographic filter selected up top silently has no
-  // effect here. Flagged only when a filter is actually active, so the note
-  // doesn't clutter the default "All" view.
-  const demographicNote = demographicType !== "overall" && (
-    <span className="section-heading-note"> (demographic filters do not apply)</span>
-  );
+  // effect here EXCEPT the two subregion filters, which scope Capacity by
+  // program_attributes.Subregion directly instead (see capacitySubregion's
+  // own comment in App.jsx) — flagged with its own, different note so a
+  // reader knows the subregion scoping below IS real, just every other
+  // filter still isn't.
+  const demographicNote =
+    capacitySubregion != null ? (
+      <span className="section-heading-note"> (scoped to {capacitySubregion})</span>
+    ) : (
+      demographicType !== "overall" && <span className="section-heading-note"> (demographic filters do not apply)</span>
+    );
 
   if (!yearRows.length) {
     return (
       <section className="section">
         <h2 className="section-heading">
           How much capacity does our system have, and how quickly does it turn over?
+          {demographicNote && <br />}
           {demographicNote}
         </h2>
         <p className="suppressed-note">No data available for this year.</p>
@@ -111,6 +142,7 @@ export default function CapacitySection({ capacityRows, capacityYearlyRows, year
     <section className="section">
       <h2 className="section-heading">
         How much capacity does our system have, and how quickly does it turn over?
+        {demographicNote && <br />}
         {demographicNote}
       </h2>
 

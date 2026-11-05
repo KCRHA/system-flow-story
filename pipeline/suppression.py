@@ -73,6 +73,9 @@ BEFORE validate()/validate_crosstab() — those remain the final hard gate;
 under normal operation they should report zero violations once this has
 run, since it's meant to resolve everything they'd otherwise catch.
 """
+import time
+from datetime import datetime
+from functools import wraps
 from itertools import combinations
 
 import pandas as pd
@@ -87,6 +90,36 @@ TRUE_COUNT_COL = "_true_count"  # internal only — never written to exported JS
 INSUFFICIENT_POPULATION_MARKER = "insufficient_population"
 
 
+def _timed(func):
+    """Prints a timestamped line every time one of this module's public
+    functions runs: which one, what scope it ran for (whichever of
+    group_cols/main_group_cols/period_col the caller passed — every
+    call site below passes one of these as a keyword, see export.py), how
+    many rows its `df` argument had, and how long it took.
+
+    export.py's own _checkpoint prints ONE number for a table's entire
+    suppression+validate chain (e.g. "flow_df suppression+validate:
+    1345.1s") — that's 5-8 of these calls lumped together, so it can't say
+    which one actually ate the time. Decorating here instead of wrapping
+    each call site individually means every call through every table gets
+    this for free, including ones added later."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        t0 = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - t0
+        df = args[0] if args and isinstance(args[0], pd.DataFrame) else None
+        rows = len(df) if df is not None else "?"
+        scope = kwargs.get("group_cols") or kwargs.get("main_group_cols") or kwargs.get("period_col")
+        now = datetime.now().strftime("%H:%M:%S")
+        print(f"[{now}] suppression.{func.__name__}(rows={rows}, scope={scope}): {elapsed:.2f}s")
+        return result
+
+    return wrapper
+
+
+@_timed
 def apply_full_suppression_pipeline(df: pd.DataFrame, group_cols: list[str], count_col: str = "count") -> pd.DataFrame:
     df = df.copy()
     df[TRUE_COUNT_COL] = df[count_col]
@@ -99,10 +132,9 @@ def apply_full_suppression_pipeline(df: pd.DataFrame, group_cols: list[str], cou
     else:
         eligible = df
 
-    for _, group in eligible.groupby(group_cols, dropna=False):
-        primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-        if _needs_secondary(primary[TRUE_COUNT_COL]):
-            _pick_secondary(df, group, count_col)
+    picks = _secondary_picks(eligible, group_cols)
+    if len(picks):
+        df.loc[picks, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
 
     df.loc[df["suppression_marker"].notna(), count_col] = pd.NA
     return df
@@ -118,6 +150,117 @@ def _needs_secondary(primary_suppressed_true_counts: pd.Series) -> bool:
     return len(unique_vals) == 1 and unique_vals[0] in (1, 10)
 
 
+def _groups_needing_secondary(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
+    """Vectorized equivalent of `{key for key, group in df.groupby(group_cols)
+    if _needs_secondary(group-restricted-to-PRIMARY_SUPPRESSION_MARKER[TRUE_COUNT_COL])}`
+    — same "exactly one primary cell, or 2+ that are all equal to 1 or 10"
+    rule, computed as one groupby().agg() over every primary-suppressed row
+    at once instead of a Python-level loop re-deriving it per group. Shared
+    by _secondary_picks below and validate()/validate_crosstab()'s own
+    group-level check, which needs the same group set but doesn't need to
+    pick a row — see each caller for why.
+
+    Returns the group-key Index (flat Index for one group_col, MultiIndex
+    for several) of every group meeting the rule — groups with ZERO
+    primary-suppressed rows never appear in `primary` at all (groupby
+    only emits groups that have >=1 member), matching
+    `_needs_secondary([]) -> False`'s implicit exclusion."""
+    primary = df[df["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
+    if primary.empty:
+        return pd.MultiIndex.from_arrays([[] for _ in group_cols]) if len(group_cols) > 1 else pd.Index([])
+    stats = primary.groupby(group_cols, dropna=False)[TRUE_COUNT_COL].agg(["size", "nunique", "first"])
+    needs_secondary = (stats["size"] == 1) | ((stats["size"] > 1) & (stats["nunique"] == 1) & stats["first"].isin([1, 10]))
+    return stats.index[needs_secondary]
+
+
+def _group_keys(df: pd.DataFrame, group_cols: list[str]):
+    """One array-like key per row of `df`, for grouping by an externally-
+    computed key (e.g. a boolean mask already applied) without losing the
+    original index the way `.merge()` would — `Series.groupby(by=...)` and
+    `Index.isin(...)` both accept this directly. A flat Index for one
+    group_col (matching that single column's own values), a MultiIndex for
+    several (matching what `.groupby(group_cols).groups` keys on)."""
+    if len(group_cols) == 1:
+        return pd.Index(df[group_cols[0]])
+    return pd.MultiIndex.from_frame(df[group_cols])
+
+
+def _secondary_picks(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
+    """Vectorized equivalent of looping `for _, group in df.groupby(group_cols):
+    if _needs_secondary(...): _pick_secondary(df, group, count_col)` — the
+    exact row-index each such call would have picked (same preference order:
+    restrict to nonzero-visible candidates if the group has any, smallest
+    TRUE_COUNT_COL among whatever's left, ties broken by original row
+    order), computed via groupby aggregations instead of a Python-level
+    loop over every group.
+
+    Only valid when every group in `group_cols` is independent of every
+    other — true here and in apply_full_suppression_pipeline's own call,
+    since group_cols fully partitions `df`'s rows into disjoint groups and
+    a pick only ever reads/writes rows already scoped to its own group. NOT
+    reused by apply_crosstab_secondary_suppression's own
+    _resolve_crosstab_period: there, a single pick can satisfy both a row's
+    and a column's need at once, so picks must be resolved jointly and
+    sequentially, not independently per group — see that function's own
+    docstring."""
+    needing = _groups_needing_secondary(df, group_cols)
+    if len(needing) == 0:
+        return pd.Index([])
+
+    visible = df[df["suppression_marker"].isna() & df[TRUE_COUNT_COL].notna()]
+    if visible.empty:
+        return pd.Index([])
+    visible_keys = _group_keys(visible, group_cols)
+    in_needing = visible_keys.isin(needing)
+    if not in_needing.any():
+        return pd.Index([])
+    visible = visible[in_needing]
+    visible_keys = visible_keys[in_needing]
+
+    # Restrict each group to nonzero-valued rows if it has any visible
+    # nonzero row at all, same "prefer hiding a nonzero cell" rule as
+    # _pick_secondary's own nonzero_visible/visible fallback.
+    is_nonzero = visible[TRUE_COUNT_COL] > 0
+    group_has_nonzero = is_nonzero.groupby(visible_keys).transform("any")
+    is_candidate = (~group_has_nonzero) | is_nonzero
+    candidates = visible[is_candidate.to_numpy()]
+    candidate_keys = visible_keys[is_candidate.to_numpy()]
+    if candidates.empty:
+        return pd.Index([])
+
+    picks = candidates.groupby(candidate_keys)[TRUE_COUNT_COL].idxmin()
+    return pd.Index(picks.to_numpy())
+
+
+def _groups_with_protection(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
+    """Group keys (same Index/MultiIndex shape _groups_needing_secondary
+    returns) that already have >=1 SECONDARY_SUPPRESSION_MARKER/
+    INSUFFICIENT_POPULATION_MARKER row — both count as protection, same
+    "repurposed into a whole-scope blank is still just as hidden" reasoning
+    validate()'s own has_secondary check already documents."""
+    protected = df[df["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER])]
+    if protected.empty:
+        return pd.MultiIndex.from_arrays([[] for _ in group_cols]) if len(group_cols) > 1 else pd.Index([])
+    return protected.groupby(group_cols, dropna=False).size().index
+
+
+def _violating_groups(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
+    """Group keys needing secondary suppression but with none in place —
+    the exact hard-gate check validate()/validate_crosstab()/
+    validate_sankey_marginal() all share, computed via groupby
+    aggregations (_groups_needing_secondary/_groups_with_protection above)
+    instead of a Python-level loop over every group. The resulting Index
+    is normally empty (or very small) on a healthy export — only an actual
+    violation lands here, so the handful of remaining call sites that
+    build a message per entry stay a plain Python loop, just over this
+    tiny set instead of every group that exists."""
+    needing = _groups_needing_secondary(df, group_cols)
+    if len(needing) == 0:
+        return needing
+    return needing.difference(_groups_with_protection(df, group_cols))
+
+
+@_timed
 def suppress_small_secondary_count(
     df: pd.DataFrame, count_col: str, marker_col: str, extra_cols: list[str] = ()
 ) -> pd.DataFrame:
@@ -152,7 +295,7 @@ def suppress_small_secondary_count(
 
 
 def _pick_secondary(df: pd.DataFrame, group: pd.DataFrame, count_col: str) -> None:
-    """Shared by apply_full_suppression_pipeline and
+    """Shared by apply_sankey_marginal_suppression and
     apply_crosstab_secondary_suppression: given a group that
     _needs_secondary(...), marks one more visible cell in it, mutating
     `df` in place. No-op if the group has nothing left to hide (already
@@ -170,6 +313,7 @@ def _pick_secondary(df: pd.DataFrame, group: pd.DataFrame, count_col: str) -> No
     df.loc[next_smallest_idx, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
 
 
+@_timed
 def apply_crosstab_secondary_suppression(df: pd.DataFrame, group_cols: list[str], count_col: str = "count") -> pd.DataFrame:
     """Run AFTER apply_full_suppression_pipeline (needs its primary markers
     and TRUE_COUNT_COL already in place) on the same df. `group_cols`
@@ -201,6 +345,7 @@ def apply_crosstab_secondary_suppression(df: pd.DataFrame, group_cols: list[str]
     return df
 
 
+@_timed
 def apply_sankey_marginal_suppression(
     df: pd.DataFrame,
     group_cols: list[str],
@@ -267,6 +412,21 @@ def _resolve_crosstab_period(df: pd.DataFrame, period_index, count_col: str) -> 
     a reason to give up on the whole period — one genuinely unresolvable
     group (validate_crosstab will surface it) shouldn't block every other,
     resolvable group in the same period from getting its own protection.
+
+    Tried replacing the full re-derive above with incremental state
+    (refresh only the 1-2 groups touched by each pick, instead of
+    regrouping the whole period from scratch every time) — measured
+    SLOWER at realistic scale (46.8s vs 36.0s on a 90k-row/4,536-period
+    synthetic benchmark), not faster. A period here typically has very
+    few groups (at most 4 inflow + 5 outflow buckets) and needs at most a
+    handful of picks, so the full re-derive was already cheap; building
+    the extra bookkeeping (per-group row-index maps, order-index for
+    tie-breaking, etc.) once per period, across however many thousands of
+    periods a table has, cost more than it saved. The real cost of
+    apply_crosstab_secondary_suppression is the sheer NUMBER of periods
+    this gets called once per — not how each individual period is
+    resolved — which this approach doesn't address. Left as the simpler
+    version on purpose.
     """
     given_up: set = set()
     while True:
@@ -295,6 +455,7 @@ def _resolve_crosstab_period(df: pd.DataFrame, period_index, count_col: str) -> 
         _pick_secondary(df, group, count_col)
 
 
+@_timed
 def apply_race_crossdim_suppression(
     df: pd.DataFrame, group_cols: list[str], race_dimensions: list[str], count_col: str = "count"
 ) -> pd.DataFrame:
@@ -377,6 +538,7 @@ def apply_race_crossdim_suppression(
     return df
 
 
+@_timed
 def apply_insufficient_population_fallback(
     df: pd.DataFrame,
     period_col: str,
@@ -438,43 +600,54 @@ def apply_insufficient_population_fallback(
     if "dimension" not in df.columns or "category" not in df.columns:
         return df
     has_flow_type = "flow_type" in df.columns
+    # length/return-cohort tables have no flow_type column at all (each row
+    # already IS one specific measurement) — every other table's blank
+    # keys carry the specific flow_type so blanking stays scoped to it, not
+    # every flow_type sharing the same (dimension, category).
+    key_cols = [period_col, "population_segment", "dimension", "category"] + (["flow_type"] if has_flow_type else [])
 
-    def _protected(marker_series: pd.Series) -> bool:
-        return marker_series.isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
-
-    def _key(period, segment, dimension, category, flow_type=None):
-        # length/return-cohort tables have no flow_type column at all
-        # (each row already IS one specific measurement) — every other
-        # table's blank_keys carry the specific flow_type so blanking
-        # stays scoped to it, not every flow_type sharing the same
-        # (dimension, category).
-        return (period, segment, dimension, category, flow_type) if has_flow_type else (period, segment, dimension, category)
-
-    blank_keys: set[tuple] = set()
+    # Each block below finds its own unresolved (`_violating_groups`)
+    # groups and collects the exact rows `_key(...)`'s original per-group
+    # Python loop would have turned into blank_keys tuples — but reads
+    # those tuples' fields straight off each implicated row's own columns
+    # (which already carry its group's key_cols values, group membership
+    # being exactly what made them constant within the group) instead of
+    # reconstructing them from a group key dict. One groupby-based pass
+    # per block replaces that block's own per-group Python loop; the
+    # `pd.concat(...).drop_duplicates()` below replaces blank_keys' own
+    # dedup role.
+    blank_frames: list[pd.DataFrame] = []
 
     eligible = df[df["dimension"] != "overall"]
-    for key, group in eligible.groupby(main_group_cols, dropna=False):
-        primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-        if _needs_secondary(primary[TRUE_COUNT_COL]) and not _protected(group["suppression_marker"]):
-            key_dict = dict(zip(main_group_cols, key if isinstance(key, tuple) else (key,)))
-            flow_type = key_dict.get("flow_type")
-            for category in primary["category"]:
-                blank_keys.add(_key(key_dict[period_col], key_dict["population_segment"], key_dict["dimension"], category, flow_type))
+    violating = _violating_groups(eligible, main_group_cols)
+    if len(violating):
+        row_keys = _group_keys(eligible, main_group_cols)
+        is_implicated = row_keys.isin(violating) & (eligible["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER).to_numpy()
+        implicated = eligible[is_implicated]
+        if not implicated.empty:
+            blank_frames.append(implicated[key_cols])
 
     if "inflow_bucket" in df.columns:
         is_pair = df["inflow_bucket"].notna()
+        pair_df = df[is_pair]
         for axis_col in ("inflow_bucket", "outflow_bucket"):
-            for key, group in df[is_pair].groupby([*crosstab_group_cols, axis_col], dropna=False):
-                primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-                if _needs_secondary(primary[TRUE_COUNT_COL]) and not _protected(group["suppression_marker"]):
-                    key_dict = dict(zip([*crosstab_group_cols, axis_col], key if isinstance(key, tuple) else (key,)))
-                    period = key_dict[period_col]
-                    segment = key_dict["population_segment"]
-                    dimension = key_dict["dimension"]
-                    category = key_dict["category"]
-                    for flow_type in group["flow_type"].unique():
-                        blank_keys.add(_key(period, segment, dimension, category, flow_type))
-                    blank_keys.add(_key(period, segment, dimension, category, f"indiv_{key_dict[axis_col]}"))
+            cols = [*crosstab_group_cols, axis_col]
+            violating = _violating_groups(pair_df, cols)
+            if len(violating) == 0:
+                continue
+            row_keys = _group_keys(pair_df, cols)
+            violating_rows = pair_df[row_keys.isin(violating)]
+            if violating_rows.empty:
+                continue
+            # Every indiv_flow_* cell sharing this row/column...
+            blank_frames.append(violating_rows[key_cols])
+            # ...PLUS that row/column's own published total flow_type (one
+            # row per violating GROUP, not per row — cols is exactly this
+            # group's key, so dropping duplicates on it collapses each
+            # group back to the single row _key(...)'s own version used).
+            totals = violating_rows.drop_duplicates(subset=cols)[[period_col, "population_segment", "dimension", "category", axis_col]].copy()
+            totals["flow_type"] = "indiv_" + totals[axis_col].astype(str)
+            blank_frames.append(totals[key_cols])
 
     if sankey_bucket_flow_type_groups:
         is_total = (
@@ -482,18 +655,24 @@ def apply_insufficient_population_fallback(
         )
         for flow_types in sankey_bucket_flow_type_groups:
             is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-            for key, group in df[is_bucket | is_total].groupby([period_col, "population_segment"], dropna=False):
-                primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-                if _needs_secondary(primary[TRUE_COUNT_COL]) and not _protected(group["suppression_marker"]):
-                    period, segment = key if isinstance(key, tuple) else (key,)
-                    for flow_type in group["flow_type"]:
-                        blank_keys.add(_key(period, segment, "overall", "Overall", flow_type))
+            scoped = df[is_bucket | is_total]
+            cols = [period_col, "population_segment"]
+            violating = _violating_groups(scoped, cols)
+            if len(violating) == 0:
+                continue
+            row_keys = _group_keys(scoped, cols)
+            violating_rows = scoped[row_keys.isin(violating)]
+            if violating_rows.empty:
+                continue
+            tagged = violating_rows[[period_col, "population_segment", "flow_type"]].copy()
+            tagged["dimension"] = "overall"
+            tagged["category"] = "Overall"
+            blank_frames.append(tagged[key_cols])
 
-    if not blank_keys:
+    if not blank_frames:
         return df
 
-    key_cols = [period_col, "population_segment", "dimension", "category"] + (["flow_type"] if has_flow_type else [])
-    blank_df = pd.DataFrame(list(blank_keys), columns=key_cols)
+    blank_df = pd.concat(blank_frames, ignore_index=True).drop_duplicates()
     blank_df["_blank"] = True
     merged = df.merge(blank_df, on=key_cols, how="left")
     mask = merged["_blank"].fillna(False).to_numpy()
@@ -502,6 +681,7 @@ def apply_insufficient_population_fallback(
     return df
 
 
+@_timed
 def validate_crosstab(df: pd.DataFrame, group_cols: list[str]) -> list[str]:
     """Companion to apply_crosstab_secondary_suppression — same hard-gate
     contract as validate(). Call alongside it, not instead of it (this
@@ -511,21 +691,16 @@ def validate_crosstab(df: pd.DataFrame, group_cols: list[str]) -> list[str]:
         return []
     violations = []
     is_pair = df["inflow_bucket"].notna()
+    pair_df = df[is_pair]
     for axis_col in ("inflow_bucket", "outflow_bucket"):
-        for key, group in df[is_pair].groupby([*group_cols, axis_col], dropna=False):
-            primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-            # Counts INSUFFICIENT_POPULATION_MARKER as protection too, not
-            # just the literal "**" — apply_insufficient_population_fallback
-            # can repurpose a cell that was already this group's valid
-            # secondary pick into a whole-scope blank; it's still just as
-            # hidden either way, so it still satisfies the group's need.
-            has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
-            if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
-                key_dict = dict(zip([*group_cols, axis_col], key if isinstance(key, tuple) else (key,)))
-                violations.append(f"crosstab group {key_dict} needs secondary suppression but has none")
+        cols = [*group_cols, axis_col]
+        for key in _violating_groups(pair_df, cols):
+            key_dict = dict(zip(cols, key if isinstance(key, tuple) else (key,)))
+            violations.append(f"crosstab group {key_dict} needs secondary suppression but has none")
     return violations
 
 
+@_timed
 def validate_sankey_marginal(
     df: pd.DataFrame,
     group_cols: list[str],
@@ -538,15 +713,14 @@ def validate_sankey_marginal(
     is_total = (df["flow_type"] == total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
     for flow_types in bucket_flow_type_groups:
         is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-        for key, group in df[is_bucket | is_total].groupby(group_cols, dropna=False):
-            primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-            has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
-            if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
-                key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
-                violations.append(f"sankey marginal group {key_dict} (flow_types={flow_types}) needs secondary suppression but has none")
+        scoped = df[is_bucket | is_total]
+        for key in _violating_groups(scoped, group_cols):
+            key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
+            violations.append(f"sankey marginal group {key_dict} (flow_types={flow_types}) needs secondary suppression but has none")
     return violations
 
 
+@_timed
 def validate(df: pd.DataFrame, group_cols: list[str], count_col: str = "count") -> list[str]:
     """Returns a list of human-readable violations; an empty list means the
     export is safe to publish. Called as a hard gate in export.py — the
@@ -567,13 +741,8 @@ def validate(df: pd.DataFrame, group_cols: list[str], count_col: str = "count") 
         eligible = df[df["dimension"] != "overall"]
     else:
         eligible = df
-    for key, group in eligible.groupby(group_cols, dropna=False):
-        primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-        # See validate_crosstab's identical comment — INSUFFICIENT_POPULATION_MARKER
-        # counts as protection too, not just the literal "**".
-        has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
-        if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
-            key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
-            violations.append(f"group {key_dict} needs secondary suppression (single suppressed cell, or multiple suppressed cells all equal to 1 or 10) but has none")
+    for key in _violating_groups(eligible, group_cols):
+        key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
+        violations.append(f"group {key_dict} needs secondary suppression (single suppressed cell, or multiple suppressed cells all equal to 1 or 10) but has none")
 
     return violations

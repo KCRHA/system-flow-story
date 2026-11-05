@@ -165,6 +165,81 @@ PROJECT_ENGAGEMENT_GROUPS = {
 }
 PROJECT_ENGAGEMENT_DIMENSIONS = list(PROJECT_ENGAGEMENT_GROUPS)
 
+# --- Subregion engagement (dashboard_flow_monthly "engaged_in_subregion_*"
+# dimensions) ---
+# Like PROJECT_ENGAGEMENT_GROUPS immediately above, these 7 groups are
+# deliberately NOT mutually exclusive — a person can access services in more
+# than one subregion within the same period (e.g. Seattle Metro AND South
+# King County in the same month), so each is its own independent binary
+# ("Included"/"Not Included") dimension rather than one dimension with 7
+# overlapping categories, same reasoning as RACE_DIMENSIONS/
+# PROJECT_ENGAGEMENT_GROUPS above.
+#
+# Sourced from event_systemwide, NOT All_Program_Enrollments — "engaged in
+# subregion X" means the person has an event_systemwide row with
+# ClientStatus == "Homeless" whose EventDate falls anywhere within the
+# period being built, joined to program_attributes.Subregion via ProgramID.
+# Deliberately a discrete event log, not an enrollment date-span: the
+# request behind this was "which subregion(s) did someone access services
+# in," a question about where homelessness-indicating events actually
+# happened, not which program spans were open.
+#
+# Values confirmed directly against program_addresses_by_pID.xlsx (the
+# manually-maintained, pre-geocoded source Program_Attributes.ipynb's own
+# Subregion column is taken from verbatim, 2026-11-02): these 6 named King
+# County subregions, plus "Pierce County," "Urban Unincorporated," and a
+# handful of blank/ungeocoded rows, all deliberately left out of this dict
+# (confirmed with the dashboard owner, 2026-11-02, that Urban Unincorporated
+# programs should be excluded from this breakdown entirely, same reasoning
+# as Pierce County being out of scope for a King County-focused dashboard) —
+# a program excluded this way simply can't make anyone "Included" via that
+# event; they still count normally for any OTHER qualifying event they have.
+# "South East King County" (with the internal space) is the literal
+# spreadsheet value, not a typo — it differs from LastKnownSubregion's own
+# "Southeast King County" (one word), a separate, unrelated lookup
+# (kc_place_subregions.csv) that this dimension does NOT use.
+#
+# Computed fresh per period, same "OR across every row in the period"
+# contract as unsheltered_in_period/project_engaged_* — see
+# period_dimensions.py's _subregion_engagement_category and
+# PERIOD_AGGREGATE_CATEGORY_DIMENSIONS.
+SUBREGION_ENGAGEMENT_GROUPS = {
+    "engaged_in_subregion_east": "East King County",
+    "engaged_in_subregion_north": "North King County",
+    "engaged_in_subregion_seattle": "Seattle Metro",
+    "engaged_in_subregion_snoqualmie": "Snoqualmie Valley",
+    "engaged_in_subregion_south": "South King County",
+    "engaged_in_subregion_southeast": "South East King County",
+}
+SUBREGION_ENGAGEMENT_DIMENSIONS = list(SUBREGION_ENGAGEMENT_GROUPS)
+
+# --- Capacity subregion scoping (dashboard_capacity_*'s "subregion" column) ---
+# build_capacity.py has no per-person dimension to filter by at all (it's
+# aggregate program inventory data, not person-level — see its own module
+# docstring), but it can be scoped by program_attributes.Subregion directly,
+# a program-location fact rather than a person one. Confirmed with the
+# dashboard owner (2026-11-02) that it makes sense for the frontend's two
+# person-level subregion filters (last_known_subregion, engaged_in_subregion)
+# to ALSO scope Capacity this way when either is active — "show capacity for
+# programs in Seattle Metro" — even though neither filter's own underlying
+# question ("where does this person live" / "where did this person get
+# served") is really about program location. See CapacitySection.jsx.
+#
+# Maps every literal program_attributes.Subregion value this dashboard
+# treats as in-scope to its display spelling. "South East King County" (two
+# words) is program_attributes' own literal spelling (see
+# SUBREGION_ENGAGEMENT_GROUPS' comment above) — normalized to "Southeast
+# King County" (one word) here so dashboard_capacity_*'s own subregion
+# column reads identically to last_known_subregion's/engaged_in_subregion's
+# category labels, letting the frontend filter by a single shared string
+# with no separate label-mapping table of its own. Pierce County/Urban
+# Unincorporated/ungeocoded programs are deliberately left out — they still
+# count toward every "Overall" (unscoped) row, same totals this table always
+# published, but don't get their own subregion row since neither is a
+# selectable category in the frontend.
+SUBREGION_DISPLAY_LABELS = {value: value for value in SUBREGION_ENGAGEMENT_GROUPS.values()}
+SUBREGION_DISPLAY_LABELS["South East King County"] = "Southeast King County"
+
 # episode_systemwide column carrying each dimension's category value
 DIMENSION_COLUMNS = {
     "race_aian": "RaceIncludes_AIAN",  # derived — see demographics.py
@@ -219,6 +294,17 @@ DIMENSION_COLUMNS = {
     "project_engaged_housing": "ProjectEngagedHousingPrograms",
     "project_engaged_th": "ProjectEngagedTransitionalHousing",
     "project_engaged_ce": "ProjectEngagedCoordinatedEntry",
+    # Same story as project_engaged_* immediately above, one synthetic
+    # column per SUBREGION_ENGAGEMENT_GROUPS entry — computed fresh per
+    # period in period_dimensions.py's _subregion_engagement_category, from
+    # event_systemwide joined to program_attributes, not a standing
+    # episode_systemwide column.
+    "engaged_in_subregion_east": "EngagedInSubregionEastKingCounty",
+    "engaged_in_subregion_north": "EngagedInSubregionNorthKingCounty",
+    "engaged_in_subregion_seattle": "EngagedInSubregionSeattleMetro",
+    "engaged_in_subregion_snoqualmie": "EngagedInSubregionSnoqualmieValley",
+    "engaged_in_subregion_south": "EngagedInSubregionSouthKingCounty",
+    "engaged_in_subregion_southeast": "EngagedInSubregionSoutheastKingCounty",
 }
 
 # --- Inflow / outflow / active flow_type values (dashboard_flow_monthly) ---

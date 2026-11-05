@@ -9,7 +9,8 @@ In CI, AZURE_CLIENT_ID/SECRET/TENANT_ID env vars stand in for `az login`
 """
 import json
 import sys
-from datetime import date
+import time
+from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -22,6 +23,7 @@ from .build_flow import (
     build_flow_quarterly_rows,
     build_flow_rows,
     build_flow_yearly_rows,
+    build_month_population_cache,
 )
 from .build_length import build_length_rows
 from .build_length_by_exit import (
@@ -37,6 +39,7 @@ from .config import (
     PROJECT_TYPE_CODE_TEXT_TO_HUD,
     RACE_DIMENSIONS,
     RETURN_WINDOW_DAYS,
+    SUBREGION_ENGAGEMENT_DIMENSIONS,
     # TOP_10_KING_COUNTY_CITIES,  # last_known_city filter temporarily disabled
     get_export_window,
     month_before,
@@ -60,7 +63,7 @@ RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
 # verified disclosure gap (e.g. race_black + project_engaged_ce - overall
 # landing under SUPPRESSION_THRESHOLD) caught by auditing the actual
 # exported JSON.
-CROSSDIM_OVERLAP_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS]
+CROSSDIM_OVERLAP_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS, *SUBREGION_ENGAGEMENT_DIMENSIONS]
 from .demographics import compute_gender_rollups, compute_race_rollups
 from .suppression import (
     TRUE_COUNT_COL,
@@ -103,6 +106,21 @@ def _to_json_records(df: pd.DataFrame, date_cols: list[str]) -> list[dict]:
     return json.loads(df.to_json(orient="records", date_format="iso"))
 
 
+# Timing instrumentation for the silent stretch between the event_systemwide
+# Synapse fetch and the first _write() print — every build_*_rows call in
+# between consumes `events`/`enrollments` via period_dimensions.py's
+# per-period dimension resolution, so printing after each one (rather than
+# just at the start/end of the whole stretch) pinpoints which specific
+# table's builder is actually slow on a given run, instead of just
+# confirming the whole block is slow. Returns the new checkpoint time so
+# callers chain `t = _checkpoint(..., t)` and each printed duration is just
+# that one step's own elapsed time, not a running cumulative total.
+def _checkpoint(label: str, since: float) -> float:
+    now = time.time()
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {label}: {now - since:.1f}s")
+    return now
+
+
 def _write(name: str, records: list[dict]):
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     path = OUTPUT_DIR / name
@@ -127,12 +145,71 @@ def _write_monthly_flow_split(records: list[dict]):
         _write(f"dashboard_flow_monthly_{year}.json", year_records)
 
 
+# dashboard_flow_quarterly split one file per dimension (race_aian,
+# gender_identity, engaged_in_subregion_east, etc. — a few hundred KB to a
+# few MB each) instead of one ~110MB blob covering every dimension's full
+# multi-year history at once. Unlike dashboard_flow_monthly (split by year,
+# because OutflowSection only ever needs ONE year of monthly rows at a
+# time — see loadMonthlyFlowForYear), the quarterly export's whole point is
+# a full-history trend per dimension, so splitting by year wouldn't let the
+# frontend load less; OutflowSection always filters quarterly rows down to
+# exactly one (dimension, category) pair before using them (see its own
+# scopedQuarterly), so the dimension is the axis that actually varies with
+# what's needed on screen. "overall" is every reader's default demographic
+# selection (see App.jsx's selectedDemographicType), so it's fetched
+# eagerly same as every other small file; every other dimension is fetched
+# only once a reader actually picks it — see loadData.js's
+# loadQuarterlyFlowForDimension. Old per-dimension files from a dimension
+# since removed are cleaned up the same way _write_monthly_flow_split does.
+def _write_quarterly_flow_split(records: list[dict]):
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for stale in OUTPUT_DIR.glob("dashboard_flow_quarterly_*.json"):
+        stale.unlink()
+    by_dimension: dict[str, list[dict]] = {}
+    for record in records:
+        by_dimension.setdefault(record["dimension"], []).append(record)
+    for dimension, dimension_records in sorted(by_dimension.items()):
+        _write(f"dashboard_flow_quarterly_{dimension}.json", dimension_records)
+
+
+def _suppress_capacity_household_count(df: pd.DataFrame, period_col: str, count_col: str) -> tuple[pd.DataFrame, list[str]]:
+    """Applies suppression.py's existing primary/secondary logic, reused
+    unmodified, to one of dashboard_capacity_*'s household-count columns
+    (enrolled/exited/active — see build_capacity.py's own module docstring
+    for why units_in_system/beds_in_system, pure bed/unit inventory, never
+    go through this). Every row sharing (period_col, project_type) is one
+    sibling group — the "Overall" scope plus its 6 named subregions (see
+    build_capacity.py's _with_subregion_scopes) — the same "a visible total
+    plus visible siblings can back-compute one hidden sibling" risk
+    apply_sankey_marginal_suppression already guards against elsewhere,
+    just keyed by subregion instead of flow_type bucket; no "dimension"
+    column here for apply_full_suppression_pipeline to exclude an
+    "overall" row from (unlike every other table's call), which is
+    correct — the "Overall" subregion scope IS meant to be an eligible
+    group member here, not a singleton excluded from its own group.
+
+    Returns `count_col` nulled wherever suppressed, with its own dedicated
+    f"{count_col}_suppression_marker" column rather than the shared
+    "suppression_marker" name apply_full_suppression_pipeline writes —
+    enrolled/exited/active each need independent suppression state on the
+    same row, same reasoning as suppress_small_secondary_count's own
+    marker_col — plus this column's own validate() violations, for the
+    caller to fold into the pipeline's usual hard gate."""
+    group_cols = [period_col, "project_type"]
+    df = apply_full_suppression_pipeline(df, group_cols=group_cols, count_col=count_col)
+    violations = validate(df, group_cols=group_cols, count_col=count_col)
+    marker_col = f"{count_col}_suppression_marker"
+    df = df.rename(columns={"suppression_marker": marker_col}).drop(columns=[TRUE_COUNT_COL], errors="ignore")
+    return df, violations
+
+
 def main():
     start, end = get_export_window()
     print(f"export window: {start} .. {end}")
     as_of = pd.Timestamp(date.today())
 
     conn = connection.get_connection()
+    t = time.time()
 
     # Client_Demographics: per-person (PersonalID) demographic rollups (the
     # 8 race_* columns, GenderIdentity/GenderAlignment) plus VeteranStatus and
@@ -142,7 +219,24 @@ def main():
     # Synapse table is singular ("client_demographic"), unlike its Looker
     # view name / the notebook it was ported from — confirmed against
     # INFORMATION_SCHEMA.TABLES directly, not assumed.
-    client_demographics = connection.query(conn, "client_demographic")
+    # Narrowed to the columns this pipeline actually reads (full-table
+    # SELECT * was the single biggest cost in every run) — GenderExpanded/
+    # RaceAndEthnicity_* feed demographics.py's rollups below,
+    # VeteranStatus/LastKnownSubregion are merged onto episodes further
+    # down. Verify against the live schema (column names/casing) before
+    # trusting this in CI — this list comes from static analysis of
+    # pipeline/*.py, not a live Synapse check.
+    client_demographics = connection.query(
+        conn,
+        """
+        SELECT PersonalID, GenderExpanded,
+               RaceAndEthnicity_AIAN, RaceAndEthnicity_Asian, RaceAndEthnicity_Black,
+               RaceAndEthnicity_NHPI, RaceAndEthnicity_WC, RaceAndEthnicity_HL, RaceAndEthnicity_MENA,
+               VeteranStatus, LastKnownSubregion
+        FROM client_demographic
+        """,
+    )
+    t = _checkpoint("fetch client_demographic", t)
     # GenderIdentity/GenderAlignment and the 8 race_* rollup columns are all
     # computed here (once, person-level), not native Synapse columns — see
     # demographics.py for why they're derived from GenderExpanded/the raw
@@ -174,7 +268,22 @@ def main():
     # Pull with no date trim for episode_systemwide: return-cohort detection
     # needs to see up to RETURN_WINDOW_DAYS past the window's end, and the
     # length/flow builders trim to the window themselves below.
-    all_episodes = connection.query(conn, "episode_systemwide")
+    # Narrowed to the columns this pipeline actually reads — see the
+    # client_demographics query above for the same caveat (static analysis,
+    # not a live schema check). ClientUniqueIdentifier deliberately left
+    # out: it's only ever mentioned as the reason the fan-out below exists,
+    # never read by name.
+    all_episodes = connection.query(
+        conn,
+        """
+        SELECT PersonalID, EpisodeID, TimePeriodStartDate, EpisodeStartDate, EpisodeEndDate,
+               EpisodeMaxCountChildren, EpisodeChronicStatus, EpisodeHouseholdType, EpisodeAgeTier,
+               EpisodeInflowType, EpisodeOutflowType, LengthOfTimeExperiencingHomelessness,
+               AgedOutOfYYA, FlagYYA, LastShelterStatusInTimeframe
+        FROM episode_systemwide
+        """,
+    )
+    t = _checkpoint("fetch episode_systemwide", t)
     all_episodes["TimePeriodStartDate"] = pd.to_datetime(all_episodes["TimePeriodStartDate"])
     all_episodes["EpisodeStartDate"] = pd.to_datetime(all_episodes["EpisodeStartDate"])
     all_episodes["EpisodeEndDate"] = pd.to_datetime(all_episodes["EpisodeEndDate"])
@@ -211,33 +320,133 @@ def main():
     # keeps using episodes_in_window.
     episodes_with_lookback = _scope_to_window(all_episodes, "TimePeriodStartDate", month_before(start), end)
 
-    episode_ce = connection.query(conn, "episode_ce")
+    episode_ce = connection.query(conn, "SELECT PersonalID, CEEntryDate, CEExitDate FROM episode_ce")
+    t = _checkpoint("fetch episode_ce", t)
     episode_ce["CEEntryDate"] = pd.to_datetime(episode_ce["CEEntryDate"])
     episode_ce["CEExitDate"] = pd.to_datetime(episode_ce["CEExitDate"])
 
-    performance_metrics = connection.query(conn, "program_performance_metrics")
+    # Narrowed to the columns build_capacity.py actually reads — same
+    # static-analysis caveat as the queries above.
+    # TimePeriodStartDate range pushed into the query — this is the exact
+    # same [start, end] bound _scope_to_window below already applied
+    # client-side, so Synapse now only ships the rows that bound would have
+    # kept anyway, not program_performance_metrics' entire history.
+    performance_metrics = connection.query(
+        conn,
+        f"""
+        SELECT ProgramID, TimePeriod, TimePeriodStartDate, TimePeriodEndDate,
+               MaxUnitsAvailableDuringTimeframe, EnrolledDuringTimeframe,
+               UnitNightsUsedNumerator, UnitNightsAvailableDenominator,
+               MaxBedsAvailableDuringTimeframe, ExitedDuringTimeframe, ActiveEnrollmentsInTimeframe
+        FROM program_performance_metrics
+        WHERE TimePeriodStartDate >= '{start.isoformat()}' AND TimePeriodStartDate <= '{end.isoformat()}'
+        """,
+    )
+    t = _checkpoint("fetch program_performance_metrics", t)
     performance_metrics["TimePeriodStartDate"] = pd.to_datetime(performance_metrics["TimePeriodStartDate"])
     performance_metrics["TimePeriodEndDate"] = pd.to_datetime(performance_metrics["TimePeriodEndDate"])
+    # Cheap safety net over the SQL filter above, same reasoning as the
+    # event_systemwide query's own belt-and-suspenders check — kept rather
+    # than removed since it's now filtering an already-small frame.
     performance_metrics = _scope_to_window(performance_metrics, "TimePeriodStartDate", start, end)
 
-    program_attributes = connection.query(conn, "program_attributes")
+    program_attributes = connection.query(conn, "SELECT ProgramID, ProjectTypeCode, Subregion FROM program_attributes")
+    t = _checkpoint("fetch program_attributes", t)
     # Synapse stores the human-readable HUD label here, not the numeric code
     # CAPACITY_PROJECT_TYPE_GROUPS is keyed by — see config.py.
     program_attributes["ProjectTypeCode"] = program_attributes["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
 
     # All_Program_Enrollments — needed by build_flow_rows/yearly/quarterly to
     # resolve the project_engaged_* dimensions (see build_flow.py's
-    # _project_engagement_category). Not date-scoped to the window: a
-    # long-open enrollment that started years earlier must still count as
-    # overlapping this window's periods.
-    enrollments = connection.query(conn, "all_program_enrollments")
+    # _project_engagement_category). Not date-scoped to window END, or by
+    # ProjectStartDate at all: a long-open enrollment that started years
+    # earlier must still count as overlapping this window's periods, and
+    # _project_engagement_category's own per-period overlap check (run
+    # fresh for every month/quarter/year, against that period's own
+    # start/end) is what actually decides overlap — this query's WHERE
+    # isn't a stand-in for that check. It only drops enrollments that
+    # ALREADY EXITED before `start`, the export window's own earliest
+    # possible period_start: such an enrollment's ProjectExitDate is always
+    # < every period_start that will ever be checked against it, so it
+    # fails that per-period overlap check (ProjectExitDate >= period_start)
+    # unconditionally, for every period, every time — pre-filtering it here
+    # changes none of that check's outcomes, it just skips fetching rows
+    # that were always going to fail it.
+    enrollments = connection.query(
+        conn,
+        f"""
+        SELECT PersonalID, ProjectStartDate, ProjectExitDate, ProjectTypeCode
+        FROM all_program_enrollments
+        WHERE ProjectExitDate IS NULL OR ProjectExitDate >= '{start.isoformat()}'
+        """,
+    )
+    t = _checkpoint("fetch all_program_enrollments", t)
     enrollments["ProjectStartDate"] = pd.to_datetime(enrollments["ProjectStartDate"])
     enrollments["ProjectExitDate"] = pd.to_datetime(enrollments["ProjectExitDate"])
     # Same text-label-vs-numeric-code mismatch as program_attributes above.
     enrollments["ProjectTypeCode"] = enrollments["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
 
+    # event_systemwide — needed by every build_*.py module (via
+    # period_dimensions.py's _subregion_engagement_category) to resolve the
+    # engaged_in_subregion_* dimensions: did a person have a homelessness-
+    # indicating event (ClientStatus == "Homeless") at a program located in
+    # a given King County subregion, sometime within the period being
+    # built. Unlike `enrollments` above, this IS safe to trim both ways in
+    # SQL rather than pulling full history and filtering client-side:
+    # event_systemwide has one point-in-time EventDate per row (no
+    # start/end span, so there's no "started long ago, still open" case an
+    # enrollment can have), and every build_*.py module restricts the
+    # periods it actually builds to `start` onward (see each one's own
+    # `months = [m for m in all_months if window_start is None or m >=
+    # window_start]`-shaped filter) — so no period's own period_start is
+    # ever earlier than `start`, and an event dated before `start` can
+    # therefore never fall inside any period's [period_start, period_end]
+    # window regardless of how the per-builder date checks slice it.
+    # ClientStatus = 'Homeless' is pushed into the query for the same
+    # reason — nothing downstream ever reads a non-"Homeless" row — cutting
+    # both filters here means Synapse only ever has to serialize and ship
+    # the rows this pipeline can possibly use, instead of this table's
+    # entire history.
+    # TODO: confirm "event_systemwide" is this table's exact Synapse name
+    # (by analogy with episode_systemwide/episode_ce/program_attributes/
+    # all_program_enrollments' own naming convention) the same way
+    # client_demographic's own name was confirmed against
+    # INFORMATION_SCHEMA.TABLES — not yet verified live against Synapse.
+    events = connection.query(
+        conn,
+        f"""
+        SELECT PersonalID, ProgramID, EventDate, ClientStatus
+        FROM event_systemwide
+        WHERE ClientStatus = 'Homeless' AND EventDate >= '{start.isoformat()}'
+        """,
+    )
+    t = _checkpoint("fetch event_systemwide", t)
+    events["EventDate"] = pd.to_datetime(events["EventDate"])
+    # Cheap safety net over the SQL filter above, not the primary filter
+    # anymore — guards against a ClientStatus value Synapse's own string
+    # comparison treats as equal (trailing whitespace, case folding, etc.)
+    # but pandas' exact-match wouldn't, same "validate at the system
+    # boundary" reasoning as the rest of this function's external-data
+    # handling.
+    events = events[events["ClientStatus"] == "Homeless"]
+    # program_attributes.Subregion is a property of the program's own
+    # physical location (pre-geocoded, manually maintained — see
+    # config.py's SUBREGION_ENGAGEMENT_GROUPS comment), joined onto each
+    # event by ProgramID the same way build_capacity.py already joins
+    # program_attributes onto performance_metrics.
+    events = events.merge(program_attributes[["ProgramID", "Subregion"]], on="ProgramID", how="left")
+    t = time.time()
+
+    # Shared by build_flow_yearly_rows/build_flow_quarterly_rows below — see
+    # build_month_population_cache's own docstring for why this is built
+    # once here rather than each of those two independently recomputing
+    # filter_population per (month, pop_label) pair.
+    month_pop_cache = build_month_population_cache(episodes_with_lookback)
+    t = _checkpoint("build_month_population_cache", t)
+
     # --- dashboard_flow_monthly ---
-    flow_df = build_flow_rows(episodes_with_lookback, episode_ce, enrollments, window_start=pd.Timestamp(start))
+    flow_df = build_flow_rows(episodes_with_lookback, episode_ce, enrollments, events, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_flow_rows", t)
 
     flow_df = apply_full_suppression_pipeline(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
     # Extra pass, on top of the above: protects the indiv_flow_* cross-tab
@@ -280,12 +489,14 @@ def main():
     flow_violations = validate(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
     flow_violations += validate_crosstab(flow_df, group_cols=["month", "population_segment", "dimension", "category"])
     flow_violations += validate_sankey_marginal(flow_df, group_cols=["month", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
+    t = _checkpoint("flow_df suppression+validate", t)
 
     # --- dashboard_flow_yearly (true distinct-person experienced_homelessness
     # and indiv_* partition per year — see build_flow_yearly_rows for why
     # these can't just be summed from dashboard_flow_monthly's per-month
     # figures) ---
-    flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, enrollments, events, month_pop_cache, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_flow_yearly_rows", t)
     flow_yearly_df = apply_full_suppression_pipeline(
         flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
     )
@@ -302,11 +513,13 @@ def main():
     flow_yearly_violations = validate(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"])
     flow_yearly_violations += validate_crosstab(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
     flow_yearly_violations += validate_sankey_marginal(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
+    t = _checkpoint("flow_yearly_df suppression+validate", t)
 
     # --- dashboard_flow_quarterly (drill-down granularity for OutflowSection's
     # pills — same "can't be summed from monthly cells" rationale as yearly,
     # see build_flow_quarterly_rows) ---
-    flow_quarterly_df = build_flow_quarterly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    flow_quarterly_df = build_flow_quarterly_rows(episodes_with_lookback, enrollments, events, month_pop_cache, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_flow_quarterly_rows", t)
     flow_quarterly_df = apply_full_suppression_pipeline(
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"]
     )
@@ -329,9 +542,11 @@ def main():
     flow_quarterly_violations += validate_sankey_marginal(
         flow_quarterly_df, group_cols=["quarter", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS
     )
+    t = _checkpoint("flow_quarterly_df suppression+validate", t)
 
     # --- dashboard_length_monthly ---
-    length_df = build_length_rows(episodes_in_window, enrollments)
+    length_df = build_length_rows(episodes_in_window, enrollments, events)
+    t = _checkpoint("build_length_rows", t)
     length_df = apply_full_suppression_pipeline(length_df, group_cols=["month", "population_segment", "dimension"], count_col="count")
     length_df = apply_race_crossdim_suppression(
         length_df, group_cols=["month", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
@@ -351,6 +566,7 @@ def main():
     # must be nulled alongside it, not left populated next to a "*"/"**".
     length_df.loc[length_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
     length_df = length_df.rename(columns={"count": "n"})
+    t = _checkpoint("length_df suppression+validate", t)
 
     # --- dashboard_length_by_exit_monthly (split by permanently_housed/
     # inactive/aged_out — see build_length_by_exit.py's module docstring for
@@ -359,7 +575,8 @@ def main():
     # episodes_with_lookback + window_start, not episodes_in_window: aged-out
     # detection needs a true prior_month for the window's own first
     # published month, same reason build_flow_rows needs it.
-    length_by_exit_df = build_length_by_exit_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_by_exit_df = build_length_by_exit_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_length_by_exit_rows", t)
     length_by_exit_df = apply_full_suppression_pipeline(
         length_by_exit_df, group_cols=["month", "population_segment", "dimension", "exit_type"], count_col="count"
     )
@@ -390,10 +607,12 @@ def main():
     )
     length_by_exit_df.loc[length_by_exit_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
     length_by_exit_df = length_by_exit_df.rename(columns={"count": "n"})
+    t = _checkpoint("length_by_exit_df suppression+validate", t)
 
     # --- dashboard_length_headline_yearly (single pooled median — see
     # build_length_by_exit.py's own docstring for exactly what this pools) ---
-    length_headline_df = build_length_headline_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_df = build_length_headline_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_length_headline_rows", t)
     length_headline_df = apply_full_suppression_pipeline(
         length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count"
     )
@@ -410,12 +629,14 @@ def main():
     length_headline_violations = validate(length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count")
     length_headline_df.loc[length_headline_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
     length_headline_df = length_headline_df.rename(columns={"count": "n"})
+    t = _checkpoint("length_headline_df suppression+validate", t)
 
     # --- dashboard_length_headline_monthly / _quarterly (same pooled
     # definition as the yearly table above, just at finer grain — powers
     # LengthSection's headline KPI card whenever a reader drills into a
     # specific month/quarter instead of browsing the full year) ---
-    length_headline_monthly_df = build_length_headline_monthly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_monthly_df = build_length_headline_monthly_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_length_headline_monthly_rows", t)
     length_headline_monthly_df = apply_full_suppression_pipeline(
         length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], count_col="count"
     )
@@ -436,8 +657,10 @@ def main():
         length_headline_monthly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
     ] = None
     length_headline_monthly_df = length_headline_monthly_df.rename(columns={"count": "n"})
+    t = _checkpoint("length_headline_monthly_df suppression+validate", t)
 
-    length_headline_quarterly_df = build_length_headline_quarterly_rows(episodes_with_lookback, enrollments, window_start=pd.Timestamp(start))
+    length_headline_quarterly_df = build_length_headline_quarterly_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
+    t = _checkpoint("build_length_headline_quarterly_rows", t)
     length_headline_quarterly_df = apply_full_suppression_pipeline(
         length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], count_col="count"
     )
@@ -458,13 +681,20 @@ def main():
         length_headline_quarterly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
     ] = None
     length_headline_quarterly_df = length_headline_quarterly_df.rename(columns={"count": "n"})
+    t = _checkpoint("length_headline_quarterly_df suppression+validate", t)
 
     # --- dashboard_return_cohorts ---
-    return_df = build_return_cohort_rows(episodes_in_window, all_episodes, enrollments, as_of=as_of)
+    return_df = build_return_cohort_rows(episodes_in_window, all_episodes, enrollments, events, as_of=as_of)
+    t = _checkpoint("build_return_cohort_rows", t)
     return_df = return_df.rename(columns={"n_exited": "count"})
     return_df = apply_full_suppression_pipeline(return_df, group_cols=["exit_quarter", "population_segment", "dimension"], count_col="count")
+    # CROSSDIM_OVERLAP_DIMENSIONS, not plain RACE_DIMENSIONS — this call was
+    # missing the same race-vs-project_engaged (and now race-vs-
+    # engaged_in_subregion) cross-dimension leak every other table's own
+    # apply_race_crossdim_suppression call already guards against (see
+    # CROSSDIM_OVERLAP_DIMENSIONS' own comment above).
     return_df = apply_race_crossdim_suppression(
-        return_df, group_cols=["exit_quarter", "population_segment", "dimension"], race_dimensions=RACE_DIMENSIONS, count_col="count"
+        return_df, group_cols=["exit_quarter", "population_segment", "dimension"], race_dimensions=CROSSDIM_OVERLAP_DIMENSIONS, count_col="count"
     )
     return_df = apply_insufficient_population_fallback(
         return_df,
@@ -484,9 +714,14 @@ def main():
     # derived count is small; the frontend shows the exited total with the
     # return split marked as withheld instead.
     return_df = suppress_small_secondary_count(return_df, count_col="n_returned", marker_col="return_suppression_marker", extra_cols=["pct_returned"])
+    t = _checkpoint("return_df suppression+validate", t)
 
-    # --- dashboard_capacity_monthly / _quarterly / _yearly (no
-    # suppression: aggregate inventory data, not person-level) ---
+    # --- dashboard_capacity_monthly / _quarterly / _yearly (aggregate
+    # inventory data, not person-level — units_in_system/beds_in_system/
+    # pct_utilization never get suppressed — but enrolled/exited/active ARE
+    # real household headcounts, and the subregion breakdown below can make
+    # one small enough to need the same primary/secondary protection every
+    # person-level table gets; see _suppress_capacity_household_count) ---
     capacity_df = build_capacity_rows(performance_metrics, program_attributes, as_of=as_of)
     capacity_quarterly_df = build_capacity_quarterly_rows(performance_metrics, program_attributes, as_of=as_of)
     # Yearly deliberately doesn't get this treatment — the current
@@ -495,6 +730,31 @@ def main():
     # the quarterly/monthly charts which should only ever show complete
     # periods.
     capacity_yearly_df = build_capacity_yearly_rows(performance_metrics, program_attributes)
+
+    capacity_df, capacity_violations = _suppress_capacity_household_count(capacity_df, "month", "enrolled")
+    capacity_df.loc[capacity_df["enrolled_suppression_marker"].notna(), "throughput_hh_per_unit"] = None
+
+    capacity_quarterly_df, capacity_quarterly_violations = _suppress_capacity_household_count(
+        capacity_quarterly_df, "quarter", "enrolled"
+    )
+    capacity_quarterly_df.loc[capacity_quarterly_df["enrolled_suppression_marker"].notna(), "throughput_hh_per_unit"] = None
+
+    capacity_yearly_df, capacity_yearly_enrolled_violations = _suppress_capacity_household_count(capacity_yearly_df, "year", "enrolled")
+    capacity_yearly_df, capacity_yearly_exited_violations = _suppress_capacity_household_count(capacity_yearly_df, "year", "exited")
+    capacity_yearly_df, capacity_yearly_active_violations = _suppress_capacity_household_count(capacity_yearly_df, "year", "active")
+    capacity_yearly_violations = capacity_yearly_enrolled_violations + capacity_yearly_exited_violations + capacity_yearly_active_violations
+    # households_per_unit/pct_exited are both derived FROM active (and
+    # pct_exited from exited too — see build_capacity.py's
+    # _grouped_yearly_metrics) — nulled alongside whichever headcount(s)
+    # they're built from, same reasoning as throughput_hh_per_unit above,
+    # so neither ratio hands a suppressed headcount back via the
+    # units_in_system/active figure published right next to it.
+    capacity_yearly_df.loc[capacity_yearly_df["active_suppression_marker"].notna(), "households_per_unit"] = None
+    capacity_yearly_df.loc[
+        capacity_yearly_df["exited_suppression_marker"].notna() | capacity_yearly_df["active_suppression_marker"].notna(),
+        "pct_exited",
+    ] = None
+    t = _checkpoint("build_capacity_rows/_quarterly/_yearly + suppression", t)
 
     all_violations = (
         flow_violations
@@ -506,6 +766,9 @@ def main():
         + length_headline_monthly_violations
         + length_headline_quarterly_violations
         + return_violations
+        + capacity_violations
+        + capacity_quarterly_violations
+        + capacity_yearly_violations
     )
     if all_violations:
         print("SUPPRESSION VALIDATION FAILED:", file=sys.stderr)
@@ -522,7 +785,7 @@ def main():
 
     _write_monthly_flow_split(_to_json_records(flow_df, ["month"]))
     _write("dashboard_flow_yearly.json", _to_json_records(flow_yearly_df, []))
-    _write("dashboard_flow_quarterly.json", _to_json_records(flow_quarterly_df, ["quarter"]))
+    _write_quarterly_flow_split(_to_json_records(flow_quarterly_df, ["quarter"]))
     _write("dashboard_length_monthly.json", _to_json_records(length_df, ["month"]))
     _write("dashboard_length_by_exit_monthly.json", _to_json_records(length_by_exit_df, ["month"]))
     _write("dashboard_length_headline_yearly.json", _to_json_records(length_headline_df, []))

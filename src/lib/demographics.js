@@ -1,11 +1,13 @@
 // "People who identify as X" (the user's specified phrasing) only reads
 // naturally for the demographic types that really are an identity a person
-// holds (race/ethnicity, gender). unsheltered_in_period and
-// project_type_engagement are both situational categories, not identities
-// — "people who identify as Unsheltered this period" or "...as Emergency
-// Shelter" reads as a category-error, so each gets its own natural phrasing
-// instead, matching how its own category labels actually read (see
-// App.jsx's UNSHELTERED_CATEGORY_LABELS / PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS).
+// holds (race/ethnicity, gender). unsheltered_in_period,
+// project_type_engagement, and engaged_in_subregion are all situational
+// categories, not identities — "people who identify as Unsheltered this
+// period", "...as Emergency Shelter", or "...as Seattle Metro" all read as
+// a category-error, so each gets its own natural phrasing instead, matching
+// how its own category labels actually read (see App.jsx's
+// UNSHELTERED_CATEGORY_LABELS / PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS /
+// ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS).
 // last_known_subregion is geographic, not an identity either — "people who
 // identify as South King County" reads the same way, so it gets its own
 // clause too. (last_known_city would read the same way, but that filter is
@@ -45,6 +47,9 @@ export function subjectFor(populationSegment, demographicType, demographicCatego
   }
   if (demographicType === "project_type_engagement") {
     return `${noun} engaged with ${demographicCategory} this period`;
+  }
+  if (demographicType === "engaged_in_subregion") {
+    return `${noun} who accessed services in ${demographicCategory} this period`;
   }
   // last_known_city filter temporarily disabled — was: `demographicType === "last_known_subregion" || demographicType === "last_known_city"`
   if (demographicType === "last_known_subregion") {

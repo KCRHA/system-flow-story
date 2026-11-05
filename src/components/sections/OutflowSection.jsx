@@ -126,6 +126,7 @@ function sumValues(cells) {
 export default function OutflowSection({
   flowYearlyRows,
   flowQuarterlyRows,
+  flowQuarterlyLoading,
   flowMonthlyRows,
   flowMonthlyLoading,
   populationSegment,
@@ -563,13 +564,17 @@ export default function OutflowSection({
         )}
       </div>
       <div className="period-pills-row">
-        <QuarterPills
-          quarters={quartersForYear}
-          selected={quarter}
-          fullYearActive={!quarter && !month}
-          onSelect={selectQuarter}
-          throughLabel={throughLabel}
-        />
+        {flowQuarterlyLoading && quartersForYear.length === 0 ? (
+          <p className="month-pills-loading">Loading quarters…</p>
+        ) : (
+          <QuarterPills
+            quarters={quartersForYear}
+            selected={quarter}
+            fullYearActive={!quarter && !month}
+            onSelect={selectQuarter}
+            throughLabel={throughLabel}
+          />
+        )}
         {flowMonthlyLoading && monthsForYear.length === 0 ? (
           <p className="month-pills-loading">Loading months…</p>
         ) : (

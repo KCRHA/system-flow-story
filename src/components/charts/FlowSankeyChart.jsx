@@ -107,6 +107,33 @@ function nodeColor(id) {
   return ACTIVE_NODE_IDS.has(id) ? ACTIVE_COLOR : FLOW_COLORS[id];
 }
 
+// Stacks each node's own several ribbons top-to-bottom in the same order
+// as the OTHER column (inflowOrder/outflowOrder — both fixed, see
+// buildGraph's comment), so e.g. already_active's ribbon to still_active
+// sits above its ribbon to inactive, matching still_active sitting above
+// inactive on the right, instead of the two crossing each other right as
+// they leave already_active. d3-sankey has its own built-in version of
+// this (re-sorting each node's links by its neighbors' current position,
+// every relaxation iteration) that runs automatically whenever linkSort
+// is left unset — but that dynamic version is driven by the SAME
+// relaxation pass that's also moving nodes' y-positions around, and with
+// nodeSort disabled (nodes pinned, not free to move to wherever the
+// relaxation would put them) it doesn't reliably converge: verified
+// against this chart's real data, it left already_active's own ribbon to
+// still_active stacked BELOW its ribbon to permanently_housed despite
+// still_active sitting above permanently_housed on the right. Passing an
+// explicit comparator here sorts links by column rank exactly once,
+// up front, using the same fixed order nodeSort already pins the nodes
+// to, instead of relying on that per-iteration re-sort to land somewhere
+// consistent with it.
+function columnLinkSort(inflowOrder, outflowOrder) {
+  const inflowRank = new Map(inflowOrder.map((id, i) => [id, i]));
+  const outflowRank = new Map(outflowOrder.map((id, i) => [id, i]));
+  return (a, b) =>
+    (inflowRank.get(a.source.id) - inflowRank.get(b.source.id)) ||
+    (outflowRank.get(a.target.id) - outflowRank.get(b.target.id));
+}
+
 // One node per inflow/outflow bucket — already_active/still_active listed
 // first in each column (see INFLOW_BUCKET_KEYS/OUTFLOW_BUCKET_KEYS) so
 // they land at the top when nodeSort is disabled below, running parallel
@@ -363,6 +390,9 @@ export default function FlowSankeyChart({ data, periodLabel, isFullYear, populat
       // should stay pinned to the top, running parallel, not drift based
       // on link layout.
       .nodeSort(null)
+      // Keeps each node's own ribbons internally consistent with that
+      // pinned column order — see columnLinkSort.
+      .linkSort(columnLinkSort(INFLOW_BUCKET_KEYS, outflowKeys))
       .extent([
         [margin.left, margin.top],
         [width - margin.right, height - margin.bottom],

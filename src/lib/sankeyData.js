@@ -6,14 +6,27 @@ export const OUTFLOW_REASONS = ["permanently_housed", "inactive", "deceased"];
 // Bucket keys in display order — already_active/still_active first, so a
 // caller that wants them pinned to the top of the sankey's left/right
 // columns can just preserve this order (see FlowSankeyChart's nodeSort).
-// aged_out sits right after still_active, matching build_flow.py's own
-// OUTFLOW_BUCKET_KEYS order — it's not one of the three HUD outflow
-// reasons above, just like still_active isn't; it's specific to the YYA
-// population (see build_flow.py's _partition_by_individual for why an
-// explicit bucket is needed there), and is always 0 for every other
-// population segment.
+// aged_out is specific to the YYA population (see build_flow.py's
+// _partition_by_individual for why an explicit bucket is needed there)
+// and is always 0 for every other population segment; it's listed last
+// here, next to deceased, since both are "exits the tracked population"
+// buckets rather than one of the three HUD outflow reasons above — and
+// because, for the periods checked, aged_out's own links skew toward the
+// newly_homeless/inactive end of the graph rather than toward
+// still_active, so sitting right after still_active produced an
+// unnecessarily sharp crossing against it. Note this is still a BEST-
+// EFFORT default order, not a crossing-free one: with already_active/
+// still_active pinned to the top (a deliberate choice, not negotiable by
+// reordering — see FlowSankeyChart), the remaining crossings in a given
+// period's sankey mostly come from already_active and newly_homeless both
+// splitting across still_active and inactive, which no reordering of the
+// OTHER buckets can remove — confirmed by brute-forcing every possible
+// column ordering against one real period's numbers, which cut total
+// weighted crossings by under 10% at best, and only by relegating
+// newly_homeless (routinely the largest inflow bucket) to the bottom of
+// its column.
 export const INFLOW_BUCKET_KEYS = ["already_active", ...INFLOW_REASONS];
-export const OUTFLOW_BUCKET_KEYS = ["still_active", "aged_out", ...OUTFLOW_REASONS];
+export const OUTFLOW_BUCKET_KEYS = ["still_active", ...OUTFLOW_REASONS, "aged_out"];
 
 function cellForYear(yearlyRows, year, flowType) {
   return resolveCell(

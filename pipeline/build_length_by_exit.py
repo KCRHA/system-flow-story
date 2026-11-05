@@ -26,13 +26,15 @@ logic ever changes in build_flow.py, this copy needs the same change.
 """
 import pandas as pd
 
-from .config import DIMENSION_COLUMNS, OUTFLOW_TYPE_MAP, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS
+from .config import DIMENSION_COLUMNS, OUTFLOW_TYPE_MAP, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS,
     PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
     _group_enrollments_by_dimension,
+    _group_events_by_subregion,
     _project_engagement_category,
+    _subregion_engagement_category,
     _unsheltered_in_period_category,
 )
 from .population import filter_population
@@ -198,7 +200,7 @@ def _aged_out_events_df(episodes: pd.DataFrame, window_start=None) -> pd.DataFra
     return pd.concat(parts, ignore_index=True)
 
 
-def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """dashboard_length_by_exit_monthly: one row per (month,
     population_segment, dimension, category, exit_type), exit_type in
     permanently_housed/inactive/aged_out (see _PANEL_EXIT_TYPES).
@@ -211,7 +213,12 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
     history (same contract as build_flow.py's build_flow_rows).
 
     `enrollments`: raw All_Program_Enrollments rows, used only to resolve
-    the project_engaged_* dimensions (see _project_engagement_category)."""
+    the project_engaged_* dimensions (see _project_engagement_category).
+
+    `events`: raw event_systemwide rows, already filtered to ClientStatus ==
+    "Homeless" and joined to program_attributes.Subregion via ProgramID,
+    used only to resolve the engaged_in_subregion_* dimensions (see
+    _subregion_engagement_category)."""
     episodes = _flag_outflow_rows(episodes)
     exit_df = _real_exit_duration_df(episodes)
     exit_df = exit_df[exit_df["exit_type"].isin(["permanently_housed", "inactive"])]
@@ -222,6 +229,7 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
     all_categories = {dimension: _all_categories(published, dimension) for dimension in EXTENDED_DIMENSIONS}
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for month in months:
@@ -241,6 +249,10 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
             **{
                 dim: _project_engagement_category(month_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(month_full_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
         month_exit = month_exit.assign(
@@ -284,7 +296,7 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
     return df
 
 
-def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """dashboard_length_headline_yearly: one row per (year, population_segment,
     dimension, category) — a single pooled median/p25/p75 of days active,
     counting everyone active at any point that year: every real exit's
@@ -303,6 +315,11 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
 
     `enrollments`: raw All_Program_Enrollments rows, used only to resolve
     the project_engaged_* dimensions (see _project_engagement_category).
+
+    `events`: raw event_systemwide rows, already filtered to ClientStatus ==
+    "Homeless" and joined to program_attributes.Subregion via ProgramID,
+    used only to resolve the engaged_in_subregion_* dimensions (see
+    _subregion_engagement_category).
     """
     episodes = _flag_outflow_rows(episodes)
     exit_df = _real_exit_duration_df(episodes)
@@ -322,6 +339,7 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
     all_categories = {dimension: _all_categories(published, dimension) for dimension in EXTENDED_DIMENSIONS}
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for year in years:
@@ -347,6 +365,10 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
             **{
                 dim: _project_engagement_category(year_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(year_full_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
 
@@ -393,7 +415,7 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
     return df
 
 
-def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """Builds dashboard_length_headline_monthly: one row per (month,
     population_segment, dimension, category) — the same pooled definition
     as build_length_headline_rows' yearly table (everyone active at any
@@ -411,6 +433,11 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
 
     `enrollments`: raw All_Program_Enrollments rows, used only to resolve
     the project_engaged_* dimensions (see _project_engagement_category).
+
+    `events`: raw event_systemwide rows, already filtered to ClientStatus ==
+    "Homeless" and joined to program_attributes.Subregion via ProgramID,
+    used only to resolve the engaged_in_subregion_* dimensions (see
+    _subregion_engagement_category).
     """
     episodes = _flag_outflow_rows(episodes)
     exit_df = _real_exit_duration_df(episodes)
@@ -421,6 +448,7 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
     all_categories = {dimension: _all_categories(published, dimension) for dimension in EXTENDED_DIMENSIONS}
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for month in months:
@@ -441,6 +469,10 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
             **{
                 dim: _project_engagement_category(month_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(month_full_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
 
@@ -475,7 +507,7 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
     return df
 
 
-def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """Builds dashboard_length_headline_quarterly: one row per (quarter,
     population_segment, dimension, category) — same pooled definition as
     build_length_headline_monthly_rows above, grouped by calendar quarter
@@ -485,7 +517,7 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
     months window is skipped entirely, not emitted as a partial quarter —
     same convention as build_flow_quarterly_rows.
 
-    `episodes`/`enrollments`: same contract as
+    `episodes`/`enrollments`/`events`: same contract as
     build_length_headline_monthly_rows above.
     """
     episodes = _flag_outflow_rows(episodes)
@@ -501,6 +533,7 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
     all_categories = {dimension: _all_categories(published, dimension) for dimension in EXTENDED_DIMENSIONS}
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     rows: list = []
     for quarter, quarter_df in published.groupby("_quarter"):
@@ -525,6 +558,10 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
             **{
                 dim: _project_engagement_category(quarter_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(quarter_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
 

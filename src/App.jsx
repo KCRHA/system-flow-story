@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { loadDashboardData, loadMonthlyFlowForYear, filterRows, distinctValues } from "./lib/loadData.js";
+import { loadDashboardData, loadMonthlyFlowForYear, loadQuarterlyFlowForDimension, filterRows, distinctValues } from "./lib/loadData.js";
 import { DEMOGRAPHIC_TYPES } from "./components/FilterBar.jsx";
 import LengthSection from "./components/sections/LengthSection.jsx";
 import OutflowSection from "./components/sections/OutflowSection.jsx";
@@ -50,6 +50,33 @@ const PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS = {
   "Housing Programs": "project_engaged_housing",
   "Transitional Housing": "project_engaged_th",
   "Coordinated Entry": "project_engaged_ce",
+};
+
+// Same pattern as PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS above: subregion
+// engagement is 6 independent binary dimensions (see pipeline/config.py's
+// SUBREGION_ENGAGEMENT_GROUPS), not one dimension with 6 overlapping
+// categories, since a person can access services in more than one
+// subregion in the same period (e.g. Seattle Metro AND South King County).
+// "Engaged" here means the person had a homelessness-indicating event
+// (ClientStatus == "Homeless" in event_systemwide) at a program located in
+// that subregion, overlapping ANY part of the currently selected time
+// period — not last_known_subregion's own person-level "where do they
+// live" question (a different dimension, see RACE_ETHNICITY_CATEGORY_
+// DIMENSIONS-style comment pattern). Label text ("Southeast King County")
+// is the display spelling; the pipeline's own literal join value differs
+// slightly ("South East King County", with a space) — see config.py's
+// SUBREGION_ENGAGEMENT_GROUPS comment — but that distinction never reaches
+// the frontend, which only ever sees the dimension key on the right.
+// Urban Unincorporated (and Pierce County) programs are excluded from this
+// breakdown entirely — confirmed with the dashboard owner, 2026-11-02 — so
+// there's no entry for either here.
+const ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS = {
+  "East King County": "engaged_in_subregion_east",
+  "North King County": "engaged_in_subregion_north",
+  "Seattle Metro": "engaged_in_subregion_seattle",
+  "Snoqualmie Valley": "engaged_in_subregion_snoqualmie",
+  "South King County": "engaged_in_subregion_south",
+  "Southeast King County": "engaged_in_subregion_southeast",
 };
 
 // Hidden from every demographic type's category dropdown for now — a
@@ -111,6 +138,9 @@ function resolveDemographicScope(demographicType, demographicCategory) {
   }
   if (demographicType === "project_type_engagement") {
     return { dimension: PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
+  }
+  if (demographicType === "engaged_in_subregion") {
+    return { dimension: ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
   }
   return { dimension: demographicType, category: demographicCategory };
 }
@@ -177,6 +207,16 @@ export default function App() {
   }, [year, monthlyFlowByYear]);
   const monthlyFlowLoading = year != null && !monthlyFlowByYear[year];
 
+  // dashboard_flow_quarterly is pre-split one file per dimension (~1-15MB
+  // each, not one ~110MB blob covering every dimension's full history at
+  // once — see pipeline/export.py's _write_quarterly_flow_split), so only
+  // the dimension(s) actually in view this render are ever fetched. Same
+  // cache-after-first-fetch shape as monthlyFlowByYear above, just keyed by
+  // dimension instead of year, and fetching a small set of needed keys at
+  // once instead of one — see the effect below, placed after filterDimension
+  // is resolved, and loadData.js's loadQuarterlyFlowForDimension.
+  const [quarterlyFlowByDimension, setQuarterlyFlowByDimension] = useState({});
+
   const demographicType = DEMOGRAPHIC_TYPES.some((opt) => opt.value === selectedDemographicType)
     ? selectedDemographicType
     : "overall";
@@ -188,10 +228,7 @@ export default function App() {
   // the one exception: its 8 visible categories are fixed labels (see
   // RACE_ETHNICITY_CATEGORY_DIMENSIONS above), not derived from any single
   // dimension's own distinct category values, since there is no single
-  // "race_ethnicity" dimension in the data anymore. Deliberately not
-  // dashboard_flow_monthly: quarterly carries the same dimension/category
-  // coverage and is small enough to publish on every deploy target (see
-  // loadData.js).
+  // "race_ethnicity" dimension in the data anymore.
   const demographicCategories = useMemo(() => {
     if (!data || demographicType === "overall") return ["Overall"];
     if (demographicType === "race_ethnicity") return Object.keys(RACE_ETHNICITY_CATEGORY_DIMENSIONS);
@@ -199,9 +236,11 @@ export default function App() {
     // derived from the dimension's own raw Included/Not Included values.
     if (demographicType === "unsheltered_in_period") return Object.keys(UNSHELTERED_CATEGORY_LABELS);
     if (demographicType === "project_type_engagement") return Object.keys(PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS);
-    const categories = distinctValues(filterRows(data.flowQuarterly, { dimension: demographicType }), "category").filter(
-      (category) => !HIDDEN_CATEGORIES.has(category)
-    );
+    if (demographicType === "engaged_in_subregion") return Object.keys(ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS);
+    const categories = distinctValues(
+      filterRows(quarterlyFlowByDimension[demographicType] ?? [], { dimension: demographicType }),
+      "category"
+    ).filter((category) => !HIDDEN_CATEGORIES.has(category));
     if (demographicType === "age_category") {
       // The export carries every age tier for every population segment
       // (categories are derived once, globally, in the pipeline — see
@@ -232,6 +271,45 @@ export default function App() {
   // dropdowns show and what the blurb text displays (see
   // resolveDemographicScope's own comment).
   const { dimension: filterDimension, category: filterCategory } = resolveDemographicScope(demographicType, demographicCategory);
+  // "overall" is every reader's default selection, fetched unconditionally
+  // alongside demographicType's own dimension (covers this dropdown's
+  // category list for the 4 demographic types whose categories are
+  // data-derived — see demographicCategories above) and filterDimension
+  // (covers OutflowSection's chart rows — see its own flowQuarterlyRows
+  // prop below). The three are often the same string (e.g. age_category),
+  // in which case this fetches it once, not three times — see the `prev[d]`
+  // check below, same guard shape as monthlyFlowByYear's own effect.
+  const neededQuarterlyDimensions = [...new Set(["overall", demographicType, filterDimension])];
+  useEffect(() => {
+    const missing = neededQuarterlyDimensions.filter((dim) => !quarterlyFlowByDimension[dim]);
+    if (missing.length === 0) return;
+    let cancelled = false;
+    Promise.all(missing.map((dim) => loadQuarterlyFlowForDimension(dim).then((rows) => [dim, rows]))).then((pairs) => {
+      if (cancelled) return;
+      setQuarterlyFlowByDimension((prev) => {
+        const next = { ...prev };
+        for (const [dim, rows] of pairs) next[dim] = rows;
+        return next;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [neededQuarterlyDimensions.join(","), quarterlyFlowByDimension]);
+  // Capacity has no per-person dimension to filter by at all (see
+  // CapacitySection.jsx/pipeline/config.py's SUBREGION_DISPLAY_LABELS own
+  // comment), but both subregion-flavored filters pick a real subregion
+  // name as their demographicCategory already ("Seattle Metro", etc. — see
+  // ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS/the data's own
+  // last_known_subregion categories, which share that exact spelling), so
+  // that name is passed straight through rather than via filterDimension/
+  // filterCategory, whose meaning differs per demographicType (e.g.
+  // engaged_in_subregion's own filterCategory is always "Included", not the
+  // subregion name). null for every other demographicType, including
+  // "overall" — CapacitySection falls back to its unscoped "Overall" rows.
+  const capacitySubregion =
+    demographicType === "last_known_subregion" || demographicType === "engaged_in_subregion" ? demographicCategory : null;
 
   if (error) return <div className="hero">Couldn't load dashboard data: {error.message}</div>;
   if (!data) return <div className="hero">Loading…</div>;
@@ -258,7 +336,8 @@ export default function App() {
       </section>
       <OutflowSection
         flowYearlyRows={data.flowYearly}
-        flowQuarterlyRows={data.flowQuarterly}
+        flowQuarterlyRows={quarterlyFlowByDimension[filterDimension] ?? []}
+        flowQuarterlyLoading={!quarterlyFlowByDimension[filterDimension]}
         flowMonthlyRows={monthlyFlowByYear[year] ?? []}
         flowMonthlyLoading={monthlyFlowLoading}
         populationSegment={populationSegment}
@@ -298,6 +377,7 @@ export default function App() {
         capacityYearlyRows={data.capacityYearly}
         year={year}
         demographicType={demographicType}
+        capacitySubregion={capacitySubregion}
       />
       <footer className="data-footnote">
         <p>

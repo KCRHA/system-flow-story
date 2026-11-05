@@ -4,13 +4,15 @@ from episode_systemwide's LengthOfTimeExperiencingHomelessness field.
 """
 import pandas as pd
 
-from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS
+from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS,
     PERIOD_AGGREGATE_CATEGORY_DIMENSIONS,
     _group_enrollments_by_dimension,
+    _group_events_by_subregion,
     _project_engagement_category,
+    _subregion_engagement_category,
     _unsheltered_in_period_category,
 )
 from .population import filter_population
@@ -63,10 +65,16 @@ def _stats_by_category(df: pd.DataFrame, dimension: str, all_categories: list) -
     return out
 
 
-def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame) -> pd.DataFrame:
+def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame) -> pd.DataFrame:
     """`enrollments`: raw All_Program_Enrollments rows, used only to resolve
     the project_engaged_* dimensions (see _project_engagement_category) —
-    same contract as build_flow.py's build_flow_rows."""
+    same contract as build_flow.py's build_flow_rows.
+
+    `events`: raw event_systemwide rows, already filtered to ClientStatus ==
+    "Homeless" and joined to program_attributes.Subregion via ProgramID,
+    used only to resolve the engaged_in_subregion_* dimensions (see
+    _subregion_engagement_category) — same contract as build_flow.py's
+    build_flow_rows."""
     # EpisodeOutflowType is a per-*episode* label (an episode's eventual
     # final disposition, stamped on every monthly row it spans — see
     # Episode_Systemwide notebook's process_episode()), not a per-month
@@ -94,6 +102,7 @@ def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame) -> pd.D
     # ProjectTypeCode-filtered once per project_engaged_* dimension, reused
     # across every month below — see _group_enrollments_by_dimension.
     group_enrollments = _group_enrollments_by_dimension(enrollments)
+    group_events = _group_events_by_subregion(events)
 
     for month in months:
         month_df = episodes[episodes["TimePeriodStartDate"] == month]
@@ -112,6 +121,10 @@ def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame) -> pd.D
             **{
                 dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
+            },
+            **{
+                dim: _subregion_engagement_category(month_df, group_events[dim], period_start, period_end)
+                for dim in SUBREGION_ENGAGEMENT_DIMENSIONS
             },
         }
         month_df = month_df.assign(

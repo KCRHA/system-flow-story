@@ -34,7 +34,6 @@ async function fetchJson(path) {
 export async function loadDashboardData() {
   const [
     flowYearly,
-    flowQuarterly,
     length,
     lengthByExit,
     lengthHeadline,
@@ -46,7 +45,13 @@ export async function loadDashboardData() {
     capacityYearly,
   ] = await Promise.all([
     fetchJson("dashboard_flow_yearly.json"),
-    fetchJson("dashboard_flow_quarterly.json"),
+    // dashboard_flow_quarterly is NOT fetched here — it's pre-split one
+    // file per dimension now (~1-15MB each, not one ~110MB blob covering
+    // every dimension at once — see pipeline/export.py's
+    // _write_quarterly_flow_split), and App.jsx only ever needs the
+    // currently-selected demographic dimension's rows. See
+    // loadQuarterlyFlowForDimension below, fetched lazily per dimension
+    // the same way loadMonthlyFlowForYear already is per year.
     fetchJson("dashboard_length_monthly.json"),
     fetchJson("dashboard_length_by_exit_monthly.json"),
     fetchJson("dashboard_length_headline_yearly.json"),
@@ -65,7 +70,6 @@ export async function loadDashboardData() {
   ]);
   return {
     flowYearly,
-    flowQuarterly,
     length,
     lengthByExit,
     lengthHeadline,
@@ -87,6 +91,18 @@ export async function loadDashboardData() {
 // empty-is-fine rendering.
 export async function loadMonthlyFlowForYear(year) {
   return fetchJson(`dashboard_flow_monthly_${year}.json`).catch(() => []);
+}
+
+// dashboard_flow_quarterly's sibling of loadMonthlyFlowForYear above, split
+// by dimension instead of by year (see pipeline/export.py's
+// _write_quarterly_flow_split for why the split key differs: OutflowSection
+// always wants one dimension's full multi-year history, never one year's
+// worth of every dimension). App.jsx fetches "overall" eagerly (the default
+// demographic selection) and every other dimension only once a reader
+// actually picks it, caching each after the first fetch the same way
+// App.jsx's monthlyFlowByYear already does.
+export async function loadQuarterlyFlowForDimension(dimension) {
+  return fetchJson(`dashboard_flow_quarterly_${dimension}.json`).catch(() => []);
 }
 
 export function filterRows(rows, { populationSegment, dimension, category, month, flowType, projectType }) {

@@ -14,3 +14,9 @@ pipeline/**/__pycache__
 # normally). This just guards against ever committing the old single-file
 # form, which exceeds GitHub's 100MB per-file push limit.
 public/data/dashboard_flow_monthly.json
+
+# Same reasoning, for dashboard_flow_quarterly.json — now split one file
+# per dimension (dashboard_flow_quarterly_<dimension>.json) so the frontend
+# only fetches the dimension a reader actually has selected. The old single
+# ~110MB blob is never committed again.
+public/data/dashboard_flow_quarterly.json

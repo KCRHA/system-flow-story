@@ -28,6 +28,7 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "unsheltered_in_period", label: "Unsheltered This Period" },
   { value: "project_type_engagement", label: "Project Type Engagement" },
   { value: "last_known_subregion", label: "Last Known Subregion" },
+  { value: "engaged_in_subregion", label: "Engaged in Subregion" },
   // { value: "last_known_city", label: "Last Known City" },  // last_known_city filter temporarily disabled
 ];
 
