@@ -28,6 +28,7 @@ import pandas as pd
 from .config import (
     DIMENSIONS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
+    PROJECT_ENGAGEMENT_PROGRAM_IDS,
     PROJECT_ENGAGEMENT_GROUPS,
     SUBREGION_ENGAGEMENT_DIMENSIONS,
     SUBREGION_ENGAGEMENT_GROUPS,
@@ -92,8 +93,15 @@ def _group_enrollments_by_dimension(enrollments: pd.DataFrame) -> dict:
     PROJECT_ENGAGEMENT_GROUPS dimension, computed once per builder call (not
     per period) since the ProjectTypeCode filter itself doesn't depend on
     which period is being built — only the date-overlap check in
-    _project_engagement_category does."""
-    return {dim: enrollments[enrollments["ProjectTypeCode"].isin(codes)] for dim, codes in PROJECT_ENGAGEMENT_GROUPS.items()}
+    _project_engagement_category does. Dimensions in
+    PROJECT_ENGAGEMENT_PROGRAM_IDS are further limited to those ProgramIDs."""
+    groups = {}
+    for dim, codes in PROJECT_ENGAGEMENT_GROUPS.items():
+        subset = enrollments[enrollments["ProjectTypeCode"].isin(codes)]
+        if dim in PROJECT_ENGAGEMENT_PROGRAM_IDS:
+            subset = subset[subset["ProgramID"].isin(PROJECT_ENGAGEMENT_PROGRAM_IDS[dim])]
+        groups[dim] = subset
+    return groups
 
 
 def _subregion_engagement_category(period_df: pd.DataFrame, group_events: tuple, period_start, period_end) -> pd.Series:

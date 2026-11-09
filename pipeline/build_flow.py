@@ -1,6 +1,7 @@
 """Builds dashboard_flow_monthly: one row per (month, population_segment,
 dimension, category, flow_type). Sourced from episode_systemwide (inflow,
-outflow, active/status, CE) joined to episode_ce for CE dates.
+outflow, active/status). CE engagement is the project_engaged_ce dimension
+(see PROJECT_ENGAGEMENT_GROUPS), not a separate flow_type.
 """
 import pandas as pd
 
@@ -601,7 +602,7 @@ def _partition_counts_by_category(partition: dict, cat_series: pd.Series, catego
     return bucket_counts, pair_counts
 
 
-def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
     """episodes: episode_systemwide rows scoped to the export window, with
     the race_*/gender_* rollup columns already joined in from
     Client_Demographics. May additionally carry one lookback month before
@@ -714,13 +715,6 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
         month_df = month_df.assign(
             **{DIMENSION_COLUMNS[dim]: month_df["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
         )
-        ce_active_ids = set(
-            episode_ce.loc[
-                (episode_ce["CEEntryDate"] <= month)
-                & (episode_ce["CEExitDate"].isna() | (episode_ce["CEExitDate"] > month)),
-                "PersonalID",
-            ]
-        )
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(month_df, pop_label, month)
@@ -759,11 +753,6 @@ def build_flow_rows(episodes: pd.DataFrame, episode_ce: pd.DataFrame, enrollment
                 ]:
                     matched = active_df[active_df["LastShelterStatusInTimeframe"] == status]
                     _emit(rows, month, segment_key, dimension, flow_type, _count_by_category(matched, dimension, categories))
-
-                ce_engaged = active_df[active_df["PersonalID"].isin(ce_active_ids)]
-                ce_not_engaged = active_df[~active_df["PersonalID"].isin(ce_active_ids)]
-                _emit(rows, month, segment_key, dimension, "active_ce_engaged", _count_by_category(ce_engaged, dimension, categories))
-                _emit(rows, month, segment_key, dimension, "active_not_ce_engaged", _count_by_category(ce_not_engaged, dimension, categories))
 
             # Individual-level partition for the sankey/KPI cards (see
             # _partition_by_individual). Kept separate from the dimension

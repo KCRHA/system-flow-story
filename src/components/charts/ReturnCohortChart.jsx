@@ -8,7 +8,7 @@ const REMAINED_HOUSED_COLOR = "var(--chart-2)";
 // A cohort can have plenty of exits (n_exited, this row's own suppression
 // key) while still having a too-small-to-publish number of returns —
 // return_suppression_marker covers that independently of suppression_marker
-// (see pipeline/suppression.py's suppress_small_secondary_count). The bar
+// (see pipeline/suppression.py's apply_return_count_suppression). The bar
 // still shows the true exited total, just as one undifferentiated segment
 // instead of the returned/remained split.
 const UNKNOWN_SPLIT_COLOR = "var(--gray-mid)";

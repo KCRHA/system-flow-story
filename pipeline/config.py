@@ -165,6 +165,15 @@ PROJECT_ENGAGEMENT_GROUPS = {
 }
 PROJECT_ENGAGEMENT_DIMENSIONS = list(PROJECT_ENGAGEMENT_GROUPS)
 
+# project_engaged_ce counts CESP enrollments only (the CE priority pool, same
+# IDs as Episode_CE.ipynb's CESP_PROGRAM_IDS), not every ProjectTypeCode 14
+# project — confirmed with the dashboard owner (2026-11-09). A dimension
+# listed here keeps only enrollments in these ProgramIDs, on top of its
+# ProjectTypeCode filter above.
+PROJECT_ENGAGEMENT_PROGRAM_IDS = {
+    "project_engaged_ce": {"4213", "4240", "4244"},
+}
+
 # --- Subregion engagement (dashboard_flow_monthly "engaged_in_subregion_*"
 # dimensions) ---
 # Like PROJECT_ENGAGEMENT_GROUPS immediately above, these 7 groups are
@@ -359,10 +368,6 @@ CAPACITY_PROJECT_TYPE_GROUPS = {
     "es": [0, 1, 8],  # ES entry/exit + ES night-by-night + Safe Haven
     "rrh": [13],
 }
-
-# --- Coordinated Entry program IDs (episode_ce / CEActive) ---
-CE_PROGRAM_IDS = {"4213", "4240", "4244"}  # HUD ProjectTypeCode 14
-
 
 def get_export_window(today: date | None = None) -> tuple[date, date]:
     """Rolling window: last 5 completed calendar years, plus completed months

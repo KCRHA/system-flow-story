@@ -21,8 +21,8 @@ One row per `(month, population_segment, dimension, category, flow_type)`.
 | column | notes |
 |---|---|
 | `month` | first of month |
-| `population_segment` | `all_population`, `yya`, `chronic`, `single_adults`, `veterans`, `family` — segments are allowed to overlap (e.g. a chronic veteran, or a YYA household that's also a family); each is its own independent filter over the same people, not a mutually-exclusive bucket |
-| `dimension` | `overall` · `race_aian`, `race_asian`, `race_black`, `race_nhpi`, `race_white`, `race_hl`, `race_mena`, `race_multiracial` · `gender_identity`, `gender_alignment` · `household_type` · `age_category` — see below |
+| `population_segment` | `all_population`, `yya`, `seniors`, `chronic`, `single_adults`, `veterans`, `family` — segments are allowed to overlap (e.g. a chronic veteran, or a YYA household that's also a family); each is its own independent filter over the same people, not a mutually-exclusive bucket |
+| `dimension` | `overall` · `race_aian`, `race_asian`, `race_black`, `race_nhpi`, `race_white`, `race_hl`, `race_mena`, `race_multiracial` · `gender_identity`, `gender_alignment` · `household_type` · `age_category` · `last_known_subregion` · `unsheltered_in_period` · `project_engaged_es`, `project_engaged_so`, `project_engaged_housing`, `project_engaged_th`, `project_engaged_ce` · `engaged_in_subregion_east`, `engaged_in_subregion_north`, `engaged_in_subregion_seattle`, `engaged_in_subregion_snoqualmie`, `engaged_in_subregion_south`, `engaged_in_subregion_southeast` — see below |
 | `category` | value within that dimension; `Overall` when `dimension = overall` |
 | `flow_type` | see enum below |
 | `inflow_bucket` / `outflow_bucket` | only present on `indiv_flow_*` rows (see below) — the two bucket keys that flow_type encodes, broken into their own columns so the suppression pipeline can group "every cell sharing this row" / "every cell sharing this column" without parsing the flow_type string |
@@ -33,11 +33,16 @@ The 8 `race_*` dimensions are each their own independent binary dimension (`Incl
 
 `household_type` and `age_category` are episode-scoped (a person's household composition, or age tier at episode start, can differ between two of their own episodes), unlike the other dimensions, which are person-level constants from `client_demographics`. That distinction matters for one thing: the `indiv_*`/`indiv_flow_*` flow_types below (which rely on a single static category per person) are never broken out by these two dimensions — they're only ever emitted under `overall` and the remaining (person-level) dimensions.
 
+`unsheltered_in_period`, `project_engaged_*` and `engaged_in_subregion_*` are binary (`Included` / `Not Included`) and resolved fresh for each period (month, quarter or year) — "did this happen at any point in the period," not a fixed per-person value. Like `race_*`, the `project_engaged_*` and `engaged_in_subregion_*` dimensions overlap (someone can use Street Outreach and Emergency Shelter in the same month), so each is its own dimension.
+
+- `unsheltered_in_period`: any of the person's episode rows in the period had last shelter status `Unsheltered`.
+- `project_engaged_*`: the person had an `All_Program_Enrollments` enrollment overlapping any part of the period, in that group's HUD project types — ES (Entry/Exit, Night-by-Night, Safe Haven), SO, Housing Programs (PSH, RRH, PH-Housing Only, PH-Housing with Services) or TH. `project_engaged_ce` is the exception: it counts **CESP enrollments only** (program IDs 4213, 4240, 4244 — the CE priority pool), not every Coordinated Entry project. The frontend's "Project Type Engagement" filter maps onto these five.
+- `engaged_in_subregion_*`: the person had a `ClientStatus = Homeless` event in the period at a program located in that subregion. Pierce County and Urban Unincorporated programs are excluded.
+
 `flow_type` values:
 - **Inflow** (per-episode events): `newly_homeless`, `return_from_housed`, `return_from_inactive`
 - **Outflow** (per-episode events): `permanently_housed`, `inactive`, `deceased`
-- **Active / status**: `active_total`, `unsheltered`, `sheltered`, `temporarily_housed`, `active_ce_engaged`, `active_not_ce_engaged`
-- **Resource access**: `resource_{type}_engaged` / `_newly_enrolled` / `_exited` for `type` in `outreach`, `emergency_shelter`, `transitional_housing`, `rapid_rehousing`, `psh`, `prevention`
+- **Active / status**: `active_total`, `unsheltered`, `sheltered`, `temporarily_housed` (all "active as of month end"). CE engagement is the `project_engaged_ce` dimension above, not a flow_type.
 - **Distinct-person total**: `experienced_homelessness` — everyone who touched the system at all that month, including someone who arrived and exited within the same month (unlike `active_total`, which is "active as of month end")
 - **Individual partition** (`indiv_*`): every person who experienced homelessness that month is assigned to exactly one inflow bucket and exactly one outflow bucket — `indiv_already_active`, `indiv_newly_homeless`, `indiv_return_from_housed`, `indiv_return_from_inactive` (inflow buckets, sum to `experienced_homelessness`) and `indiv_still_active`, `indiv_aged_out`, `indiv_permanently_housed`, `indiv_inactive`, `indiv_deceased` (outflow buckets, also sum to `experienced_homelessness`). Unlike the per-episode inflow/outflow counts above (which the same person can contribute to more than once in a month), this is a true one-bucket-per-person partition — built for the sankey and KPI cards, which represent individuals, not episodes. `indiv_aged_out` is always 0 outside the `yya` segment; it captures someone dropping out of YYA tracking mid-episode with no HMIS inflow/outflow event of its own.
 - **Individual cross-tab** (`indiv_flow_{inflow_bucket}_to_{outflow_bucket}`): the per-person pairing of the two buckets above (all 4 × 5 = 20 combinations) — e.g. "of the people newly homeless this month, how many were still active vs. permanently housed by month's end." Powers the sankey's actual links. These rows also carry `inflow_bucket`/`outflow_bucket` columns (see the table above).
@@ -59,32 +64,36 @@ One row per `(exit_quarter, population_segment, dimension, category)`. A permane
 | column | notes |
 |---|---|
 | `n_exited` | cohort size (denominator); `suppression_marker` set if <11 |
-| `n_returned` | how many returned within the window; null when `suppression_marker` is set |
-| `pct_returned` | null if suppressed *or* if `window_complete = false` |
+| `n_returned` | how many returned within the window; null when `suppression_marker` or `return_suppression_marker` is set |
+| `pct_returned` | null if either marker is set *or* if `window_complete = false` |
+| `return_suppression_marker` | suppression for `n_returned` on its own, since a cohort can have plenty of exits but only a handful of returns. `"*"`, `"**"` or `"insufficient_population"`, same meanings as `suppression_marker`; only set on rows whose `suppression_marker` is null. Gets the same primary, secondary and cross-dimension passes as the main count. When set, the frontend still shows `n_exited` but withholds the returned/remained split |
 | `window_complete` | false for exit quarters less than 6 months old — those cohorts haven't had time to fully mature, so their return rate isn't yet accurate. The frontend excludes these entirely rather than showing a partial/misleading rate; the chart only ever shows the most recent 8 quarters (2 years) that *are* complete. |
 
 The chart itself (`ReturnCohortChart.jsx`) is a stacked bar per exit quarter: total bar height is `n_exited`, split into a "returned" segment (`n_returned`) and a "remained housed" segment (`n_exited - n_returned`), each labeled with its percent share — so the exit volume, the split, and the exact rate are all visible in one bar.
 
 ### `dashboard_capacity_monthly.json`
 
-One row per `(month, project_type)`, `project_type` in `ph`, `th`, `es`, `rrh`. **Not suppressed** — this is aggregate program inventory data, not person-level counts.
+One row per `(month, project_type, subregion)`, `project_type` in `ph`, `th`, `es`, `rrh`. `subregion` is `Overall` plus each of the 6 King County subregions, by program location (Pierce County, Urban Unincorporated and ungeocoded programs count only toward `Overall`). Inventory figures (units, beds, utilization) are never suppressed. Household counts are: every row sharing `(period, project_type)` is one sibling group for primary and secondary suppression, since the subregion rows sum to `Overall`.
 
 | column | notes |
 |---|---|
 | `units_in_system` | household capacity — the default measure throughout this dashboard |
-| `throughput_hh_per_unit` | households enrolled per unit in the period |
+| `enrolled` | households enrolled in the period; null when `enrolled_suppression_marker` is set |
+| `throughput_hh_per_unit` | households enrolled per unit in the period; null when `enrolled` is suppressed |
 | `pct_utilization` | unit-nights used / unit-nights available |
 | `beds_in_system` | individual-person capacity — a secondary reference figure only; not interchangeable with units |
+| `bed_pct_utilization` | bed-nights used / bed-nights available |
+| `enrolled_suppression_marker` | `"*"`, `"**"` or `"insufficient_population"` (the whole group was already blank, with nothing left to hide behind — e.g. one small TH program in one quarter) |
 
 ### `dashboard_capacity_quarterly.json`
 
-One row per `(quarter, project_type)`, feeding the Utilization chart's trailing 3-year (12-quarter) trend. **Not suppressed**, same rationale as the monthly table above. Same columns as `dashboard_capacity_monthly.json`, sourced from `program_performance_metrics`'s own `TimePeriod = 'Quarter'` rows rather than summed from the `'Month'` rows above — `UnitNightsUsed`/`AvailableDenominator` are per-night counts with no double-counting risk from summing either way, but the source's native quarterly rows are used for consistency with the yearly Turnover table.
+One row per `(quarter, project_type, subregion)`, feeding the Utilization chart's trailing 3-year (12-quarter) trend. Suppressed the same way as the monthly table above. Same columns as `dashboard_capacity_monthly.json`, sourced from `program_performance_metrics`'s own `TimePeriod = 'Quarter'` rows rather than summed from the `'Month'` rows above — `UnitNightsUsed`/`AvailableDenominator` are per-night counts with no double-counting risk from summing either way, but the source's native quarterly rows are used for consistency with the yearly Turnover table.
 
 Both this table and the monthly one only include periods where `TimePeriodEndDate < as_of` (today, at export time) — filtered on each row's own end date, not the export window's start/end cutoff. That window cutoff is scoped by `TimePeriodStartDate` at monthly granularity, so it correctly excludes the current in-progress *month*, but doesn't generalize to longer grains: a quarter/year "starting" within the safe window can still extend well past today (confirmed this let an in-progress quarter — units_in_system etc. only reflecting its first month so far — into the export). Yearly deliberately does *not* get this filter — the current year is intentionally included there, labeled "year to date" by the frontend's Year selector.
 
 ### `dashboard_capacity_yearly.json`
 
-One row per `(year, project_type)`, feeding the Turnover chart's percent-exited and households-per-unit metrics. **Not suppressed**, same rationale as the monthly table above.
+One row per `(year, project_type, subregion)`, feeding the Turnover chart's percent-exited and households-per-unit metrics. `enrolled`, `exited` and `active` are each suppressed independently, the same way as the monthly table's `enrolled`, with their own `enrolled_suppression_marker` / `exited_suppression_marker` / `active_suppression_marker`. `households_per_unit` and `people_per_bed` are nulled when `active` is suppressed, and `pct_exited` when `exited` or `active` is.
 
 Sourced from `program_performance_metrics`'s own `TimePeriod = 'Year'` rows — deliberately *not* derived by summing the `'Month'` rows the table above uses. `EnrolledDuringTimeframe`/`ExitedDuringTimeframe` are monthly snapshots (a household enrolled across a multi-month stay is counted again in every month of it), so summing them would overcount relative to a true annual headcount; the source table's own Year-grain rows are already a correctly deduplicated once-per-household-per-year count.
 
@@ -93,6 +102,7 @@ Sourced from `program_performance_metrics`'s own `TimePeriod = 'Year'` rows — 
 | `enrolled` / `exited` / `active` | raw annual counts, for reference. `enrolled` (`EnrolledDuringTimeframe`) runs lower than `active` (`ActiveEnrollmentsInTimeframe`) and isn't used to derive either metric below — confirmed `active = exited + ActiveAtEndOfTimeframe` (holds for 5369/5372 program-years checked), i.e. `active` is the true "touched this project at any point in the year" headcount, while `enrolled` is some narrower count (e.g. new enrollments only) that let `pct_exited` exceed 100% when used as the denominator |
 | `pct_exited` | `exited / active` — share of everyone active at any point that year who also exited within it (vs. still active at year-end). Structurally bounded to `[0, 1]`; null if `active = 0` |
 | `households_per_unit` | `active / units_in_system` — e.g. one Emergency Shelter unit with ~2-month average stays reads as ~6/year; null if `units_in_system = 0` |
+| `people_per_bed` | `active / beds_in_system` |
 
 ## Suppression (`pipeline/suppression.py`)
 
@@ -138,19 +148,29 @@ would additionally guard against here.
    (not as two independent passes), so a rare category claimed as one row's
    secondary pick doesn't leave its own column with nothing left to hide
    behind.
-4. **Race cross-dimension suppression** (`apply_race_crossdim_suppression`)
-   — the 8 `race_*` dimensions are deliberately not mutually exclusive (see
-   the data contract above), so two individually-safe, above-threshold
-   "Included" counts from two different race dimensions, plus the scope's
-   own published `overall` total, can jointly lower-bound the population
-   Included in *both* via inclusion-exclusion (`count_A + count_B - total`)
-   — a number nobody decided to publish, which can land under the
-   suppression threshold even though every contributing cell looks safe on
-   its own. When that happens, both categories of one of the two violating
-   dimensions are suppressed together for that scope (suppressing only the
-   `Included` cell would hand the value right back via its own `Not
-   Included` sibling and the known total).
-5. **Insufficient-population fallback** (`apply_insufficient_population_fallback`)
+4. **Cross-dimension suppression** (`apply_race_crossdim_suppression`)
+   — the 8 `race_*` dimensions, the 5 `project_engaged_*` dimensions and
+   the 6 `engaged_in_subregion_*` dimensions are deliberately not mutually
+   exclusive (see the data contract above), so two individually-safe,
+   above-threshold "Included" counts from two different overlapping
+   dimensions, plus the scope's own published `overall` total, can jointly
+   lower-bound the population Included in *both* via inclusion-exclusion
+   (`count_A + count_B - total`) — a number nobody decided to publish,
+   which can land under the suppression threshold even though every
+   contributing cell looks safe on its own. All three families are checked
+   as one combined list, so a race-vs-project pair is caught too, not just
+   pairs within one family. When a pair violates, both categories of one of
+   the two dimensions are suppressed together for that scope (suppressing
+   only the `Included` cell would hand the value right back via its own
+   `Not Included` sibling and the known total).
+5. **Return-count suppression** (`dashboard_return_cohorts`' `n_returned`)
+   — `n_returned` can be small even when `n_exited` is well above
+   threshold, so it gets its own primary, secondary and cross-dimension
+   passes (rules 1, 2 and 4), tracked in `return_suppression_marker`
+   instead of `suppression_marker`. A row whose `n_exited` is already
+   hidden counts as a hidden sibling, and `pct_returned` is blanked along
+   with `n_returned`.
+6. **Insufficient-population fallback** (`apply_insufficient_population_fallback`)
    — a small population segment crossed with a low-cardinality dimension
    (e.g. `gender_alignment`'s 3 categories) can leave a group needing
    secondary suppression with no visible sibling cell left to hide behind at
@@ -160,7 +180,11 @@ would additionally guard against here.
    blanked together and marked `"insufficient_population"`. The frontend
    shows a dedicated "population too small to display" message for this
    marker rather than routing it through the ordinary `"*"`/`"**"` display.
-6. **Validation gate** (`suppression.validate()` / `validate_crosstab()`) —
+   `n_returned` and the capacity household counts get the same fallback for
+   their own groups. There it can only trigger when every count in the
+   group is already hidden, so it relabels those rows rather than hiding
+   anything new — it just keeps that group from failing the whole export.
+7. **Validation gate** (`suppression.validate()` / `validate_crosstab()`) —
    the pipeline exits non-zero if any exported row needed secondary
    suppression but didn't get it, or has a marker with a non-null count.
    This is a hard gate: the exported JSON is publicly fetchable and
@@ -185,15 +209,14 @@ Sourced from Azure Synapse (`rha-bnl-prod.sql.azuresynapse.net` / `rhabnl`) via 
 - `config.py` — thresholds, population-segment/dimension enums, the rolling export window (last 5 completed calendar years + completed months of the current year, recomputed every run), the HUD `ProjectTypeCode` → `ph`/`th`/`es`/`rrh` rollup.
 - `connection.py` — thin wrapper around `team_custom_modules.remote_connections.RemoteDataConn` for Synapse access, so pipeline scripts never import the vendored module directly.
 - `demographics.py` — derives the person-level `race_*`/`gender_identity`/`gender_alignment` rollup columns from `client_demographic`'s raw multi-select flags (`RaceAndEthnicity_*`, `GenderExpanded`), since none of those distinctions survive in the plain summary columns HMIS otherwise exposes.
-- `population.py` — population-segment filters (`all_population`, `yya`, `chronic`, `single_adults`, `veterans`, `family`), ported from `BFZ_Monthly_Report`'s `filter_population()`; a separate enrollment-level variant covers the `resource_*` flow types below, since `all_program_enrollments` carries different column names for the same concepts.
-- `build_flow.py` — `build_flow_rows`/`build_flow_yearly_rows`/`build_flow_quarterly_rows`, built from `episode_systemwide` + `episode_ce`, joined to `client_demographics`. Also builds the `indiv_*`/`indiv_flow_*` individual-partition rows that power the sankey and KPI cards.
+- `population.py` — population-segment filters (`all_population`, `yya`, `seniors`, `chronic`, `single_adults`, `veterans`, `family`), ported from `BFZ_Monthly_Report`'s `filter_population()`.
+- `build_flow.py` — `build_flow_rows`/`build_flow_yearly_rows`/`build_flow_quarterly_rows`, built from `episode_systemwide`, joined to `client_demographics`, with `all_program_enrollments` for the `project_engaged_*` dimensions and `event_systemwide` for the `engaged_in_subregion_*` dimensions. Also builds the `indiv_*`/`indiv_flow_*` individual-partition rows that power the sankey and KPI cards.
 - `build_length.py`, `build_return_cohorts.py` — same source tables as above.
-- `build_flow.build_resource_access_rows()` (the `resource_*` flow types) — built from `all_program_enrollments` (one row per enrollment span, `ProjectStartDate`..`ProjectExitDate`, `ProjectTypeCode`), also joined to `client_demographics`. This table has no monthly grain of its own, so engaged/newly-enrolled/exited are derived by checking each month in the export window against every enrollment's date span.
 - `build_capacity.py` — built from `program_performance_metrics` (`TimePeriod = 'Month'` / `'Quarter'` / `'Year'`) + `program_attributes`.
 - `suppression.py` — see above.
 - `export.py` — orchestrates the above and writes `public/data/dashboard_*.json`.
 
-Every source table and column name above (`episode_systemwide`, `episode_ce`, `client_demographics`, `all_program_enrollments`, `program_performance_metrics`, `program_attributes`) was confirmed directly against the actual `DataHubDevelopment` notebook code, not the old methodology deck.
+Every source table and column name above (`episode_systemwide`, `client_demographics`, `all_program_enrollments`, `program_performance_metrics`, `program_attributes`) was confirmed directly against the actual `DataHubDevelopment` notebook code, not the old methodology deck.
 
 ### Running the pipeline locally
 

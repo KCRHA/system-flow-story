@@ -66,13 +66,16 @@ RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
 CROSSDIM_OVERLAP_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS, *SUBREGION_ENGAGEMENT_DIMENSIONS]
 from .demographics import compute_gender_rollups, compute_race_rollups
 from .suppression import (
+    INSUFFICIENT_POPULATION_MARKER,
     TRUE_COUNT_COL,
+    _group_keys,
+    _violating_groups,
+    apply_return_count_suppression,
     apply_crosstab_secondary_suppression,
     apply_full_suppression_pipeline,
     apply_insufficient_population_fallback,
     apply_race_crossdim_suppression,
     apply_sankey_marginal_suppression,
-    suppress_small_secondary_count,
     validate,
     validate_crosstab,
     validate_sankey_marginal,
@@ -192,11 +195,22 @@ def _suppress_capacity_household_count(df: pd.DataFrame, period_col: str, count_
     f"{count_col}_suppression_marker" column rather than the shared
     "suppression_marker" name apply_full_suppression_pipeline writes —
     enrolled/exited/active each need independent suppression state on the
-    same row, same reasoning as suppress_small_secondary_count's own
+    same row, same reasoning as apply_return_count_suppression's own
     marker_col — plus this column's own validate() violations, for the
     caller to fold into the pipeline's usual hard gate."""
     group_cols = [period_col, "project_type"]
     df = apply_full_suppression_pipeline(df, group_cols=group_cols, count_col=count_col)
+    # A group only fails validate() when none of its rows is left visible to
+    # hide as a secondary — e.g. a quarter with one TH program, where
+    # "Overall" and that program's subregion are the same small number.
+    # Every count in it is already blank, so marking the group
+    # insufficient_population (which validate() accepts as protection)
+    # hides nothing new; it just stops that group failing the whole export.
+    unresolved = _violating_groups(df, group_cols)
+    if len(unresolved):
+        in_unresolved = _group_keys(df, group_cols).isin(unresolved)
+        df.loc[in_unresolved, "suppression_marker"] = INSUFFICIENT_POPULATION_MARKER
+        df.loc[in_unresolved, count_col] = None
     violations = validate(df, group_cols=group_cols, count_col=count_col)
     marker_col = f"{count_col}_suppression_marker"
     df = df.rename(columns={"suppression_marker": marker_col}).drop(columns=[TRUE_COUNT_COL], errors="ignore")
@@ -320,11 +334,6 @@ def main():
     # keeps using episodes_in_window.
     episodes_with_lookback = _scope_to_window(all_episodes, "TimePeriodStartDate", month_before(start), end)
 
-    episode_ce = connection.query(conn, "SELECT PersonalID, CEEntryDate, CEExitDate FROM episode_ce")
-    t = _checkpoint("fetch episode_ce", t)
-    episode_ce["CEEntryDate"] = pd.to_datetime(episode_ce["CEEntryDate"])
-    episode_ce["CEExitDate"] = pd.to_datetime(episode_ce["CEExitDate"])
-
     # Narrowed to the columns build_capacity.py actually reads — same
     # static-analysis caveat as the queries above.
     # TimePeriodStartDate range pushed into the query — this is the exact
@@ -376,7 +385,7 @@ def main():
     enrollments = connection.query(
         conn,
         f"""
-        SELECT PersonalID, ProjectStartDate, ProjectExitDate, ProjectTypeCode
+        SELECT PersonalID, ProgramID, ProjectStartDate, ProjectExitDate, ProjectTypeCode
         FROM all_program_enrollments
         WHERE ProjectExitDate IS NULL OR ProjectExitDate >= '{start.isoformat()}'
         """,
@@ -384,6 +393,8 @@ def main():
     t = _checkpoint("fetch all_program_enrollments", t)
     enrollments["ProjectStartDate"] = pd.to_datetime(enrollments["ProjectStartDate"])
     enrollments["ProjectExitDate"] = pd.to_datetime(enrollments["ProjectExitDate"])
+    # String, to match PROJECT_ENGAGEMENT_PROGRAM_IDS (project_engaged_ce's CESP filter).
+    enrollments["ProgramID"] = enrollments["ProgramID"].astype("string")
     # Same text-label-vs-numeric-code mismatch as program_attributes above.
     enrollments["ProjectTypeCode"] = enrollments["ProjectTypeCode"].map(PROJECT_TYPE_CODE_TEXT_TO_HUD)
 
@@ -409,7 +420,7 @@ def main():
     # the rows this pipeline can possibly use, instead of this table's
     # entire history.
     # TODO: confirm "event_systemwide" is this table's exact Synapse name
-    # (by analogy with episode_systemwide/episode_ce/program_attributes/
+    # (by analogy with episode_systemwide/program_attributes/
     # all_program_enrollments' own naming convention) the same way
     # client_demographic's own name was confirmed against
     # INFORMATION_SCHEMA.TABLES — not yet verified live against Synapse.
@@ -446,7 +457,7 @@ def main():
     t = _checkpoint("build_month_population_cache", t)
 
     # --- dashboard_flow_monthly ---
-    flow_df = build_flow_rows(episodes_with_lookback, episode_ce, enrollments, events, window_start=pd.Timestamp(start))
+    flow_df = build_flow_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
     t = _checkpoint("build_flow_rows", t)
 
     flow_df = apply_full_suppression_pipeline(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
@@ -710,11 +721,19 @@ def main():
     return_df.loc[return_df["suppression_marker"].notna(), "pct_returned"] = None
     # n_exited being above threshold doesn't mean n_returned is — a cohort
     # can have plenty of exits but only a handful who returned. Suppressed
-    # independently, row-local (see suppress_small_secondary_count) so a
-    # well-populated row isn't hidden entirely just because this one
-    # derived count is small; the frontend shows the exited total with the
-    # return split marked as withheld instead.
-    return_df = suppress_small_secondary_count(return_df, count_col="n_returned", marker_col="return_suppression_marker", extra_cols=["pct_returned"])
+    # independently (see apply_return_count_suppression) so a well-populated
+    # row isn't hidden entirely just because this one derived count is
+    # small; the frontend shows the exited total with the return split
+    # marked as withheld instead.
+    return_df, return_count_violations = apply_return_count_suppression(
+        return_df,
+        group_cols=["exit_quarter", "population_segment", "dimension"],
+        count_col="n_returned",
+        marker_col="return_suppression_marker",
+        extra_cols=["pct_returned"],
+        crossdim_dimensions=CROSSDIM_OVERLAP_DIMENSIONS,
+    )
+    return_violations += return_count_violations
     t = _checkpoint("return_df suppression+validate", t)
 
     # --- dashboard_capacity_monthly / _quarterly / _yearly (aggregate

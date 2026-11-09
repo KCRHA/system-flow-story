@@ -261,37 +261,80 @@ def _violating_groups(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
 
 
 @_timed
-def suppress_small_secondary_count(
-    df: pd.DataFrame, count_col: str, marker_col: str, extra_cols: list[str] = ()
-) -> pd.DataFrame:
-    """Row-local primary suppression for a derived count that's independently
-    small-cell-risky from whatever the table's own `suppression_marker`
-    already protects — e.g. dashboard_return_cohorts' n_returned, which can
-    be small even when n_exited (the row's main suppression key) is well
-    above threshold: plenty of people can exit to permanent housing in a
-    quarter while only a handful of them return.
+def apply_return_count_suppression(
+    df: pd.DataFrame,
+    group_cols: list[str],
+    count_col: str,
+    marker_col: str,
+    extra_cols: list[str] = (),
+    crossdim_dimensions: list[str] = (),
+) -> tuple[pd.DataFrame, list[str]]:
+    """Primary and secondary suppression for a derived count that's
+    independently small-cell-risky from whatever the table's own
+    `suppression_marker` already protects — e.g. dashboard_return_cohorts'
+    n_returned, which can be small even when n_exited (the row's main
+    suppression key) is well above threshold: plenty of people can exit to
+    permanent housing in a quarter while only a handful of them return.
 
-    No complementary/secondary suppression needed here, unlike the rest of
-    this module — that machinery exists because a suppressed value could
-    otherwise be back-computed from a visible sibling category or group
-    total published elsewhere. `count_col` has no such sibling: nothing
-    else in the export publishes "the complement of n_returned" (e.g. a
-    separate remained-housed count), so nulling it directly removes the
-    only place that number appears. A single below-threshold nonzero value
-    is marked and blanked; `extra_cols` (e.g. a percentage derived from it)
-    are blanked alongside it.
+    `count_col` needs the same complementary protection as every other
+    count here: each dimension's categories sum to the "overall" row, so a
+    lone hidden value is recoverable by subtraction. Run AFTER the table's
+    main suppression, with `count_col` already nulled on every row carrying
+    a `suppression_marker` — those rows count as hidden siblings, so a group
+    that already has one needs no further pick. `group_cols` is the same
+    list passed to apply_full_suppression_pipeline.
 
     Uses its own `marker_col`, separate from the table's `suppression_marker`
     — a row can have a perfectly safe-to-show n_exited while still needing
     this, so it shouldn't be forced to hide the whole row the way a
-    `suppression_marker` hit does.
+    `suppression_marker` hit does. `extra_cols` (e.g. a percentage derived
+    from `count_col`) are blanked alongside it.
+
+    `crossdim_dimensions` runs apply_race_crossdim_suppression on `count_col`
+    too, pass the same overlapping-dimension list the table's main count
+    got: two visible "Included" counts from overlapping dimensions plus the
+    visible overall can bound how many people are in both.
+
+    A group left with nothing visible to hide behind is marked
+    INSUFFICIENT_POPULATION_MARKER rather than reported as a violation —
+    see _suppress_capacity_household_count for why that hides nothing new.
+
+    Returns the suppressed df plus any violations, for the caller to fold
+    into the pipeline's usual hard gate.
     """
+    work = df.copy()
+    row_hidden = work["suppression_marker"].notna()
+    work[TRUE_COUNT_COL] = work[count_col]
+    work["suppression_marker"] = None
+    work.loc[row_hidden, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
+    is_primary = ~row_hidden & (work[count_col] > 0) & (work[count_col] < SUPPRESSION_THRESHOLD)
+    work.loc[is_primary, "suppression_marker"] = PRIMARY_SUPPRESSION_MARKER
+
+    if crossdim_dimensions:
+        work = apply_race_crossdim_suppression(work, group_cols=group_cols, race_dimensions=crossdim_dimensions, count_col=count_col)
+
+    eligible = work[work["dimension"] != "overall"]
+    unprotected = _violating_groups(eligible, group_cols)
+    if len(unprotected):
+        picks = _secondary_picks(eligible[_group_keys(eligible, group_cols).isin(unprotected)], group_cols)
+        work.loc[picks, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
+
+    eligible = work[work["dimension"] != "overall"]
+    unresolved = _violating_groups(eligible, group_cols)
+    if len(unresolved):
+        work.loc[eligible.index[_group_keys(eligible, group_cols).isin(unresolved)], "suppression_marker"] = INSUFFICIENT_POPULATION_MARKER
+
+    violations = []
+    for key in _violating_groups(work[work["dimension"] != "overall"], group_cols):
+        key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
+        violations.append(f"{count_col} group {key_dict} needs secondary suppression but has none")
+
     df = df.copy()
-    df[marker_col] = None
-    at_risk = df[count_col].notna() & (df[count_col] > 0) & (df[count_col] < SUPPRESSION_THRESHOLD)
-    df.loc[at_risk, marker_col] = PRIMARY_SUPPRESSION_MARKER
-    df.loc[at_risk, [count_col, *extra_cols]] = None
-    return df
+    # Rows already hidden by suppression_marker keep marker_col empty — the
+    # whole row is withheld, not just this count.
+    df[marker_col] = work["suppression_marker"].where(~row_hidden, None)
+    df.loc[df[marker_col].notna(), [count_col, *extra_cols]] = None
+    return df, violations
 
 
 def _pick_secondary(df: pd.DataFrame, group: pd.DataFrame, count_col: str) -> None:
