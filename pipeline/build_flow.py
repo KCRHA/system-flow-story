@@ -286,7 +286,11 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         # among people who genuinely are.
         prior_active_ids = set(prior_df.loc[~prior_df["_is_outflow_row"], "PersonalID"])
     else:
-        prior_active_ids = set()
+        # No earlier month exists at the start of episode_systemwide, so
+        # read the same fact off the period's first month: a row there that
+        # isn't its episode's first row means the episode was already open.
+        first_df = episodes[episodes["TimePeriodStartDate"] == months[0]]
+        prior_active_ids = set(first_df.loc[~first_df["_is_inflow_row"], "PersonalID"])
     # Intersected with this period's own people defensively — every
     # already-active person should already have a row in the period's
     # first month (their episode must still be open to have been active

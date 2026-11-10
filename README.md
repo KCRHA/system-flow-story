@@ -27,13 +27,13 @@ One row per `(month, population_segment, dimension, category, flow_type)`.
 | `flow_type` | see enum below |
 | `inflow_bucket` / `outflow_bucket` | only present on `indiv_flow_*` rows (see below) — the two bucket keys that flow_type encodes, broken into their own columns so the suppression pipeline can group "every cell sharing this row" / "every cell sharing this column" without parsing the flow_type string |
 | `count` | **null when `suppression_marker` is set** |
-| `suppression_marker` | `null` (not suppressed), `"*"` (primary — this cell's own count fell below 11), `"**"` (secondary/complementary — suppressed to prevent a `"*"` neighbor in the same group from being recovered by arithmetic), or `"insufficient_population"` (this whole (month, population_segment, dimension, category) scope was blanked because the group had nothing left to hide a suppressed cell behind — see Suppression, below) |
+| `suppression_marker` | `null` (not suppressed), `"*"` (primary — this cell's own count is 1-10), `"**"` (secondary/complementary — suppressed to prevent a `"*"` cell from being recovered by arithmetic; the true count can be any value: a nonzero cell is always preferred, but a zero is hidden as a last resort when nothing else is left), or `"insufficient_population"` (blanked because there was nothing safe left to show; the true count can be anything from 0 up — see Suppression, below) |
 
-The 8 `race_*` dimensions are each their own independent binary dimension (`Included` / `Not Included`), not 8 categories of one `race_ethnicity` dimension — a person can be `Included` in more than one at once (e.g. Black AND Hispanic/Latina/o), which a single overlapping dimension can't represent cleanly. The frontend's "Race / Ethnicity" filter is a virtual demographic type layered on top of these 8 (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), not a dimension that exists in the exported data itself. `age_category` isn't offered as a frontend filter for the `yya` population segment — everyone there already falls in the same one or two age tiers by definition.
+The 8 `race_*` dimensions are each their own independent binary dimension (`Included` / `Not Included`), not 8 categories of one `race_ethnicity` dimension — a person can be `Included` in more than one at once (e.g. Black AND Hispanic/Latina/o), which a single overlapping dimension can't represent cleanly. Only each one's `Included` row is exported: `Not Included` is dropped before suppression (the frontend never shows it, and published next to `Overall` it would hand back `Included` by subtraction). The frontend's "Race / Ethnicity" filter is a virtual demographic type layered on top of these 8 (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), not a dimension that exists in the exported data itself. `age_category` isn't offered as a frontend filter for the `yya` population segment — everyone there already falls in the same one or two age tiers by definition.
 
 `household_type` and `age_category` are episode-scoped (a person's household composition, or age tier at episode start, can differ between two of their own episodes), unlike the other dimensions, which are person-level constants from `client_demographics`. That distinction matters for one thing: the `indiv_*`/`indiv_flow_*` flow_types below (which rely on a single static category per person) are never broken out by these two dimensions — they're only ever emitted under `overall` and the remaining (person-level) dimensions.
 
-`unsheltered_in_period`, `project_engaged_*` and `engaged_in_subregion_*` are binary (`Included` / `Not Included`) and resolved fresh for each period (month, quarter or year) — "did this happen at any point in the period," not a fixed per-person value. Like `race_*`, the `project_engaged_*` and `engaged_in_subregion_*` dimensions overlap (someone can use Street Outreach and Emergency Shelter in the same month), so each is its own dimension.
+`unsheltered_in_period`, `project_engaged_*` and `engaged_in_subregion_*` are binary (`Included` / `Not Included`) and resolved fresh for each period (month, quarter or year) — "did this happen at any point in the period," not a fixed per-person value. Like `race_*`, the `project_engaged_*` and `engaged_in_subregion_*` dimensions overlap (someone can use Street Outreach and Emergency Shelter in the same month), so each is its own dimension, and like `race_*` only its `Included` row is exported. `unsheltered_in_period` doesn't overlap with anything and keeps both categories.
 
 - `unsheltered_in_period`: any of the person's episode rows in the period had last shelter status `Unsheltered`.
 - `project_engaged_*`: the person had an `All_Program_Enrollments` enrollment overlapping any part of the period, in that group's HUD project types — ES (Entry/Exit, Night-by-Night, Safe Haven), SO, Housing Programs (PSH, RRH, PH-Housing Only, PH-Housing with Services) or TH. `project_engaged_ce` is the exception: it counts **CESP enrollments only** (program IDs 4213, 4240, 4244 — the CE priority pool), not every Coordinated Entry project. The frontend's "Project Type Engagement" filter maps onto these five.
@@ -111,6 +111,13 @@ Applied at pipeline build time, never in the frontend. Suppressed counts are
 number, and that marker is the whole protection; there's nothing rounding
 would additionally guard against here.
 
+**Scope:** secondary suppression only protects a hidden number from being
+calculated out of the other categories in the same Demographic/Characteristic
+selection a reader sees (one dimension's categories, plus the sankey's own
+row, column and bucket totals within one category). Combining numbers across
+different selections (overlapping dimensions, or chaining one solved number
+into another relationship) is deliberately out of scope.
+
 1. **Primary threshold** — any *nonzero* cell with count under
    `SUPPRESSION_THRESHOLD` (11, HUD convention) is nulled and marked `"*"`.
    A true zero is never suppressed: it can't identify any specific person,
@@ -131,12 +138,13 @@ would additionally guard against here.
      suppressed cells with *different* true values are safe as-is — many
      splits of an unknown sum are possible, so no single value is forced.
 
-   The `"**"` mark lands on the next-smallest currently-visible category in
-   the group, never on a category that's already `"*"` — and prefers a
-   nonzero category over a zero one, since hiding a zero protects the
-   suppressed cell just as well arithmetically but there's no privacy
-   reason to ever hide one; a zero is only picked if it's the only visible
-   category left.
+   The `"**"` mark lands on the next-smallest currently-visible *nonzero*
+   category in the group, never on a category that's already `"*"`. A zero
+   is only picked as a last resort, when no visible nonzero category is
+   left (there's no privacy reason to hide one otherwise). A group
+   with only one category in it (e.g. `race_aian`, whose only exported
+   category is `Included`) never needs secondary suppression: there's no
+   other category to calculate it from.
 3. **Cross-tab secondary suppression** (`apply_crosstab_secondary_suppression`)
    — the `indiv_flow_*` cross-tab cells (see the flow_type enum above) aren't
    a dimension/category breakdown, so pass 2's grouping never sees them as
@@ -147,30 +155,21 @@ would additionally guard against here.
    `dimension`/`category`. Resolves both axes jointly within each period
    (not as two independent passes), so a rare category claimed as one row's
    secondary pick doesn't leave its own column with nothing left to hide
-   behind.
-4. **Cross-dimension suppression** (`apply_race_crossdim_suppression`)
-   — the 8 `race_*` dimensions, the 5 `project_engaged_*` dimensions and
-   the 6 `engaged_in_subregion_*` dimensions are deliberately not mutually
-   exclusive (see the data contract above), so two individually-safe,
-   above-threshold "Included" counts from two different overlapping
-   dimensions, plus the scope's own published `overall` total, can jointly
-   lower-bound the population Included in *both* via inclusion-exclusion
-   (`count_A + count_B - total`) — a number nobody decided to publish,
-   which can land under the suppression threshold even though every
-   contributing cell looks safe on its own. All three families are checked
-   as one combined list, so a race-vs-project pair is caught too, not just
-   pairs within one family. When a pair violates, both categories of one of
-   the two dimensions are suppressed together for that scope (suppressing
-   only the `Included` cell would hand the value right back via its own
-   `Not Included` sibling and the known total).
-5. **Return-count suppression** (`dashboard_return_cohorts`' `n_returned`)
+   behind. The sankey's bucket totals get the same treatment
+   (`apply_sankey_marginal_suppression`): the 4 inflow buckets and the 5
+   outflow buckets each add up to `experienced_homelessness`, for every
+   (dimension, category), since selecting a category shows that category's
+   own sankey.
+4. **Return-count suppression** (`dashboard_return_cohorts`' `n_returned`)
    — `n_returned` can be small even when `n_exited` is well above
-   threshold, so it gets its own primary, secondary and cross-dimension
-   passes (rules 1, 2 and 4), tracked in `return_suppression_marker`
-   instead of `suppression_marker`. A row whose `n_exited` is already
-   hidden counts as a hidden sibling, and `pct_returned` is blanked along
-   with `n_returned`.
-6. **Insufficient-population fallback** (`apply_insufficient_population_fallback`)
+   threshold, so it gets its own primary and secondary passes (rules 1
+   and 2), tracked in `return_suppression_marker` instead of
+   `suppression_marker`. A row whose `n_exited` is already hidden also
+   hides its `n_returned`, but that value can still be calculated from the
+   other categories, so it's judged by its own true value: 1-10 counts as
+   primary (a sibling gets hidden too), 11+ counts as protection already in
+   place. `pct_returned` is blanked along with `n_returned`.
+5. **Insufficient-population fallback** (`apply_insufficient_population_fallback`)
    — a small population segment crossed with a low-cardinality dimension
    (e.g. `gender_alignment`'s 3 categories) can leave a group needing
    secondary suppression with no visible sibling cell left to hide behind at
@@ -184,13 +183,19 @@ would additionally guard against here.
    their own groups. There it can only trigger when every count in the
    group is already hidden, so it relabels those rows rather than hiding
    anything new — it just keeps that group from failing the whole export.
-7. **Validation gate** (`suppression.validate()` / `validate_crosstab()`) —
-   the pipeline exits non-zero if any exported row needed secondary
-   suppression but didn't get it, or has a marker with a non-null count.
+6. **Validation gate** (`suppression.validate()` / `validate_crosstab()` /
+   `validate_sankey_marginal()`) — the pipeline exits non-zero if any
+   exported row needed secondary suppression but didn't get it, or has a
+   marker with a non-null count.
    This is a hard gate: the exported JSON is publicly fetchable and
    permanent once committed (a later commit can't erase what an earlier one
    exposed via git history), so a violation must fail the build, not just
    log a warning.
+
+**Pre-commit audit**: `python3 scripts/audit_suppression.py` re-checks the
+published JSON from a reader's point of view, independently of the pipeline
+code (exit 1 on any finding). Run it after every data refresh or manual
+update, before committing.
 
 **Frontend rendering**: a suppressed cell always shows its marker (`*` or
 `**`) in place of the number — never 0, never blank. 0 is a real, reportable

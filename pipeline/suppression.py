@@ -30,6 +30,16 @@ frontend:
      only picked when every other visible category is already spoken for
      (i.e. there's no nonzero option left).
 
+Scope: secondary suppression only protects a hidden cell from being
+calculated out of the other categories in the SAME selection a reader sees
+on the dashboard (one dimension's categories within one period, population
+segment and flow_type; plus the sankey's own row/column/bucket totals
+within one category). It deliberately does not guard against combining
+numbers across different selections (overlapping dimensions, or chaining
+one relationship's result into another). A group with only one category
+in it (e.g. race_aian once its "Not Included" row is dropped in export.py)
+never needs secondary suppression: there's nothing to calculate it from.
+
 No rounding is applied — secondary suppression is what prevents
 back-calculation, so there's nothing rounding would additionally protect
 against here.
@@ -76,7 +86,6 @@ run, since it's meant to resolve everything they'd otherwise catch.
 import time
 from datetime import datetime
 from functools import wraps
-from itertools import combinations
 
 import pandas as pd
 
@@ -170,7 +179,12 @@ def _groups_needing_secondary(df: pd.DataFrame, group_cols: list[str]) -> pd.Ind
         return pd.MultiIndex.from_arrays([[] for _ in group_cols]) if len(group_cols) > 1 else pd.Index([])
     stats = primary.groupby(group_cols, dropna=False)[TRUE_COUNT_COL].agg(["size", "nunique", "first"])
     needs_secondary = (stats["size"] == 1) | ((stats["size"] > 1) & (stats["nunique"] == 1) & stats["first"].isin([1, 10]))
-    return stats.index[needs_secondary]
+    # A group with only one member has no sibling to calculate it from
+    # (e.g. a race_* dimension, whose only published category is
+    # "Included"), so it never needs secondary suppression.
+    group_sizes = df.groupby(group_cols, dropna=False).size()
+    has_siblings = group_sizes.reindex(stats.index).fillna(0) > 1
+    return stats.index[needs_secondary & has_siblings.to_numpy()]
 
 
 def _group_keys(df: pd.DataFrame, group_cols: list[str]):
@@ -217,14 +231,16 @@ def _secondary_picks(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
     visible = visible[in_needing]
     visible_keys = visible_keys[in_needing]
 
-    # Restrict each group to nonzero-valued rows if it has any visible
-    # nonzero row at all, same "prefer hiding a nonzero cell" rule as
-    # _pick_secondary's own nonzero_visible/visible fallback.
+    # Prefer hiding a nonzero cell: restrict each group to its nonzero
+    # visible rows if it has any, and only fall back to hiding a zero when
+    # nothing else is left (a hidden zero protects the primary cell just as
+    # well, but there's no privacy reason to hide one otherwise). So "**"
+    # doesn't promise 11+; it can be any value, including 0.
     is_nonzero = visible[TRUE_COUNT_COL] > 0
     group_has_nonzero = is_nonzero.groupby(visible_keys).transform("any")
-    is_candidate = (~group_has_nonzero) | is_nonzero
-    candidates = visible[is_candidate.to_numpy()]
-    candidate_keys = visible_keys[is_candidate.to_numpy()]
+    is_candidate = ((~group_has_nonzero) | is_nonzero).to_numpy()
+    candidates = visible[is_candidate]
+    candidate_keys = visible_keys[is_candidate]
     if candidates.empty:
         return pd.Index([])
 
@@ -267,7 +283,6 @@ def apply_return_count_suppression(
     count_col: str,
     marker_col: str,
     extra_cols: list[str] = (),
-    crossdim_dimensions: list[str] = (),
 ) -> tuple[pd.DataFrame, list[str]]:
     """Primary and secondary suppression for a derived count that's
     independently small-cell-risky from whatever the table's own
@@ -280,20 +295,22 @@ def apply_return_count_suppression(
     count here: each dimension's categories sum to the "overall" row, so a
     lone hidden value is recoverable by subtraction. Run AFTER the table's
     main suppression, with `count_col` already nulled on every row carrying
-    a `suppression_marker` — those rows count as hidden siblings, so a group
-    that already has one needs no further pick. `group_cols` is the same
-    list passed to apply_full_suppression_pipeline.
+    a `suppression_marker`. `group_cols` is the same list passed to
+    apply_full_suppression_pipeline.
+
+    A row hidden by `suppression_marker` hides its `count_col` too, but that
+    doesn't make it protection on its own: its value is still the overall
+    minus every visible category. So it's treated by its own true value: a
+    1-10 counts as primary (it needs a sibling hidden too, and it counts
+    toward the all-1s/all-10s rule), 11+ counts as a secondary that's
+    already in place, and a zero is ignored (a recovered zero identifies
+    nobody).
 
     Uses its own `marker_col`, separate from the table's `suppression_marker`
     — a row can have a perfectly safe-to-show n_exited while still needing
     this, so it shouldn't be forced to hide the whole row the way a
     `suppression_marker` hit does. `extra_cols` (e.g. a percentage derived
     from `count_col`) are blanked alongside it.
-
-    `crossdim_dimensions` runs apply_race_crossdim_suppression on `count_col`
-    too, pass the same overlapping-dimension list the table's main count
-    got: two visible "Included" counts from overlapping dimensions plus the
-    visible overall can bound how many people are in both.
 
     A group left with nothing visible to hide behind is marked
     INSUFFICIENT_POPULATION_MARKER rather than reported as a violation —
@@ -306,12 +323,9 @@ def apply_return_count_suppression(
     row_hidden = work["suppression_marker"].notna()
     work[TRUE_COUNT_COL] = work[count_col]
     work["suppression_marker"] = None
-    work.loc[row_hidden, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
-    is_primary = ~row_hidden & (work[count_col] > 0) & (work[count_col] < SUPPRESSION_THRESHOLD)
+    work.loc[row_hidden & (work[count_col] >= SUPPRESSION_THRESHOLD), "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
+    is_primary = (work[count_col] > 0) & (work[count_col] < SUPPRESSION_THRESHOLD)
     work.loc[is_primary, "suppression_marker"] = PRIMARY_SUPPRESSION_MARKER
-
-    if crossdim_dimensions:
-        work = apply_race_crossdim_suppression(work, group_cols=group_cols, race_dimensions=crossdim_dimensions, count_col=count_col)
 
     eligible = work[work["dimension"] != "overall"]
     unprotected = _violating_groups(eligible, group_cols)
@@ -333,7 +347,7 @@ def apply_return_count_suppression(
     # Rows already hidden by suppression_marker keep marker_col empty — the
     # whole row is withheld, not just this count.
     df[marker_col] = work["suppression_marker"].where(~row_hidden, None)
-    df.loc[df[marker_col].notna(), [count_col, *extra_cols]] = None
+    df.loc[df[marker_col].notna() | row_hidden, [count_col, *extra_cols]] = None
     return df, violations
 
 
@@ -346,10 +360,7 @@ def _pick_secondary(df: pd.DataFrame, group: pd.DataFrame, count_col: str) -> No
     visible = group[group["suppression_marker"].isna()].dropna(subset=[TRUE_COUNT_COL])
     if visible.empty:
         return
-    # Prefer hiding a nonzero cell — a hidden zero protects the primary
-    # cell just as well arithmetically, but there's no privacy reason to
-    # ever hide a true zero, so it's only picked as a last resort (every
-    # other visible category already spoken for).
+    # Prefer a nonzero cell, fall back to a zero — see _secondary_picks.
     nonzero_visible = visible[visible[TRUE_COUNT_COL] > 0]
     candidates = nonzero_visible if not nonzero_visible.empty else visible
     next_smallest_idx = candidates[TRUE_COUNT_COL].idxmin()
@@ -406,17 +417,17 @@ def apply_sankey_marginal_suppression(
     flow_types) are a true partition of experienced_homelessness, and so
     are its outflow buckets (still_active/aged_out/permanently_housed/
     inactive/deceased) — see build_flow.py's _partition_by_individual
-    docstring. Both sets live at dimension="overall"/category="Overall",
-    exactly like experienced_homelessness's own dimension="overall" row
-    (the sankey's headline total). That's the same "exactly one suppressed
-    cell is recoverable from its siblings plus a known group total" risk
+    docstring. Both sets exist for every (dimension, category), not just
+    overall: picking a category on the dashboard shows that category's own
+    sankey, whose buckets add up to that category's own
+    experienced_homelessness. So this runs once per (group_cols, dimension,
+    category). That's the same "exactly one suppressed cell is recoverable
+    from its siblings plus a known group total" risk
     apply_full_suppression_pipeline's own main loop already guards against
     for demographic categories — but flow_type is part of THAT loop's own
     group_cols, so every indiv_* row lands in its own single-row group
-    there, and dimension=="overall" is excluded from its eligible check
-    besides (see that function's own `eligible` line). Nothing else in the
-    pipeline treats these flow_types as siblings of each other, so this
-    gets its own pass.
+    there. Nothing else in the pipeline treats these flow_types as siblings
+    of each other, so this gets its own pass.
 
     `total_flow_type`'s own row is folded into each bucket group as an
     extra member, not just referenced conceptually: a small, suppressed
@@ -425,16 +436,18 @@ def apply_sankey_marginal_suppression(
     equally eligible to be the one `_pick_secondary` hides.
     """
     df = df.copy()
-    is_total = (df["flow_type"] == total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+    cols = [*group_cols, "dimension", "category"]
+    is_total = df["flow_type"] == total_flow_type
+    # Inflow first, then outflow: both share the total row, so an inflow
+    # pick that lands on the total already protects the outflow group, and
+    # _violating_groups below sees it.
     for flow_types in bucket_flow_type_groups:
-        is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-        scoped_idx = df.index[is_bucket | is_total]
-        for _, idx in df.loc[scoped_idx].groupby(group_cols, dropna=False).groups.items():
-            group = df.loc[idx]
-            primary = group[group["suppression_marker"] == PRIMARY_SUPPRESSION_MARKER]
-            has_secondary = group["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER]).any()
-            if _needs_secondary(primary[TRUE_COUNT_COL]) and not has_secondary:
-                _pick_secondary(df, group, count_col)
+        scoped = df[df["flow_type"].isin(flow_types) | is_total]
+        unprotected = _violating_groups(scoped, cols)
+        if len(unprotected) == 0:
+            continue
+        picks = _secondary_picks(scoped[_group_keys(scoped, cols).isin(unprotected)], cols)
+        df.loc[picks, "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
 
     df.loc[df["suppression_marker"].notna(), count_col] = pd.NA
     return df
@@ -496,89 +509,6 @@ def _resolve_crosstab_period(df: pd.DataFrame, period_index, count_col: str) -> 
             given_up.add((axis_col, key))
             continue
         _pick_secondary(df, group, count_col)
-
-
-@_timed
-def apply_race_crossdim_suppression(
-    df: pd.DataFrame, group_cols: list[str], race_dimensions: list[str], count_col: str = "count"
-) -> pd.DataFrame:
-    """Run AFTER apply_full_suppression_pipeline (and, for tables that have
-    it, apply_crosstab_secondary_suppression), BEFORE
-    apply_insufficient_population_fallback/validate*, on the same df.
-
-    The race_* dimensions are deliberately NOT mutually exclusive (see
-    config.py's RACE_DIMENSIONS comment) — a person can be "Included" in
-    more than one at once. Each dimension is still its own clean partition
-    on its own (Included + Not Included = the scope's "overall" total), so
-    apply_full_suppression_pipeline's within-dimension protection is sound
-    on its own terms. But that overlap opens a *cross*-dimension gap it
-    can never see: two individually-visible, above-threshold "Included"
-    counts from two different race dimensions, plus the scope's own
-    published "overall" total, let a reader lower-bound the population
-    Included in BOTH at once via inclusion-exclusion
-    (count_A + count_B - total) — a number nobody decided to publish,
-    which can land under SUPPRESSION_THRESHOLD even though every
-    contributing cell looks safe in isolation.
-
-    `group_cols` is exactly what was passed to apply_full_suppression_pipeline
-    for this table — its own "dimension" column is stripped internally to
-    get the shared scope (e.g. ["month", "population_segment", "flow_type"])
-    that race dimensions are compared within. `race_dimensions` is
-    config.py's RACE_DIMENSIONS, passed explicitly rather than imported
-    here to keep this module free of domain-specific dimension lists.
-
-    Only the two-dimension "both Included" bound above is checked —
-    per-conversation scope, same as apply_crosstab_secondary_suppression's
-    own docstring; other inclusion-exclusion combinations (three-or-more
-    dimensions, or the "Not Included" / complement side) are a separate
-    follow-up, not covered here.
-
-    Suppressing just the "Included" cell of a violating dimension would
-    accomplish nothing — its own "Not Included" sibling plus the scope's
-    known overall total would immediately hand the hidden value right
-    back — so both categories of a chosen dimension are suppressed
-    together, closing that dimension's breakdown for that scope entirely.
-    Picks greedily (most-violated dimension first, same most-constrained-
-    first spirit as _resolve_crosstab_period) until no violating pair
-    remains in the scope.
-    """
-    df = df.copy()
-    scope_cols = [c for c in group_cols if c != "dimension"]
-    race_set = set(race_dimensions)
-
-    overall = df[(df["dimension"] == "overall") & df["suppression_marker"].isna()]
-    overall_totals = {key: group[TRUE_COUNT_COL].iloc[0] for key, group in overall.groupby(scope_cols, dropna=False)}
-
-    race_rows = df[df["dimension"].isin(race_set)]
-    for key, scope_group in race_rows.groupby(scope_cols, dropna=False):
-        total = overall_totals.get(key)
-        if total is None:
-            continue
-
-        dim_index = {dim: g.index for dim, g in scope_group.groupby("dimension")}
-        visible = scope_group[(scope_group["category"] == "Included") & scope_group["suppression_marker"].isna()]
-        visible_included = dict(zip(visible["dimension"], visible[TRUE_COUNT_COL]))
-
-        while True:
-            degree = {dim: 0 for dim in visible_included}
-            for a, b in combinations(visible_included, 2):
-                bound = visible_included[a] + visible_included[b] - total
-                if 1 <= bound < SUPPRESSION_THRESHOLD:
-                    degree[a] += 1
-                    degree[b] += 1
-            violating = {dim: n for dim, n in degree.items() if n > 0}
-            if not violating:
-                break
-            max_degree = max(violating.values())
-            # Tie-break on smallest true count, then name, purely for a
-            # deterministic pick among equally-violated dimensions — no
-            # privacy reasoning behind the order itself.
-            pick = min((dim for dim in violating if violating[dim] == max_degree), key=lambda d: (visible_included[d], d))
-            df.loc[dim_index[pick], "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
-            del visible_included[pick]
-
-    df.loc[df["suppression_marker"].notna(), count_col] = pd.NA
-    return df
 
 
 @_timed
@@ -693,24 +623,16 @@ def apply_insufficient_population_fallback(
             blank_frames.append(totals[key_cols])
 
     if sankey_bucket_flow_type_groups:
-        is_total = (
-            (df["flow_type"] == sankey_total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-        )
+        is_total = df["flow_type"] == sankey_total_flow_type
+        cols = [period_col, "population_segment", "dimension", "category"]
         for flow_types in sankey_bucket_flow_type_groups:
-            is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-            scoped = df[is_bucket | is_total]
-            cols = [period_col, "population_segment"]
+            scoped = df[df["flow_type"].isin(flow_types) | is_total]
             violating = _violating_groups(scoped, cols)
             if len(violating) == 0:
                 continue
-            row_keys = _group_keys(scoped, cols)
-            violating_rows = scoped[row_keys.isin(violating)]
-            if violating_rows.empty:
-                continue
-            tagged = violating_rows[[period_col, "population_segment", "flow_type"]].copy()
-            tagged["dimension"] = "overall"
-            tagged["category"] = "Overall"
-            blank_frames.append(tagged[key_cols])
+            violating_rows = scoped[_group_keys(scoped, cols).isin(violating)]
+            if not violating_rows.empty:
+                blank_frames.append(violating_rows[key_cols])
 
     if not blank_frames:
         return df
@@ -753,12 +675,12 @@ def validate_sankey_marginal(
     """Companion to apply_sankey_marginal_suppression — same hard-gate
     contract as validate(). Call alongside it, not instead of it."""
     violations = []
-    is_total = (df["flow_type"] == total_flow_type) & (df["dimension"] == "overall") & (df["category"] == "Overall")
+    cols = [*group_cols, "dimension", "category"]
+    is_total = df["flow_type"] == total_flow_type
     for flow_types in bucket_flow_type_groups:
-        is_bucket = df["flow_type"].isin(flow_types) & (df["dimension"] == "overall") & (df["category"] == "Overall")
-        scoped = df[is_bucket | is_total]
-        for key in _violating_groups(scoped, group_cols):
-            key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
+        scoped = df[df["flow_type"].isin(flow_types) | is_total]
+        for key in _violating_groups(scoped, cols):
+            key_dict = dict(zip(cols, key if isinstance(key, tuple) else (key,)))
             violations.append(f"sankey marginal group {key_dict} (flow_types={flow_types}) needs secondary suppression but has none")
     return violations
 
