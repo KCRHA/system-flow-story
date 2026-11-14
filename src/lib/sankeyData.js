@@ -1,7 +1,10 @@
 import { resolveCell } from "./loadData.js";
 
 export const INFLOW_REASONS = ["newly_homeless", "return_from_housed", "return_from_inactive"];
-export const OUTFLOW_REASONS = ["permanently_housed", "inactive", "deceased"];
+// Deceased is folded into inactive (see the pipeline's config.FLOW_OUTFLOW_BUCKET_MAP);
+// how many of an inactive count are deceased comes separately, as a band
+// (period.inactiveDeceased, see lib/deceased.js's deceasedNote).
+export const OUTFLOW_REASONS = ["permanently_housed", "inactive"];
 
 // Bucket keys in display order — already_active/still_active first, so a
 // caller that wants them pinned to the top of the sankey's left/right
@@ -9,8 +12,8 @@ export const OUTFLOW_REASONS = ["permanently_housed", "inactive", "deceased"];
 // aged_out is specific to the YYA population (see build_flow.py's
 // _partition_by_individual for why an explicit bucket is needed there)
 // and is always 0 for every other population segment; it's listed last
-// here, next to deceased, since both are "exits the tracked population"
-// buckets rather than one of the three HUD outflow reasons above — and
+// here since it's an "exits the tracked population" bucket rather than
+// one of the HUD outflow reasons above — and
 // because, for the periods checked, aged_out's own links skew toward the
 // newly_homeless/inactive end of the graph rather than toward
 // still_active, so sitting right after still_active produced an
@@ -112,11 +115,11 @@ export function monthsInQuarter(monthlyRows, quarter) {
 // Every number here comes straight from the pipeline's indiv_* flow_types
 // (build_flow.py's _partition_by_individual) — each of the four inflow
 // buckets (already active / newly homeless / return from housed / return
-// from inactive) and five outflow buckets (still active / aged out [YYA
-// only] / permanently housed / inactive / deceased) assigns a given
-// person to exactly ONE bucket for the period, so the four inflow counts
-// sum to experiencedHomelessness exactly, and so do the five outflow
-// counts —
+// from inactive) and four outflow buckets (still active / aged out [YYA
+// only] / permanently housed / inactive, deceased included) assigns a
+// given person to exactly ONE bucket for the period, so the four inflow
+// counts sum to experiencedHomelessness exactly, and so do the four
+// outflow counts —
 // this is a partition of individuals, not a count of episode-entry
 // events. That partitioning has to happen with the whole period's
 // episodes in view at once (to find each person's single earliest
@@ -165,9 +168,11 @@ export function buildFlowPeriod(yearlyRows, quarterlyRows, monthlyRows, { year, 
     outflow: {
       permanently_housed: get("indiv_permanently_housed"),
       inactive: get("indiv_inactive"),
-      deceased: get("indiv_deceased"),
       aged_out: get("indiv_aged_out"),
     },
+    // How many of outflow.inactive are deceased: 0, a band of 10, or
+    // withheld (see lib/deceased.js's deceasedNote).
+    inactiveDeceased: get("deceased_in_inactive"),
     pairs,
   };
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
-import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
+import { INSUFFICIENT_POPULATION_MARKER, suppressedMessage } from "../../lib/loadData.js";
 
 const RETURNED_COLOR = "var(--chart-3)";
 const REMAINED_HOUSED_COLOR = "var(--chart-2)";
@@ -150,11 +150,7 @@ export default function ReturnCohortChart({ rows, width = 720, height = 340 }) {
       .on("mouseenter", (event, d) => {
         let body;
         if (d.suppression_marker) {
-          const suppressedMessage =
-            d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
-              ? "Population too small to safely display for this combination"
-              : "Data suppressed (small cell)";
-          body = `<div>${suppressedMessage}</div>`;
+          body = `<div>${suppressedMessage(d.suppression_marker)}</div>`;
         } else if (isReturnSuppressed(d)) {
           body = `<div>${d.n_exited.toLocaleString()} exited</div><div>Return count suppressed (fewer than 11 people)</div>`;
         } else {

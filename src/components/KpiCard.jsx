@@ -1,4 +1,5 @@
 import InfoIcon from "./InfoIcon.jsx";
+import { suppressedMessage } from "../lib/loadData.js";
 
 // `trendDirection` ("up"/"down"/"flat"/null) is this period vs. the prior
 // one for this specific card, computed by the caller (see OutflowSection's
@@ -7,7 +8,7 @@ import InfoIcon from "./InfoIcon.jsx";
 // `goodDirection` ("up"/"down"/null) says which direction is desirable for
 // this specific metric: the pill renders "good" (green) when trendDirection
 // matches it, "bad" (orange) when it's the opposite. `goodDirection: null`
-// (Deceased, Inactive) opts a card out of that judgment entirely — the pill
+// (Inactive) opts a card out of that judgment entirely — the pill
 // still shows which way the number moved, just always in neutral gray,
 // since color-coding a rise or fall as "good"/"bad" isn't appropriate for
 // those terms. "flat" is always neutral gray too, regardless of
@@ -38,7 +39,9 @@ import InfoIcon from "./InfoIcon.jsx";
 // "ⓘ" next to the label that opens a dark popover defining this specific
 // term on hover (see InfoIcon's "dark" variant) — distinct from the
 // section header's own "Show definitions" glossary, which lists every term
-// at once rather than one at a time next to its card.
+// at once rather than one at a time next to its card. `info.note`, when
+// given, is an extra italic line at the bottom of that popover (e.g. how
+// many of an Inactive count are deceased).
 // `layout: "stat"` switches to a wide, single-row layout — value, then
 // description, then the trend pill, all side by side instead of stacked —
 // for a lone headline card whose description is the sentence doing the
@@ -64,6 +67,7 @@ export default function KpiCard({ label, value, marker, percent, percentLabel = 
             <InfoIcon label={`About ${label}`} variant="dark">
               <p className="info-icon-popover-title">{info.title}</p>
               <p>{info.body}</p>
+              {info.note && <p style={{ fontStyle: "italic" }}>{info.note}</p>}
               {info.linkHref && (
                 <p>
                   <a href={info.linkHref} target="_blank" rel="noreferrer">
@@ -78,7 +82,7 @@ export default function KpiCard({ label, value, marker, percent, percentLabel = 
       {description && <p className="kpi-description">{description}</p>}
       <div className="kpi-value-row">
         {marker ? (
-          <span className="suppressed-cell" title="Data suppressed (small cell)">{marker}</span>
+          <span className="suppressed-cell" title={suppressedMessage(marker)}>{marker}</span>
         ) : (
           <>
             <span className="kpi-value">{value}</span>

@@ -20,6 +20,17 @@ SUPPRESSION_THRESHOLD = 11  # HUD convention: suppress any nonzero cell under th
 PRIMARY_SUPPRESSION_MARKER = "*"
 SECONDARY_SUPPRESSION_MARKER = "**"
 
+# "We don't know" buckets (GenderIdentity/GenderAlignment/LastKnownSubregion/
+# age "Unknown", people with no client_demographic row). The dashboard never
+# shows them, so they're never written to the JSON and never suppressed
+# themselves. They still take part in suppression as hidden cells
+# (suppression.UNPUBLISHED_MARKER): to a reader they're "0 or more", which
+# already stops the other categories from adding up to the overall row, so
+# most groups need no secondary at all. Their own value may be derivable
+# (overall minus the categories); that's fine, since it counts people whose
+# characteristic is unknown, not people who have one.
+UNPUBLISHED_CATEGORIES = frozenset({"Unknown", "Undefined"})
+
 # --- Return-to-homelessness window ---
 # How soon after a permanent-housing exit a new episode counts as a
 # "return" for dashboard_return_cohorts — 6 months, not the 730-day gap
@@ -81,10 +92,10 @@ RACE_DIMENSIONS = ["race_aian", "race_asian", "race_black", "race_nhpi", "race_w
 # "age_category" is native to episode_systemwide (EpisodeAgeTier -- see the
 # Episode_Systemwide notebook's age-at-episode-start computation and
 # population.py's YYA branch, which already reads this same column), not a
-# derived rollup. Like household_type, it's episode-scoped rather than a true
+# derived rollup. It's episode-scoped rather than a true
 # person-level constant (age tier can differ between two of a person's own episodes over
 # the export window) -- see build_flow.py's EPISODE_SCOPED_CATEGORY_DIMENSIONS,
-# which resolves both dimensions' categories fresh per period rather than
+# which resolves its categories fresh per period rather than
 # from a single whole-window snapshot, for the same reason. For the YYA
 # population segment, the frontend (see FilterBar.jsx/App.jsx) restricts this
 # filter's options to the tiers YYA can actually contain ("0 to 11",
@@ -103,7 +114,6 @@ DIMENSIONS = [
     *RACE_DIMENSIONS,
     "gender_identity",
     "gender_alignment",
-    "household_type",
     "age_category",
     "last_known_subregion",
     # "last_known_city",  # last_known_city filter temporarily disabled
@@ -261,7 +271,6 @@ DIMENSION_COLUMNS = {
     "race_multiracial": "RaceMultiracial",
     "gender_identity": "GenderIdentity",  # derived — see demographics.py
     "gender_alignment": "GenderAlignment",  # derived — see demographics.py
-    "household_type": "EpisodeHouseholdType",
     "age_category": "EpisodeAgeTier",
     # Native client_demographic column (Client_Demographics.ipynb's own
     # city -> subregion mapping), person-level like VeteranStatus/the
@@ -270,8 +279,8 @@ DIMENSION_COLUMNS = {
     # County, in an unincorporated area, or never collected) gets NaN from
     # that notebook — filled to "Unknown" in export.py's client_demographics
     # load, same as GenderIdentity's own "Unknown" bucket, so this dimension
-    # still partitions cleanly for suppression. "Unknown" is then hidden
-    # from the frontend filter by App.jsx's existing HIDDEN_CATEGORIES set.
+    # still partitions cleanly for suppression. "Unknown" is then never
+    # published (UNPUBLISHED_CATEGORIES above).
     "last_known_subregion": "LastKnownSubregion",
     # last_known_city filter temporarily disabled — see DIMENSIONS above and
     # export.py's LastKnownCity handling.
@@ -322,11 +331,33 @@ INFLOW_TYPE_MAP = {
     "Return from Housed": "return_from_housed",
     "Return from Inactive": "return_from_inactive",
 }
+# HUD outflow reason -> exit key. The length-of-time tables use this as is:
+# their by-exit "inactive" panel deliberately excludes deceased.
 OUTFLOW_TYPE_MAP = {
     "Permanently Housed": "permanently_housed",
     "Inactive": "inactive",
     "Deceased": "deceased",
 }
+DECEASED_HUD_VALUE = "Deceased"
+
+# The flow tables (sankey, KPI cards, trend chart) fold Deceased into
+# Inactive: on its own, deceased was the smallest outflow and the single
+# biggest cause of suppression. How many of an Inactive count are deceased
+# is published only as a band of DECEASED_BAND_WIDTH (1-10, 11-20, ...)
+# under DECEASED_IN_INACTIVE_FLOW_TYPE — see suppression.apply_deceased_bands.
+FLOW_OUTFLOW_BUCKET_MAP = {
+    "Permanently Housed": "permanently_housed",
+    "Inactive": "inactive",
+    DECEASED_HUD_VALUE: "inactive",
+}
+DECEASED_IN_INACTIVE_FLOW_TYPE = "deceased_in_inactive"
+DECEASED_BAND_WIDTH = 10
+
+# Length-of-time tables publish every group with at least one person (no
+# small-cell suppression, and n itself is never published), but a group
+# smaller than this gets only its median: with three or fewer people, the
+# percentiles and mean give away individual durations (user raised 3 -> 4).
+LENGTH_FULL_STATS_MIN_N = 4
 
 # HUD ProjectTypeCode legend (see Event_Systemwide_2026_01_21.ipynb header, and
 # confirmed again directly against All_Program_Enrollments_2026_01_22.ipynb,

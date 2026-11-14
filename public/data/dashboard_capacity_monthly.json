@@ -3136,8 +3136,8 @@
     "project_type": "ph",
     "subregion": "Overall",
     "units_in_system": 6984.0,
-    "enrolled": 169.0,
-    "throughput_hh_per_unit": 0.0241981672,
+    "enrolled": 168.0,
+    "throughput_hh_per_unit": 0.0240549828,
     "pct_utilization": 0.9085337915,
     "beds_in_system": 8483.0,
     "bed_pct_utilization": 0.8925773115,
@@ -3366,7 +3366,7 @@
     "units_in_system": 3764.0,
     "enrolled": 674.0,
     "throughput_hh_per_unit": 0.1790648247,
-    "pct_utilization": 0.8532679739,
+    "pct_utilization": 0.8530736619,
     "beds_in_system": 4993.0,
     "bed_pct_utilization": 0.879685522,
     "enrolled_suppression_marker": null
@@ -3414,7 +3414,7 @@
     "units_in_system": 3770.0,
     "enrolled": 719.0,
     "throughput_hh_per_unit": 0.1907161804,
-    "pct_utilization": 0.8644656223,
+    "pct_utilization": 0.8641992283,
     "beds_in_system": 4999.0,
     "bed_pct_utilization": 0.8852836834,
     "enrolled_suppression_marker": null
@@ -3459,12 +3459,12 @@
     "month": "2025-01-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3763.0,
+    "units_in_system": 3747.0,
     "enrolled": 1086.0,
-    "throughput_hh_per_unit": 0.2885995217,
-    "pct_utilization": 0.8570211448,
-    "beds_in_system": 5005.0,
-    "bed_pct_utilization": 0.8669498484,
+    "throughput_hh_per_unit": 0.2898318655,
+    "pct_utilization": 0.8604271281,
+    "beds_in_system": 4989.0,
+    "bed_pct_utilization": 0.869738933,
     "enrolled_suppression_marker": null
   },
   {
@@ -3472,8 +3472,8 @@
     "project_type": "ph",
     "subregion": "Overall",
     "units_in_system": 6864.0,
-    "enrolled": 108.0,
-    "throughput_hh_per_unit": 0.0157342657,
+    "enrolled": 107.0,
+    "throughput_hh_per_unit": 0.0155885781,
     "pct_utilization": 0.9530582278,
     "beds_in_system": 8229.0,
     "bed_pct_utilization": 0.9392874945,
@@ -3507,12 +3507,12 @@
     "month": "2025-02-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3777.0,
+    "units_in_system": 3761.0,
     "enrolled": 700.0,
-    "throughput_hh_per_unit": 0.1853322743,
-    "pct_utilization": 0.8546643941,
-    "beds_in_system": 5009.0,
-    "bed_pct_utilization": 0.8651812227,
+    "throughput_hh_per_unit": 0.1861207126,
+    "pct_utilization": 0.8580581614,
+    "beds_in_system": 4993.0,
+    "bed_pct_utilization": 0.8679770621,
     "enrolled_suppression_marker": null
   },
   {
@@ -3520,8 +3520,8 @@
     "project_type": "ph",
     "subregion": "Overall",
     "units_in_system": 6890.0,
-    "enrolled": 107.0,
-    "throughput_hh_per_unit": 0.0155297533,
+    "enrolled": 108.0,
+    "throughput_hh_per_unit": 0.0156748911,
     "pct_utilization": 0.9515650143,
     "beds_in_system": 8265.0,
     "bed_pct_utilization": 0.9367578842,
@@ -3555,12 +3555,12 @@
     "month": "2025-03-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3839.0,
+    "units_in_system": 3823.0,
     "enrolled": 710.0,
-    "throughput_hh_per_unit": 0.1849439958,
-    "pct_utilization": 0.8192657698,
-    "beds_in_system": 5056.0,
-    "bed_pct_utilization": 0.8315766639,
+    "throughput_hh_per_unit": 0.1857180225,
+    "pct_utilization": 0.822432982,
+    "beds_in_system": 5040.0,
+    "bed_pct_utilization": 0.8342165899,
     "enrolled_suppression_marker": null
   },
   {
@@ -3603,12 +3603,12 @@
     "month": "2025-04-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3729.0,
+    "units_in_system": 3713.0,
     "enrolled": 702.0,
-    "throughput_hh_per_unit": 0.1882542237,
-    "pct_utilization": 0.8547135171,
-    "beds_in_system": 4946.0,
-    "bed_pct_utilization": 0.8499392632,
+    "throughput_hh_per_unit": 0.1890654457,
+    "pct_utilization": 0.858184839,
+    "beds_in_system": 4930.0,
+    "bed_pct_utilization": 0.852732551,
     "enrolled_suppression_marker": null
   },
   {
@@ -3651,12 +3651,12 @@
     "month": "2025-05-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3667.0,
+    "units_in_system": 3651.0,
     "enrolled": 672.0,
-    "throughput_hh_per_unit": 0.1832560676,
-    "pct_utilization": 0.8698901918,
-    "beds_in_system": 4933.0,
-    "bed_pct_utilization": 0.8725625197,
+    "throughput_hh_per_unit": 0.1840591619,
+    "pct_utilization": 0.8734608355,
+    "beds_in_system": 4917.0,
+    "bed_pct_utilization": 0.8754793533,
     "enrolled_suppression_marker": null
   },
   {
@@ -3699,12 +3699,12 @@
     "month": "2025-06-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3611.0,
+    "units_in_system": 3595.0,
     "enrolled": 627.0,
-    "throughput_hh_per_unit": 0.1736361119,
-    "pct_utilization": 0.8770054463,
-    "beds_in_system": 4765.0,
-    "bed_pct_utilization": 0.8785729276,
+    "throughput_hh_per_unit": 0.1744089013,
+    "pct_utilization": 0.8806305053,
+    "beds_in_system": 4749.0,
+    "bed_pct_utilization": 0.8815329543,
     "enrolled_suppression_marker": null
   },
   {
@@ -3747,12 +3747,12 @@
     "month": "2025-07-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3655.0,
-    "enrolled": 676.0,
-    "throughput_hh_per_unit": 0.1849521204,
-    "pct_utilization": 0.868593619,
-    "beds_in_system": 4809.0,
-    "bed_pct_utilization": 0.8629317342,
+    "units_in_system": 3639.0,
+    "enrolled": 677.0,
+    "throughput_hh_per_unit": 0.1860401209,
+    "pct_utilization": 0.8723594749,
+    "beds_in_system": 4793.0,
+    "bed_pct_utilization": 0.8659806304,
     "enrolled_suppression_marker": null
   },
   {
@@ -3762,9 +3762,9 @@
     "units_in_system": 6985.0,
     "enrolled": 86.0,
     "throughput_hh_per_unit": 0.0123120974,
-    "pct_utilization": 0.9449964661,
+    "pct_utilization": 0.9439940502,
     "beds_in_system": 8358.0,
-    "bed_pct_utilization": 0.9347938542,
+    "bed_pct_utilization": 0.9339561458,
     "enrolled_suppression_marker": null
   },
   {
@@ -3795,12 +3795,12 @@
     "month": "2025-08-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3807.0,
-    "enrolled": 694.0,
-    "throughput_hh_per_unit": 0.1822957709,
-    "pct_utilization": 0.8499679254,
-    "beds_in_system": 4961.0,
-    "bed_pct_utilization": 0.8508902276,
+    "units_in_system": 3791.0,
+    "enrolled": 693.0,
+    "throughput_hh_per_unit": 0.1828013717,
+    "pct_utilization": 0.8534775251,
+    "beds_in_system": 4945.0,
+    "bed_pct_utilization": 0.8538454306,
     "enrolled_suppression_marker": null
   },
   {
@@ -3810,9 +3810,9 @@
     "units_in_system": 7018.0,
     "enrolled": 85.0,
     "throughput_hh_per_unit": 0.0121117127,
-    "pct_utilization": 0.9379245994,
+    "pct_utilization": 0.9369271643,
     "beds_in_system": 8415.0,
-    "bed_pct_utilization": 0.9242328407,
+    "bed_pct_utilization": 0.9234009929,
     "enrolled_suppression_marker": null
   },
   {
@@ -3843,12 +3843,12 @@
     "month": "2025-09-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3575.0,
-    "enrolled": 684.0,
-    "throughput_hh_per_unit": 0.1913286713,
-    "pct_utilization": 0.8983496503,
-    "beds_in_system": 4476.0,
-    "bed_pct_utilization": 0.9082365207,
+    "units_in_system": 3559.0,
+    "enrolled": 685.0,
+    "throughput_hh_per_unit": 0.1924697949,
+    "pct_utilization": 0.9023396523,
+    "beds_in_system": 4460.0,
+    "bed_pct_utilization": 0.9127389868,
     "enrolled_suppression_marker": null
   },
   {
@@ -3858,9 +3858,9 @@
     "units_in_system": 6968.0,
     "enrolled": 161.0,
     "throughput_hh_per_unit": 0.0231056257,
-    "pct_utilization": 0.9426808266,
+    "pct_utilization": 0.9416762342,
     "beds_in_system": 8377.0,
-    "bed_pct_utilization": 0.9274561299,
+    "bed_pct_utilization": 0.9266205085,
     "enrolled_suppression_marker": null
   },
   {
@@ -3891,12 +3891,12 @@
     "month": "2025-10-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3575.0,
-    "enrolled": 745.0,
-    "throughput_hh_per_unit": 0.2083916084,
-    "pct_utilization": 0.8999142793,
-    "beds_in_system": 4476.0,
-    "bed_pct_utilization": 0.9183170457,
+    "units_in_system": 3557.0,
+    "enrolled": 744.0,
+    "throughput_hh_per_unit": 0.2091650267,
+    "pct_utilization": 0.9045407964,
+    "beds_in_system": 4454.0,
+    "bed_pct_utilization": 0.9244825239,
     "enrolled_suppression_marker": null
   },
   {
@@ -3906,9 +3906,9 @@
     "units_in_system": 6962.0,
     "enrolled": 94.0,
     "throughput_hh_per_unit": 0.0135018673,
-    "pct_utilization": 0.9458210933,
+    "pct_utilization": 0.9448156351,
     "beds_in_system": 8359.0,
-    "bed_pct_utilization": 0.931898784,
+    "bed_pct_utilization": 0.9310613633,
     "enrolled_suppression_marker": null
   },
   {
@@ -3928,8 +3928,8 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 680.0,
-    "enrolled": 38.0,
-    "throughput_hh_per_unit": 0.0558823529,
+    "enrolled": 37.0,
+    "throughput_hh_per_unit": 0.0544117647,
     "pct_utilization": 0.7628083491,
     "beds_in_system": 1423.0,
     "bed_pct_utilization": 0.7993561989,
@@ -3939,12 +3939,12 @@
     "month": "2025-11-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3746.0,
+    "units_in_system": 3728.0,
     "enrolled": 742.0,
-    "throughput_hh_per_unit": 0.1980779498,
-    "pct_utilization": 0.8600614234,
-    "beds_in_system": 4678.0,
-    "bed_pct_utilization": 0.8695463131,
+    "throughput_hh_per_unit": 0.1990343348,
+    "pct_utilization": 0.8640368532,
+    "beds_in_system": 4656.0,
+    "bed_pct_utilization": 0.8750170086,
     "enrolled_suppression_marker": null
   },
   {
@@ -3954,9 +3954,9 @@
     "units_in_system": 7160.0,
     "enrolled": 174.0,
     "throughput_hh_per_unit": 0.024301676,
-    "pct_utilization": 0.9279343095,
+    "pct_utilization": 0.9269556626,
     "beds_in_system": 8568.0,
-    "bed_pct_utilization": 0.9177173295,
+    "bed_pct_utilization": 0.9168996426,
     "enrolled_suppression_marker": null
   },
   {
@@ -3987,12 +3987,12 @@
     "month": "2025-12-01",
     "project_type": "es",
     "subregion": "Overall",
-    "units_in_system": 3772.0,
+    "units_in_system": 3754.0,
     "enrolled": 1040.0,
-    "throughput_hh_per_unit": 0.2757158006,
-    "pct_utilization": 0.8605265617,
-    "beds_in_system": 4704.0,
-    "bed_pct_utilization": 0.8686689541,
+    "throughput_hh_per_unit": 0.2770378263,
+    "pct_utilization": 0.8643863797,
+    "beds_in_system": 4682.0,
+    "bed_pct_utilization": 0.8740242741,
     "enrolled_suppression_marker": null
   },
   {
@@ -4002,9 +4002,9 @@
     "units_in_system": 7176.0,
     "enrolled": 165.0,
     "throughput_hh_per_unit": 0.022993311,
-    "pct_utilization": 0.9394037473,
+    "pct_utilization": 0.9384282735,
     "beds_in_system": 8573.0,
-    "bed_pct_utilization": 0.9286130876,
+    "bed_pct_utilization": 0.9277965706,
     "enrolled_suppression_marker": null
   },
   {
@@ -4038,9 +4038,9 @@
     "units_in_system": 3803.0,
     "enrolled": 1064.0,
     "throughput_hh_per_unit": 0.2797791217,
-    "pct_utilization": 0.876971636,
+    "pct_utilization": 0.8765576895,
     "beds_in_system": 4766.0,
-    "bed_pct_utilization": 0.8951233554,
+    "bed_pct_utilization": 0.8953831248,
     "enrolled_suppression_marker": null
   },
   {
@@ -4050,9 +4050,9 @@
     "units_in_system": 7271.0,
     "enrolled": 121.0,
     "throughput_hh_per_unit": 0.0166414523,
-    "pct_utilization": 0.9386599317,
+    "pct_utilization": 0.9376759877,
     "beds_in_system": 8637.0,
-    "bed_pct_utilization": 0.9312328111,
+    "bed_pct_utilization": 0.9304073613,
     "enrolled_suppression_marker": null
   },
   {
@@ -4072,11 +4072,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 605.0,
-    "enrolled": 33.0,
-    "throughput_hh_per_unit": 0.0545454545,
-    "pct_utilization": 0.8851201728,
+    "enrolled": 34.0,
+    "throughput_hh_per_unit": 0.0561983471,
+    "pct_utilization": 0.8853362139,
     "beds_in_system": 1280.0,
-    "bed_pct_utilization": 0.900836714,
+    "bed_pct_utilization": 0.9009381339,
     "enrolled_suppression_marker": null
   },
   {
@@ -4086,9 +4086,9 @@
     "units_in_system": 3806.0,
     "enrolled": 904.0,
     "throughput_hh_per_unit": 0.2375197057,
-    "pct_utilization": 0.8642577209,
+    "pct_utilization": 0.8639483208,
     "beds_in_system": 4767.0,
-    "bed_pct_utilization": 0.8717281013,
+    "bed_pct_utilization": 0.8716906868,
     "enrolled_suppression_marker": null
   },
   {
@@ -4098,9 +4098,9 @@
     "units_in_system": 7437.0,
     "enrolled": 114.0,
     "throughput_hh_per_unit": 0.0153287616,
-    "pct_utilization": 0.9033836608,
+    "pct_utilization": 0.9024424211,
     "beds_in_system": 8803.0,
-    "bed_pct_utilization": 0.9012552539,
+    "bed_pct_utilization": 0.9004600704,
     "enrolled_suppression_marker": null
   },
   {
@@ -4122,9 +4122,9 @@
     "units_in_system": 605.0,
     "enrolled": 27.0,
     "throughput_hh_per_unit": 0.0446280992,
-    "pct_utilization": 0.8742030697,
+    "pct_utilization": 0.8758559622,
     "beds_in_system": 1280.0,
-    "bed_pct_utilization": 0.9019810268,
+    "bed_pct_utilization": 0.9027622768,
     "enrolled_suppression_marker": null
   },
   {
@@ -4134,9 +4134,9 @@
     "units_in_system": 3841.0,
     "enrolled": 932.0,
     "throughput_hh_per_unit": 0.2426451445,
-    "pct_utilization": 0.8621590177,
+    "pct_utilization": 0.8617237656,
     "beds_in_system": 4885.0,
-    "bed_pct_utilization": 0.8569631508,
+    "bed_pct_utilization": 0.8568248428,
     "enrolled_suppression_marker": null
   },
   {
@@ -4146,9 +4146,9 @@
     "units_in_system": 7445.0,
     "enrolled": 117.0,
     "throughput_hh_per_unit": 0.0157152451,
-    "pct_utilization": 0.9083163139,
+    "pct_utilization": 0.907375368,
     "beds_in_system": 8811.0,
-    "bed_pct_utilization": 0.9054750609,
+    "bed_pct_utilization": 0.9046800872,
     "enrolled_suppression_marker": null
   },
   {
@@ -4168,11 +4168,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 605.0,
-    "enrolled": 32.0,
-    "throughput_hh_per_unit": 0.052892562,
-    "pct_utilization": 0.8521460944,
+    "enrolled": 33.0,
+    "throughput_hh_per_unit": 0.0545454545,
+    "pct_utilization": 0.8541722207,
     "beds_in_system": 1280.0,
-    "bed_pct_utilization": 0.8724546371,
+    "bed_pct_utilization": 0.8734122984,
     "enrolled_suppression_marker": null
   },
   {
@@ -4180,11 +4180,11 @@
     "project_type": "es",
     "subregion": "Overall",
     "units_in_system": 3707.0,
-    "enrolled": 803.0,
-    "throughput_hh_per_unit": 0.2166172107,
-    "pct_utilization": 0.9019570707,
+    "enrolled": 804.0,
+    "throughput_hh_per_unit": 0.2168869706,
+    "pct_utilization": 0.9017766955,
     "beds_in_system": 4751.0,
-    "bed_pct_utilization": 0.8910407876,
+    "bed_pct_utilization": 0.8911111111,
     "enrolled_suppression_marker": null
   },
   {
@@ -4194,9 +4194,9 @@
     "units_in_system": 7445.0,
     "enrolled": 126.0,
     "throughput_hh_per_unit": 0.0169241101,
-    "pct_utilization": 0.9119321493,
+    "pct_utilization": 0.9109907745,
     "beds_in_system": 8811.0,
-    "bed_pct_utilization": 0.908932886,
+    "bed_pct_utilization": 0.9081376061,
     "enrolled_suppression_marker": null
   },
   {
@@ -4216,11 +4216,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 605.0,
-    "enrolled": 34.0,
-    "throughput_hh_per_unit": 0.0561983471,
-    "pct_utilization": 0.8419283747,
+    "enrolled": 35.0,
+    "throughput_hh_per_unit": 0.0578512397,
+    "pct_utilization": 0.8462258953,
     "beds_in_system": 1280.0,
-    "bed_pct_utilization": 0.85484375,
+    "bed_pct_utilization": 0.856875,
     "enrolled_suppression_marker": null
   },
   {
@@ -4230,9 +4230,9 @@
     "units_in_system": 3704.0,
     "enrolled": 737.0,
     "throughput_hh_per_unit": 0.1989740821,
-    "pct_utilization": 0.9096547086,
+    "pct_utilization": 0.9095324197,
     "beds_in_system": 4739.0,
-    "bed_pct_utilization": 0.8928483707,
+    "bed_pct_utilization": 0.8929643578,
     "enrolled_suppression_marker": null
   },
   {
@@ -4242,9 +4242,9 @@
     "units_in_system": 7431.0,
     "enrolled": 98.0,
     "throughput_hh_per_unit": 0.0131879962,
-    "pct_utilization": 0.9135964855,
+    "pct_utilization": 0.9126544858,
     "beds_in_system": 8877.0,
-    "bed_pct_utilization": 0.902092032,
+    "bed_pct_utilization": 0.9013034773,
     "enrolled_suppression_marker": null
   },
   {
@@ -4266,9 +4266,9 @@
     "units_in_system": 606.0,
     "enrolled": 36.0,
     "throughput_hh_per_unit": 0.0594059406,
-    "pct_utilization": 0.8283156605,
+    "pct_utilization": 0.8323653221,
     "beds_in_system": 1284.0,
-    "bed_pct_utilization": 0.8447190898,
+    "bed_pct_utilization": 0.8466320983,
     "enrolled_suppression_marker": null
   },
   {
@@ -4278,9 +4278,9 @@
     "units_in_system": 3908.0,
     "enrolled": 756.0,
     "throughput_hh_per_unit": 0.1934493347,
-    "pct_utilization": 0.8625352836,
+    "pct_utilization": 0.8626379266,
     "beds_in_system": 4950.0,
-    "bed_pct_utilization": 0.8512654383,
+    "bed_pct_utilization": 0.8515488965,
     "enrolled_suppression_marker": null
   },
   {
@@ -4290,9 +4290,9 @@
     "units_in_system": 7551.0,
     "enrolled": 111.0,
     "throughput_hh_per_unit": 0.0147000397,
-    "pct_utilization": 0.9034741535,
+    "pct_utilization": 0.9025603673,
     "beds_in_system": 8997.0,
-    "bed_pct_utilization": 0.8947501019,
+    "bed_pct_utilization": 0.8939646549,
     "enrolled_suppression_marker": null
   },
   {
@@ -4312,11 +4312,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 606.0,
-    "enrolled": 27.0,
-    "throughput_hh_per_unit": 0.0445544554,
-    "pct_utilization": 0.8087458746,
+    "enrolled": 28.0,
+    "throughput_hh_per_unit": 0.0462046205,
+    "pct_utilization": 0.8099559956,
     "beds_in_system": 1284.0,
-    "bed_pct_utilization": 0.8349428868,
+    "bed_pct_utilization": 0.8355140187,
     "enrolled_suppression_marker": null
   },
   {
@@ -4326,9 +4326,9 @@
     "units_in_system": 3939.0,
     "enrolled": 742.0,
     "throughput_hh_per_unit": 0.1883726834,
-    "pct_utilization": 0.8631036991,
+    "pct_utilization": 0.8630541139,
     "beds_in_system": 4981.0,
-    "bed_pct_utilization": 0.849118756,
+    "bed_pct_utilization": 0.8492818285,
     "enrolled_suppression_marker": null
   },
   {
@@ -4336,11 +4336,11 @@
     "project_type": "ph",
     "subregion": "Overall",
     "units_in_system": 7551.0,
-    "enrolled": 127.0,
-    "throughput_hh_per_unit": 0.0168189644,
-    "pct_utilization": 0.90751492,
+    "enrolled": 128.0,
+    "throughput_hh_per_unit": 0.0169513972,
+    "pct_utilization": 0.9065195381,
     "beds_in_system": 8997.0,
-    "bed_pct_utilization": 0.8995041358,
+    "bed_pct_utilization": 0.8985575837,
     "enrolled_suppression_marker": null
   },
   {
@@ -4362,9 +4362,9 @@
     "units_in_system": 606.0,
     "enrolled": 33.0,
     "throughput_hh_per_unit": 0.0544554455,
-    "pct_utilization": 0.7899499627,
+    "pct_utilization": 0.7916001278,
     "beds_in_system": 1284.0,
-    "bed_pct_utilization": 0.8335091951,
+    "bed_pct_utilization": 0.8342880113,
     "enrolled_suppression_marker": null
   },
   {
@@ -4374,9 +4374,9 @@
     "units_in_system": 3807.0,
     "enrolled": 703.0,
     "throughput_hh_per_unit": 0.1846598371,
-    "pct_utilization": 0.9032459159,
+    "pct_utilization": 0.9028360134,
     "beds_in_system": 4896.0,
-    "bed_pct_utilization": 0.878464776,
+    "bed_pct_utilization": 0.8783512042,
     "enrolled_suppression_marker": null
   },
   {
@@ -4386,9 +4386,9 @@
     "units_in_system": 7562.0,
     "enrolled": 137.0,
     "throughput_hh_per_unit": 0.0181169003,
-    "pct_utilization": 0.9122863895,
+    "pct_utilization": 0.9110962282,
     "beds_in_system": 8986.0,
-    "bed_pct_utilization": 0.9071925504,
+    "bed_pct_utilization": 0.9061909924,
     "enrolled_suppression_marker": null
   },
   {
@@ -4396,7 +4396,7 @@
     "project_type": "rrh",
     "subregion": "Overall",
     "units_in_system": 0.0,
-    "enrolled": 102.0,
+    "enrolled": 103.0,
     "throughput_hh_per_unit": null,
     "pct_utilization": null,
     "beds_in_system": 0.0,
@@ -4410,9 +4410,9 @@
     "units_in_system": 606.0,
     "enrolled": 33.0,
     "throughput_hh_per_unit": 0.0544554455,
-    "pct_utilization": 0.7919727457,
+    "pct_utilization": 0.7936229107,
     "beds_in_system": 1284.0,
-    "bed_pct_utilization": 0.8352678123,
+    "bed_pct_utilization": 0.8360466285,
     "enrolled_suppression_marker": null
   },
   {
@@ -4420,11 +4420,11 @@
     "project_type": "es",
     "subregion": "Overall",
     "units_in_system": 3830.0,
-    "enrolled": 644.0,
-    "throughput_hh_per_unit": 0.1681462141,
-    "pct_utilization": 0.8989649083,
+    "enrolled": 649.0,
+    "throughput_hh_per_unit": 0.1694516971,
+    "pct_utilization": 0.8984316262,
     "beds_in_system": 4919.0,
-    "bed_pct_utilization": 0.863072571,
+    "bed_pct_utilization": 0.8628617669,
     "enrolled_suppression_marker": null
   },
   {
@@ -4434,9 +4434,9 @@
     "units_in_system": 7567.0,
     "enrolled": 102.0,
     "throughput_hh_per_unit": 0.0134795824,
-    "pct_utilization": 0.9178423822,
+    "pct_utilization": 0.9166527138,
     "beds_in_system": 8987.0,
-    "bed_pct_utilization": 0.9125778137,
+    "bed_pct_utilization": 0.9115761591,
     "enrolled_suppression_marker": null
   },
   {
@@ -4444,7 +4444,7 @@
     "project_type": "rrh",
     "subregion": "Overall",
     "units_in_system": 0.0,
-    "enrolled": 133.0,
+    "enrolled": 135.0,
     "throughput_hh_per_unit": null,
     "pct_utilization": null,
     "beds_in_system": 0.0,
@@ -4456,11 +4456,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 606.0,
-    "enrolled": 33.0,
-    "throughput_hh_per_unit": 0.0544554455,
-    "pct_utilization": 0.7758525853,
+    "enrolled": 35.0,
+    "throughput_hh_per_unit": 0.0577557756,
+    "pct_utilization": 0.7773377338,
     "beds_in_system": 1284.0,
-    "bed_pct_utilization": 0.8213655244,
+    "bed_pct_utilization": 0.8214953271,
     "enrolled_suppression_marker": null
   },
   {
@@ -4468,11 +4468,11 @@
     "project_type": "es",
     "subregion": "Overall",
     "units_in_system": 3923.0,
-    "enrolled": 632.0,
-    "throughput_hh_per_unit": 0.1611011981,
-    "pct_utilization": 0.8236197343,
+    "enrolled": 719.0,
+    "throughput_hh_per_unit": 0.1832781035,
+    "pct_utilization": 0.8838123373,
     "beds_in_system": 5021.0,
-    "bed_pct_utilization": 0.796458049,
+    "bed_pct_utilization": 0.843335283,
     "enrolled_suppression_marker": null
   },
   {
@@ -4480,11 +4480,11 @@
     "project_type": "ph",
     "subregion": "Overall",
     "units_in_system": 7511.0,
-    "enrolled": 78.0,
-    "throughput_hh_per_unit": 0.010384769,
-    "pct_utilization": 0.9224921728,
+    "enrolled": 84.0,
+    "throughput_hh_per_unit": 0.0111835974,
+    "pct_utilization": 0.9212466877,
     "beds_in_system": 8931.0,
-    "bed_pct_utilization": 0.9164887796,
+    "bed_pct_utilization": 0.9154593821,
     "enrolled_suppression_marker": null
   },
   {
@@ -4492,7 +4492,7 @@
     "project_type": "rrh",
     "subregion": "Overall",
     "units_in_system": 0.0,
-    "enrolled": 113.0,
+    "enrolled": 115.0,
     "throughput_hh_per_unit": null,
     "pct_utilization": null,
     "beds_in_system": 0.0,
@@ -4504,11 +4504,11 @@
     "project_type": "th",
     "subregion": "Overall",
     "units_in_system": 563.0,
-    "enrolled": 25.0,
-    "throughput_hh_per_unit": 0.0444049734,
-    "pct_utilization": 0.8273649229,
+    "enrolled": 29.0,
+    "throughput_hh_per_unit": 0.0515097691,
+    "pct_utilization": 0.828453561,
     "beds_in_system": 1241.0,
-    "bed_pct_utilization": 0.8503028255,
+    "bed_pct_utilization": 0.8498349406,
     "enrolled_suppression_marker": null
   },
   {
@@ -18364,8 +18364,8 @@
     "project_type": "ph",
     "subregion": "Seattle Metro",
     "units_in_system": 5667.0,
-    "enrolled": 123.0,
-    "throughput_hh_per_unit": 0.0217046056,
+    "enrolled": 122.0,
+    "throughput_hh_per_unit": 0.0215281454,
     "pct_utilization": 0.9303923299,
     "beds_in_system": 6484.0,
     "bed_pct_utilization": 0.9073719926,
@@ -19326,7 +19326,7 @@
     "units_in_system": 2910.0,
     "enrolled": 507.0,
     "throughput_hh_per_unit": 0.1742268041,
-    "pct_utilization": 0.8456701031,
+    "pct_utilization": 0.8454180985,
     "beds_in_system": 3410.0,
     "bed_pct_utilization": 0.8695698925,
     "enrolled_suppression_marker": null
@@ -19530,7 +19530,7 @@
     "units_in_system": 2910.0,
     "enrolled": 506.0,
     "throughput_hh_per_unit": 0.1738831615,
-    "pct_utilization": 0.8613915938,
+    "pct_utilization": 0.8610430207,
     "beds_in_system": 3410.0,
     "bed_pct_utilization": 0.877233468,
     "enrolled_suppression_marker": null
@@ -19731,12 +19731,12 @@
     "month": "2025-01-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2883.0,
+    "units_in_system": 2867.0,
     "enrolled": 881.0,
-    "throughput_hh_per_unit": 0.3055844606,
-    "pct_utilization": 0.8503239233,
-    "beds_in_system": 3387.0,
-    "bed_pct_utilization": 0.8615008048,
+    "throughput_hh_per_unit": 0.30728985,
+    "pct_utilization": 0.8547205689,
+    "beds_in_system": 3371.0,
+    "bed_pct_utilization": 0.865589803,
     "enrolled_suppression_marker": null
   },
   {
@@ -19792,8 +19792,8 @@
     "project_type": "ph",
     "subregion": "Seattle Metro",
     "units_in_system": 5552.0,
-    "enrolled": 85.0,
-    "throughput_hh_per_unit": 0.0153097983,
+    "enrolled": 84.0,
+    "throughput_hh_per_unit": 0.015129683,
     "pct_utilization": 0.9651912708,
     "beds_in_system": 6227.0,
     "bed_pct_utilization": 0.9558271212,
@@ -19935,12 +19935,12 @@
     "month": "2025-02-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2883.0,
+    "units_in_system": 2867.0,
     "enrolled": 499.0,
-    "throughput_hh_per_unit": 0.1730835935,
-    "pct_utilization": 0.8560005978,
-    "beds_in_system": 3387.0,
-    "bed_pct_utilization": 0.8726535564,
+    "throughput_hh_per_unit": 0.1740495291,
+    "pct_utilization": 0.8604528831,
+    "beds_in_system": 3371.0,
+    "bed_pct_utilization": 0.8768337539,
     "enrolled_suppression_marker": null
   },
   {
@@ -20139,12 +20139,12 @@
     "month": "2025-03-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2976.0,
+    "units_in_system": 2960.0,
     "enrolled": 552.0,
-    "throughput_hh_per_unit": 0.185483871,
-    "pct_utilization": 0.8144185744,
-    "beds_in_system": 3465.0,
-    "bed_pct_utilization": 0.8301820044,
+    "throughput_hh_per_unit": 0.1864864865,
+    "pct_utilization": 0.8184829991,
+    "beds_in_system": 3449.0,
+    "bed_pct_utilization": 0.8340332401,
     "enrolled_suppression_marker": null
   },
   {
@@ -20343,12 +20343,12 @@
     "month": "2025-04-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2866.0,
+    "units_in_system": 2850.0,
     "enrolled": 508.0,
-    "throughput_hh_per_unit": 0.1772505234,
-    "pct_utilization": 0.864026434,
-    "beds_in_system": 3355.0,
-    "bed_pct_utilization": 0.8715942674,
+    "throughput_hh_per_unit": 0.178245614,
+    "pct_utilization": 0.868625529,
+    "beds_in_system": 3339.0,
+    "bed_pct_utilization": 0.8758492331,
     "enrolled_suppression_marker": null
   },
   {
@@ -20547,12 +20547,12 @@
     "month": "2025-05-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2780.0,
+    "units_in_system": 2764.0,
     "enrolled": 492.0,
-    "throughput_hh_per_unit": 0.1769784173,
-    "pct_utilization": 0.8758180552,
-    "beds_in_system": 3269.0,
-    "bed_pct_utilization": 0.8802632748,
+    "throughput_hh_per_unit": 0.1780028944,
+    "pct_utilization": 0.8805261192,
+    "beds_in_system": 3253.0,
+    "bed_pct_utilization": 0.884592882,
     "enrolled_suppression_marker": null
   },
   {
@@ -20763,12 +20763,12 @@
     "month": "2025-06-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2760.0,
+    "units_in_system": 2744.0,
     "enrolled": 483.0,
-    "throughput_hh_per_unit": 0.175,
-    "pct_utilization": 0.879468599,
-    "beds_in_system": 3249.0,
-    "bed_pct_utilization": 0.8804452652,
+    "throughput_hh_per_unit": 0.1760204082,
+    "pct_utilization": 0.8842322643,
+    "beds_in_system": 3233.0,
+    "bed_pct_utilization": 0.884802557,
     "enrolled_suppression_marker": null
   },
   {
@@ -20979,12 +20979,12 @@
     "month": "2025-07-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2802.0,
+    "units_in_system": 2786.0,
     "enrolled": 518.0,
-    "throughput_hh_per_unit": 0.1848679515,
-    "pct_utilization": 0.8732011697,
-    "beds_in_system": 3291.0,
-    "bed_pct_utilization": 0.874006332,
+    "throughput_hh_per_unit": 0.1859296482,
+    "pct_utilization": 0.8778570271,
+    "beds_in_system": 3275.0,
+    "bed_pct_utilization": 0.8782762866,
     "enrolled_suppression_marker": null
   },
   {
@@ -21004,11 +21004,11 @@
     "project_type": "es",
     "subregion": "South King County",
     "units_in_system": 294.0,
-    "enrolled": 50.0,
-    "throughput_hh_per_unit": 0.1700680272,
-    "pct_utilization": 0.9353741497,
+    "enrolled": 51.0,
+    "throughput_hh_per_unit": 0.1734693878,
+    "pct_utilization": 0.9381171824,
     "beds_in_system": 507.0,
-    "bed_pct_utilization": 1.0001272507,
+    "bed_pct_utilization": 1.0017178851,
     "enrolled_suppression_marker": null
   },
   {
@@ -21054,9 +21054,9 @@
     "units_in_system": 5683.0,
     "enrolled": 67.0,
     "throughput_hh_per_unit": 0.0117895478,
-    "pct_utilization": 0.9585214207,
+    "pct_utilization": 0.9572892712,
     "beds_in_system": 6368.0,
-    "bed_pct_utilization": 0.9494400811,
+    "bed_pct_utilization": 0.9483405118,
     "enrolled_suppression_marker": null
   },
   {
@@ -21195,12 +21195,12 @@
     "month": "2025-08-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2952.0,
-    "enrolled": 552.0,
-    "throughput_hh_per_unit": 0.1869918699,
-    "pct_utilization": 0.8451022817,
-    "beds_in_system": 3441.0,
-    "bed_pct_utilization": 0.8599338152,
+    "units_in_system": 2936.0,
+    "enrolled": 551.0,
+    "throughput_hh_per_unit": 0.1876702997,
+    "pct_utilization": 0.8492243122,
+    "beds_in_system": 3425.0,
+    "bed_pct_utilization": 0.8638285849,
     "enrolled_suppression_marker": null
   },
   {
@@ -21222,9 +21222,9 @@
     "units_in_system": 294.0,
     "enrolled": 38.0,
     "throughput_hh_per_unit": 0.1292517007,
-    "pct_utilization": 0.9352644284,
+    "pct_utilization": 0.9386657889,
     "beds_in_system": 507.0,
-    "bed_pct_utilization": 0.9850480372,
+    "bed_pct_utilization": 0.9870204237,
     "enrolled_suppression_marker": null
   },
   {
@@ -21270,9 +21270,9 @@
     "units_in_system": 5701.0,
     "enrolled": 57.0,
     "throughput_hh_per_unit": 0.0099982459,
-    "pct_utilization": 0.9524361883,
+    "pct_utilization": 0.9512083336,
     "beds_in_system": 6386.0,
-    "bed_pct_utilization": 0.9423385834,
+    "bed_pct_utilization": 0.9412424356,
     "enrolled_suppression_marker": null
   },
   {
@@ -21411,12 +21411,12 @@
     "month": "2025-09-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2802.0,
+    "units_in_system": 2786.0,
     "enrolled": 526.0,
-    "throughput_hh_per_unit": 0.187723055,
-    "pct_utilization": 0.8991553652,
-    "beds_in_system": 3291.0,
-    "bed_pct_utilization": 0.9082548364,
+    "throughput_hh_per_unit": 0.1888011486,
+    "pct_utilization": 0.903622963,
+    "beds_in_system": 3275.0,
+    "bed_pct_utilization": 0.9124424901,
     "enrolled_suppression_marker": null
   },
   {
@@ -21426,9 +21426,9 @@
     "units_in_system": 15.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.8666666667,
+    "pct_utilization": 0.9177777778,
     "beds_in_system": 30.0,
-    "bed_pct_utilization": 0.6588888889,
+    "bed_pct_utilization": 0.8377777778,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -21438,9 +21438,9 @@
     "units_in_system": 294.0,
     "enrolled": 54.0,
     "throughput_hh_per_unit": 0.1836734694,
-    "pct_utilization": 0.9222222222,
+    "pct_utilization": 0.9256235828,
     "beds_in_system": 507.0,
-    "bed_pct_utilization": 0.9666666667,
+    "bed_pct_utilization": 0.9686390533,
     "enrolled_suppression_marker": null
   },
   {
@@ -21486,9 +21486,9 @@
     "units_in_system": 5644.0,
     "enrolled": 135.0,
     "throughput_hh_per_unit": 0.0239192062,
-    "pct_utilization": 0.9585695724,
+    "pct_utilization": 0.9573293173,
     "beds_in_system": 6329.0,
-    "bed_pct_utilization": 0.9493653552,
+    "bed_pct_utilization": 0.9482593353,
     "enrolled_suppression_marker": null
   },
   {
@@ -21627,12 +21627,12 @@
     "month": "2025-10-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2802.0,
+    "units_in_system": 2784.0,
     "enrolled": 579.0,
-    "throughput_hh_per_unit": 0.2066381156,
-    "pct_utilization": 0.9005433907,
-    "beds_in_system": 3291.0,
-    "bed_pct_utilization": 0.9169582733,
+    "throughput_hh_per_unit": 0.2079741379,
+    "pct_utilization": 0.905798109,
+    "beds_in_system": 3269.0,
+    "bed_pct_utilization": 0.922951677,
     "enrolled_suppression_marker": null
   },
   {
@@ -21642,9 +21642,9 @@
     "units_in_system": 15.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.7784946237,
+    "pct_utilization": 0.8451612903,
     "beds_in_system": 30.0,
-    "bed_pct_utilization": 0.5967741935,
+    "bed_pct_utilization": 0.8301075269,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -21652,11 +21652,11 @@
     "project_type": "es",
     "subregion": "South King County",
     "units_in_system": 294.0,
-    "enrolled": 46.0,
-    "throughput_hh_per_unit": 0.156462585,
-    "pct_utilization": 0.9199034452,
+    "enrolled": 45.0,
+    "throughput_hh_per_unit": 0.1530612245,
+    "pct_utilization": 0.9227561993,
     "beds_in_system": 507.0,
-    "bed_pct_utilization": 0.9814213909,
+    "bed_pct_utilization": 0.9830756506,
     "enrolled_suppression_marker": null
   },
   {
@@ -21702,9 +21702,9 @@
     "units_in_system": 5644.0,
     "enrolled": 72.0,
     "throughput_hh_per_unit": 0.01275691,
-    "pct_utilization": 0.9616492536,
+    "pct_utilization": 0.9604089984,
     "beds_in_system": 6329.0,
-    "bed_pct_utilization": 0.9543371781,
+    "bed_pct_utilization": 0.9532311582,
     "enrolled_suppression_marker": null
   },
   {
@@ -21796,8 +21796,8 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 466.0,
-    "enrolled": 26.0,
-    "throughput_hh_per_unit": 0.0557939914,
+    "enrolled": 25.0,
+    "throughput_hh_per_unit": 0.0536480687,
     "pct_utilization": 0.6914716877,
     "beds_in_system": 801.0,
     "bed_pct_utilization": 0.7118521203,
@@ -21843,12 +21843,12 @@
     "month": "2025-11-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 2973.0,
+    "units_in_system": 2955.0,
     "enrolled": 546.0,
-    "throughput_hh_per_unit": 0.1836528759,
-    "pct_utilization": 0.8477580111,
-    "beds_in_system": 3493.0,
-    "bed_pct_utilization": 0.8530302307,
+    "throughput_hh_per_unit": 0.1847715736,
+    "pct_utilization": 0.8523629383,
+    "beds_in_system": 3471.0,
+    "bed_pct_utilization": 0.8582496275,
     "enrolled_suppression_marker": null
   },
   {
@@ -21858,9 +21858,9 @@
     "units_in_system": 15.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 1.0355555556,
+    "pct_utilization": 1.1022222222,
     "beds_in_system": 30.0,
-    "bed_pct_utilization": 0.6911111111,
+    "bed_pct_utilization": 0.9244444444,
     "enrolled_suppression_marker": "**"
   },
   {
@@ -21918,9 +21918,9 @@
     "units_in_system": 5839.0,
     "enrolled": 153.0,
     "throughput_hh_per_unit": 0.026203117,
-    "pct_utilization": 0.939371942,
+    "pct_utilization": 0.9381716128,
     "beds_in_system": 6524.0,
-    "bed_pct_utilization": 0.9354431157,
+    "bed_pct_utilization": 0.9343689579,
     "enrolled_suppression_marker": null
   },
   {
@@ -22059,12 +22059,12 @@
     "month": "2025-12-01",
     "project_type": "es",
     "subregion": "Seattle Metro",
-    "units_in_system": 3003.0,
+    "units_in_system": 2985.0,
     "enrolled": 786.0,
-    "throughput_hh_per_unit": 0.2617382617,
-    "pct_utilization": 0.8494945914,
-    "beds_in_system": 3523.0,
-    "bed_pct_utilization": 0.8548158186,
+    "throughput_hh_per_unit": 0.2633165829,
+    "pct_utilization": 0.8539471551,
+    "beds_in_system": 3501.0,
+    "bed_pct_utilization": 0.8599017792,
     "enrolled_suppression_marker": null
   },
   {
@@ -22074,9 +22074,9 @@
     "units_in_system": 15.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 1.1827956989,
+    "pct_utilization": 1.2559139785,
     "beds_in_system": 30.0,
-    "bed_pct_utilization": 0.7924731183,
+    "bed_pct_utilization": 1.0290322581,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -22134,9 +22134,9 @@
     "units_in_system": 5839.0,
     "enrolled": 137.0,
     "throughput_hh_per_unit": 0.0234629217,
-    "pct_utilization": 0.9547260081,
+    "pct_utilization": 0.9535271727,
     "beds_in_system": 6524.0,
-    "bed_pct_utilization": 0.9497142066,
+    "bed_pct_utilization": 0.9486412452,
     "enrolled_suppression_marker": null
   },
   {
@@ -22278,9 +22278,9 @@
     "units_in_system": 3016.0,
     "enrolled": 854.0,
     "throughput_hh_per_unit": 0.2831564987,
-    "pct_utilization": 0.8764113014,
+    "pct_utilization": 0.8757834444,
     "beds_in_system": 3564.0,
-    "bed_pct_utilization": 0.8958878129,
+    "bed_pct_utilization": 0.8956387636,
     "enrolled_suppression_marker": null
   },
   {
@@ -22290,9 +22290,9 @@
     "units_in_system": 15.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 1.2752688172,
+    "pct_utilization": 1.2946236559,
     "beds_in_system": 30.0,
-    "bed_pct_utilization": 0.8634408602,
+    "bed_pct_utilization": 0.9311827957,
     "enrolled_suppression_marker": "**"
   },
   {
@@ -22350,9 +22350,9 @@
     "units_in_system": 5767.0,
     "enrolled": 80.0,
     "throughput_hh_per_unit": 0.0138720305,
-    "pct_utilization": 0.9539761826,
+    "pct_utilization": 0.9527623799,
     "beds_in_system": 6499.0,
-    "bed_pct_utilization": 0.9416436276,
+    "bed_pct_utilization": 0.9405665388,
     "enrolled_suppression_marker": null
   },
   {
@@ -22444,11 +22444,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 394.0,
-    "enrolled": 26.0,
-    "throughput_hh_per_unit": 0.0659898477,
-    "pct_utilization": 0.8611992651,
+    "enrolled": 27.0,
+    "throughput_hh_per_unit": 0.0685279188,
+    "pct_utilization": 0.8615333222,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.8769942642,
+    "bed_pct_utilization": 0.8771870632,
     "enrolled_suppression_marker": null
   },
   {
@@ -22494,9 +22494,9 @@
     "units_in_system": 3002.0,
     "enrolled": 699.0,
     "throughput_hh_per_unit": 0.2328447702,
-    "pct_utilization": 0.8656235784,
+    "pct_utilization": 0.8651926162,
     "beds_in_system": 3555.0,
-    "bed_pct_utilization": 0.8706529418,
+    "bed_pct_utilization": 0.8705722071,
     "enrolled_suppression_marker": null
   },
   {
@@ -22506,9 +22506,9 @@
     "units_in_system": 25.0,
     "enrolled": 26.0,
     "throughput_hh_per_unit": 1.04,
-    "pct_utilization": 0.7814285714,
+    "pct_utilization": 0.7857142857,
     "beds_in_system": 31.0,
-    "bed_pct_utilization": 0.797235023,
+    "bed_pct_utilization": 0.8006912442,
     "enrolled_suppression_marker": null
   },
   {
@@ -22566,9 +22566,9 @@
     "units_in_system": 5933.0,
     "enrolled": 86.0,
     "throughput_hh_per_unit": 0.0144951964,
-    "pct_utilization": 0.9309672293,
+    "pct_utilization": 0.9297873877,
     "beds_in_system": 6665.0,
-    "bed_pct_utilization": 0.9214660808,
+    "bed_pct_utilization": 0.9204158182,
     "enrolled_suppression_marker": null
   },
   {
@@ -22662,9 +22662,9 @@
     "units_in_system": 394.0,
     "enrolled": 16.0,
     "throughput_hh_per_unit": 0.0406091371,
-    "pct_utilization": 0.8439992748,
+    "pct_utilization": 0.8465373459,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.8734437645,
+    "bed_pct_utilization": 0.8749208694,
     "enrolled_suppression_marker": null
   },
   {
@@ -22710,9 +22710,9 @@
     "units_in_system": 2997.0,
     "enrolled": 724.0,
     "throughput_hh_per_unit": 0.2415749082,
-    "pct_utilization": 0.8767477155,
+    "pct_utilization": 0.8761664891,
     "beds_in_system": 3553.0,
-    "bed_pct_utilization": 0.8852310179,
+    "bed_pct_utilization": 0.8850221984,
     "enrolled_suppression_marker": null
   },
   {
@@ -22722,9 +22722,9 @@
     "units_in_system": 25.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.6258064516,
+    "pct_utilization": 0.6283870968,
     "beds_in_system": 31.0,
-    "bed_pct_utilization": 0.616024974,
+    "bed_pct_utilization": 0.6181061394,
     "enrolled_suppression_marker": "**"
   },
   {
@@ -22782,9 +22782,9 @@
     "units_in_system": 5941.0,
     "enrolled": 81.0,
     "throughput_hh_per_unit": 0.0136340683,
-    "pct_utilization": 0.9349601891,
+    "pct_utilization": 0.9337808093,
     "beds_in_system": 6673.0,
-    "bed_pct_utilization": 0.9252589665,
+    "bed_pct_utilization": 0.9242090698,
     "enrolled_suppression_marker": null
   },
   {
@@ -22876,11 +22876,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 394.0,
-    "enrolled": 21.0,
-    "throughput_hh_per_unit": 0.0532994924,
-    "pct_utilization": 0.825364336,
+    "enrolled": 22.0,
+    "throughput_hh_per_unit": 0.0558375635,
+    "pct_utilization": 0.8284755199,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.8552437223,
+    "bed_pct_utilization": 0.857054367,
     "enrolled_suppression_marker": null
   },
   {
@@ -22924,11 +22924,11 @@
     "project_type": "es",
     "subregion": "Seattle Metro",
     "units_in_system": 2863.0,
-    "enrolled": 630.0,
-    "throughput_hh_per_unit": 0.2200488998,
-    "pct_utilization": 0.9268232819,
+    "enrolled": 631.0,
+    "throughput_hh_per_unit": 0.2203981837,
+    "pct_utilization": 0.9265895278,
     "beds_in_system": 3419.0,
-    "bed_pct_utilization": 0.931562989,
+    "bed_pct_utilization": 0.9316607981,
     "enrolled_suppression_marker": null
   },
   {
@@ -22998,9 +22998,9 @@
     "units_in_system": 5941.0,
     "enrolled": 98.0,
     "throughput_hh_per_unit": 0.0164955395,
-    "pct_utilization": 0.9375751582,
+    "pct_utilization": 0.9363951045,
     "beds_in_system": 6673.0,
-    "bed_pct_utilization": 0.928075511,
+    "bed_pct_utilization": 0.9270250803,
     "enrolled_suppression_marker": null
   },
   {
@@ -23092,11 +23092,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 394.0,
-    "enrolled": 14.0,
-    "throughput_hh_per_unit": 0.0355329949,
-    "pct_utilization": 0.8093062606,
+    "enrolled": 15.0,
+    "throughput_hh_per_unit": 0.038071066,
+    "pct_utilization": 0.8159052453,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.8381585426,
+    "bed_pct_utilization": 0.8419990153,
     "enrolled_suppression_marker": null
   },
   {
@@ -23142,9 +23142,9 @@
     "units_in_system": 2863.0,
     "enrolled": 585.0,
     "throughput_hh_per_unit": 0.2043311212,
-    "pct_utilization": 0.9363547935,
+    "pct_utilization": 0.9361964439,
     "beds_in_system": 3419.0,
-    "bed_pct_utilization": 0.9400840527,
+    "bed_pct_utilization": 0.9402449644,
     "enrolled_suppression_marker": null
   },
   {
@@ -23214,9 +23214,9 @@
     "units_in_system": 5887.0,
     "enrolled": 50.0,
     "throughput_hh_per_unit": 0.0084932903,
-    "pct_utilization": 0.9432429026,
+    "pct_utilization": 0.942053842,
     "beds_in_system": 6619.0,
-    "bed_pct_utilization": 0.9330470932,
+    "bed_pct_utilization": 0.9319895316,
     "enrolled_suppression_marker": null
   },
   {
@@ -23310,9 +23310,9 @@
     "units_in_system": 394.0,
     "enrolled": 20.0,
     "throughput_hh_per_unit": 0.0507614213,
-    "pct_utilization": 0.7752579008,
+    "pct_utilization": 0.7814802685,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.8042121313,
+    "bed_pct_utilization": 0.8078334207,
     "enrolled_suppression_marker": null
   },
   {
@@ -23358,9 +23358,9 @@
     "units_in_system": 3067.0,
     "enrolled": 592.0,
     "throughput_hh_per_unit": 0.1930224976,
-    "pct_utilization": 0.875,
+    "pct_utilization": 0.8751308901,
     "beds_in_system": 3630.0,
-    "bed_pct_utilization": 0.8835866261,
+    "bed_pct_utilization": 0.8839734733,
     "enrolled_suppression_marker": null
   },
   {
@@ -23418,9 +23418,9 @@
     "units_in_system": 164.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.937601626,
+    "pct_utilization": 0.9333333333,
     "beds_in_system": 228.0,
-    "bed_pct_utilization": 0.9112573099,
+    "bed_pct_utilization": 0.9081871345,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -23428,11 +23428,11 @@
     "project_type": "ph",
     "subregion": "Seattle Metro",
     "units_in_system": 6007.0,
-    "enrolled": 63.0,
-    "throughput_hh_per_unit": 0.0104877643,
-    "pct_utilization": 0.923111925,
+    "enrolled": 64.0,
+    "throughput_hh_per_unit": 0.0106542367,
+    "pct_utilization": 0.9220853449,
     "beds_in_system": 6739.0,
-    "bed_pct_utilization": 0.9169906514,
+    "bed_pct_utilization": 0.9160508483,
     "enrolled_suppression_marker": null
   },
   {
@@ -23454,9 +23454,9 @@
     "units_in_system": 812.0,
     "enrolled": 32.0,
     "throughput_hh_per_unit": 0.039408867,
-    "pct_utilization": 0.850410509,
+    "pct_utilization": 0.8503694581,
     "beds_in_system": 1152.0,
-    "bed_pct_utilization": 0.8625868056,
+    "bed_pct_utilization": 0.8625578704,
     "enrolled_suppression_marker": null
   },
   {
@@ -23524,11 +23524,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 394.0,
-    "enrolled": 14.0,
-    "throughput_hh_per_unit": 0.0355329949,
-    "pct_utilization": 0.7365482234,
+    "enrolled": 15.0,
+    "throughput_hh_per_unit": 0.038071066,
+    "pct_utilization": 0.7384094755,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.7663712457,
+    "bed_pct_utilization": 0.7674544559,
     "enrolled_suppression_marker": null
   },
   {
@@ -23574,9 +23574,9 @@
     "units_in_system": 3098.0,
     "enrolled": 586.0,
     "throughput_hh_per_unit": 0.1891542931,
-    "pct_utilization": 0.8768499889,
+    "pct_utilization": 0.8770501301,
     "beds_in_system": 3661.0,
-    "bed_pct_utilization": 0.8839624152,
+    "bed_pct_utilization": 0.8844073105,
     "enrolled_suppression_marker": null
   },
   {
@@ -23598,9 +23598,9 @@
     "units_in_system": 345.0,
     "enrolled": 56.0,
     "throughput_hh_per_unit": 0.1623188406,
-    "pct_utilization": 0.7167835437,
+    "pct_utilization": 0.7144460028,
     "beds_in_system": 645.0,
-    "bed_pct_utilization": 0.616304076,
+    "bed_pct_utilization": 0.6150537634,
     "enrolled_suppression_marker": null
   },
   {
@@ -23634,9 +23634,9 @@
     "units_in_system": 164.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.9541699449,
+    "pct_utilization": 0.9480723839,
     "beds_in_system": 228.0,
-    "bed_pct_utilization": 0.9231748727,
+    "bed_pct_utilization": 0.9187889078,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -23646,9 +23646,9 @@
     "units_in_system": 6007.0,
     "enrolled": 87.0,
     "throughput_hh_per_unit": 0.014483103,
-    "pct_utilization": 0.9238845003,
+    "pct_utilization": 0.9230521381,
     "beds_in_system": 6739.0,
-    "bed_pct_utilization": 0.9183089288,
+    "bed_pct_utilization": 0.917418589,
     "enrolled_suppression_marker": null
   },
   {
@@ -23668,11 +23668,11 @@
     "project_type": "ph",
     "subregion": "South King County",
     "units_in_system": 812.0,
-    "enrolled": 19.0,
-    "throughput_hh_per_unit": 0.0233990148,
-    "pct_utilization": 0.8697759415,
+    "enrolled": 20.0,
+    "throughput_hh_per_unit": 0.0246305419,
+    "pct_utilization": 0.8679087875,
     "beds_in_system": 1152.0,
-    "bed_pct_utilization": 0.8740479391,
+    "bed_pct_utilization": 0.8727318548,
     "enrolled_suppression_marker": null
   },
   {
@@ -23742,9 +23742,9 @@
     "units_in_system": 394.0,
     "enrolled": 26.0,
     "throughput_hh_per_unit": 0.0659898477,
-    "pct_utilization": 0.7097592926,
+    "pct_utilization": 0.7122973637,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.7634726259,
+    "bed_pct_utilization": 0.7649497308,
     "enrolled_suppression_marker": null
   },
   {
@@ -23790,9 +23790,9 @@
     "units_in_system": 2966.0,
     "enrolled": 560.0,
     "throughput_hh_per_unit": 0.1888064734,
-    "pct_utilization": 0.926771394,
+    "pct_utilization": 0.9265846424,
     "beds_in_system": 3576.0,
-    "bed_pct_utilization": 0.926456121,
+    "bed_pct_utilization": 0.9265848389,
     "enrolled_suppression_marker": null
   },
   {
@@ -23814,9 +23814,9 @@
     "units_in_system": 345.0,
     "enrolled": 44.0,
     "throughput_hh_per_unit": 0.1275362319,
-    "pct_utilization": 0.7366993922,
+    "pct_utilization": 0.7338008415,
     "beds_in_system": 645.0,
-    "bed_pct_utilization": 0.6124531133,
+    "bed_pct_utilization": 0.6109027257,
     "enrolled_suppression_marker": null
   },
   {
@@ -23850,9 +23850,9 @@
     "units_in_system": 164.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.9760031471,
+    "pct_utilization": 0.9699055862,
     "beds_in_system": 228.0,
-    "bed_pct_utilization": 0.9388794567,
+    "bed_pct_utilization": 0.9344934918,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -23862,9 +23862,9 @@
     "units_in_system": 6015.0,
     "enrolled": 100.0,
     "throughput_hh_per_unit": 0.0166251039,
-    "pct_utilization": 0.9265277666,
+    "pct_utilization": 0.9255302604,
     "beds_in_system": 6725.0,
-    "bed_pct_utilization": 0.9250317784,
+    "bed_pct_utilization": 0.9241395851,
     "enrolled_suppression_marker": null
   },
   {
@@ -23886,9 +23886,9 @@
     "units_in_system": 812.0,
     "enrolled": 23.0,
     "throughput_hh_per_unit": 0.0283251232,
-    "pct_utilization": 0.8871762276,
+    "pct_utilization": 0.8847131734,
     "beds_in_system": 1152.0,
-    "bed_pct_utilization": 0.8848846326,
+    "bed_pct_utilization": 0.8831485215,
     "enrolled_suppression_marker": null
   },
   {
@@ -23908,7 +23908,7 @@
     "project_type": "rrh",
     "subregion": "Seattle Metro",
     "units_in_system": 0.0,
-    "enrolled": 85.0,
+    "enrolled": 86.0,
     "throughput_hh_per_unit": null,
     "pct_utilization": null,
     "beds_in_system": 0.0,
@@ -23958,9 +23958,9 @@
     "units_in_system": 394.0,
     "enrolled": 22.0,
     "throughput_hh_per_unit": 0.0558375635,
-    "pct_utilization": 0.7098411659,
+    "pct_utilization": 0.7123792369,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.7601848764,
+    "bed_pct_utilization": 0.7616619812,
     "enrolled_suppression_marker": null
   },
   {
@@ -23980,8 +23980,8 @@
     "project_type": "es",
     "subregion": "East King County",
     "units_in_system": 307.0,
-    "enrolled": 50.0,
-    "throughput_hh_per_unit": 0.1628664495,
+    "enrolled": 51.0,
+    "throughput_hh_per_unit": 0.1661237785,
     "pct_utilization": 0.9175895765,
     "beds_in_system": 411.0,
     "bed_pct_utilization": 0.8895377129,
@@ -24004,11 +24004,11 @@
     "project_type": "es",
     "subregion": "Seattle Metro",
     "units_in_system": 2989.0,
-    "enrolled": 526.0,
-    "throughput_hh_per_unit": 0.1759785882,
-    "pct_utilization": 0.919668895,
+    "enrolled": 530.0,
+    "throughput_hh_per_unit": 0.1773168284,
+    "pct_utilization": 0.9193211898,
     "beds_in_system": 3599.0,
-    "bed_pct_utilization": 0.9042864056,
+    "bed_pct_utilization": 0.9042770995,
     "enrolled_suppression_marker": null
   },
   {
@@ -24030,9 +24030,9 @@
     "units_in_system": 345.0,
     "enrolled": 44.0,
     "throughput_hh_per_unit": 0.1275362319,
-    "pct_utilization": 0.7377777778,
+    "pct_utilization": 0.7348792271,
     "beds_in_system": 645.0,
-    "bed_pct_utilization": 0.6138501292,
+    "bed_pct_utilization": 0.6122997416,
     "enrolled_suppression_marker": null
   },
   {
@@ -24066,9 +24066,9 @@
     "units_in_system": 164.0,
     "enrolled": 0.0,
     "throughput_hh_per_unit": 0.0,
-    "pct_utilization": 0.9833333333,
+    "pct_utilization": 0.9772357724,
     "beds_in_system": 228.0,
-    "bed_pct_utilization": 0.9421052632,
+    "bed_pct_utilization": 0.9377192982,
     "enrolled_suppression_marker": null
   },
   {
@@ -24078,9 +24078,9 @@
     "units_in_system": 6016.0,
     "enrolled": 93.0,
     "throughput_hh_per_unit": 0.0154587766,
-    "pct_utilization": 0.9318484043,
+    "pct_utilization": 0.9308510638,
     "beds_in_system": 6722.0,
-    "bed_pct_utilization": 0.9307497769,
+    "bed_pct_utilization": 0.9298571854,
     "enrolled_suppression_marker": null
   },
   {
@@ -24102,9 +24102,9 @@
     "units_in_system": 812.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.8947044335,
+    "pct_utilization": 0.8922413793,
     "beds_in_system": 1152.0,
-    "bed_pct_utilization": 0.8901909722,
+    "bed_pct_utilization": 0.8884548611,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -24124,7 +24124,7 @@
     "project_type": "rrh",
     "subregion": "Seattle Metro",
     "units_in_system": 0.0,
-    "enrolled": 125.0,
+    "enrolled": 127.0,
     "throughput_hh_per_unit": null,
     "pct_utilization": null,
     "beds_in_system": 0.0,
@@ -24172,11 +24172,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 394.0,
-    "enrolled": 27.0,
-    "throughput_hh_per_unit": 0.0685279188,
-    "pct_utilization": 0.6978849408,
+    "enrolled": 29.0,
+    "throughput_hh_per_unit": 0.0736040609,
+    "pct_utilization": 0.7020304569,
     "beds_in_system": 677.0,
-    "bed_pct_utilization": 0.7500738552,
+    "bed_pct_utilization": 0.7524864599,
     "enrolled_suppression_marker": null
   },
   {
@@ -24186,9 +24186,9 @@
     "units_in_system": 104.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.8907051282,
+    "pct_utilization": 0.8836538462,
     "beds_in_system": 303.0,
-    "bed_pct_utilization": 0.8653465347,
+    "bed_pct_utilization": 0.8605060506,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -24196,11 +24196,11 @@
     "project_type": "es",
     "subregion": "East King County",
     "units_in_system": 307.0,
-    "enrolled": 41.0,
-    "throughput_hh_per_unit": 0.1335504886,
-    "pct_utilization": 0.8784280761,
+    "enrolled": 47.0,
+    "throughput_hh_per_unit": 0.1530944625,
+    "pct_utilization": 0.9203530524,
     "beds_in_system": 411.0,
-    "bed_pct_utilization": 0.8725374774,
+    "bed_pct_utilization": 0.9012636371,
     "enrolled_suppression_marker": null
   },
   {
@@ -24220,11 +24220,11 @@
     "project_type": "es",
     "subregion": "Seattle Metro",
     "units_in_system": 2999.0,
-    "enrolled": 510.0,
-    "throughput_hh_per_unit": 0.1700566856,
-    "pct_utilization": 0.8369175627,
+    "enrolled": 590.0,
+    "throughput_hh_per_unit": 0.1967322441,
+    "pct_utilization": 0.9107721207,
     "beds_in_system": 3609.0,
-    "bed_pct_utilization": 0.8233427173,
+    "bed_pct_utilization": 0.8849719378,
     "enrolled_suppression_marker": null
   },
   {
@@ -24246,9 +24246,9 @@
     "units_in_system": 345.0,
     "enrolled": 42.0,
     "throughput_hh_per_unit": 0.1217391304,
-    "pct_utilization": 0.7438055166,
+    "pct_utilization": 0.7409069659,
     "beds_in_system": 645.0,
-    "bed_pct_utilization": 0.6259564891,
+    "bed_pct_utilization": 0.6244061015,
     "enrolled_suppression_marker": null
   },
   {
@@ -24282,9 +24282,9 @@
     "units_in_system": 164.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.9673485445,
+    "pct_utilization": 0.9612509835,
     "beds_in_system": 228.0,
-    "bed_pct_utilization": 0.9282682513,
+    "bed_pct_utilization": 0.9238822864,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -24292,11 +24292,11 @@
     "project_type": "ph",
     "subregion": "Seattle Metro",
     "units_in_system": 5960.0,
-    "enrolled": 67.0,
-    "throughput_hh_per_unit": 0.0112416107,
-    "pct_utilization": 0.938628491,
+    "enrolled": 73.0,
+    "throughput_hh_per_unit": 0.0122483221,
+    "pct_utilization": 0.9375460056,
     "beds_in_system": 6666.0,
-    "bed_pct_utilization": 0.9376227945,
+    "bed_pct_utilization": 0.9366549558,
     "enrolled_suppression_marker": null
   },
   {
@@ -24318,9 +24318,9 @@
     "units_in_system": 812.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.8917845225,
+    "pct_utilization": 0.8894406483,
     "beds_in_system": 1152.0,
-    "bed_pct_utilization": 0.8843806004,
+    "bed_pct_utilization": 0.8828685036,
     "enrolled_suppression_marker": "*"
   },
   {
@@ -24388,11 +24388,11 @@
     "project_type": "th",
     "subregion": "Seattle Metro",
     "units_in_system": 351.0,
-    "enrolled": 15.0,
-    "throughput_hh_per_unit": 0.0427350427,
-    "pct_utilization": 0.7782372944,
+    "enrolled": 17.0,
+    "throughput_hh_per_unit": 0.0484330484,
+    "pct_utilization": 0.7839353001,
     "beds_in_system": 634.0,
-    "bed_pct_utilization": 0.7995827821,
+    "bed_pct_utilization": 0.8027373563,
     "enrolled_suppression_marker": null
   },
   {
@@ -24402,9 +24402,9 @@
     "units_in_system": 104.0,
     "enrolled": null,
     "throughput_hh_per_unit": null,
-    "pct_utilization": 0.8610421836,
+    "pct_utilization": 0.8477047146,
     "beds_in_system": 303.0,
-    "bed_pct_utilization": 0.847971894,
+    "bed_pct_utilization": 0.8394549132,
     "enrolled_suppression_marker": "*"
   }
 ]

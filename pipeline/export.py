@@ -34,7 +34,9 @@ from .build_length_by_exit import (
 )
 from .build_return_cohorts import build_return_cohort_rows
 from .config import (
+    DECEASED_IN_INACTIVE_FLOW_TYPE,
     DIMENSION_COLUMNS,
+    LENGTH_FULL_STATS_MIN_N,
     PROJECT_ENGAGEMENT_DIMENSIONS,
     PROJECT_TYPE_CODE_TEXT_TO_HUD,
     RACE_DIMENSIONS,
@@ -72,7 +74,13 @@ def _drop_overlap_not_included(df: pd.DataFrame) -> pd.DataFrame:
     return df[~drop].reset_index(drop=True)
 from .demographics import compute_gender_rollups, compute_race_rollups
 from .suppression import (
+    DECEASED_COMBINED_HIGH_COL,
+    DECEASED_HIGH_COL,
+    DECEASED_LOW_COL,
     INSUFFICIENT_POPULATION_MARKER,
+    apply_deceased_bands,
+    unpublished_rows,
+    validate_deceased_bands,
     TRUE_COUNT_COL,
     _group_keys,
     _violating_groups,
@@ -89,7 +97,7 @@ from .suppression import (
 # The sankey's inflow buckets (already_active/newly_homeless/
 # return_from_housed/return_from_inactive) are a true partition of
 # experienced_homelessness, and so are its outflow buckets (still_active/
-# aged_out/permanently_housed/inactive/deceased) — see build_flow.py's
+# aged_out/permanently_housed/inactive, deceased included) — see build_flow.py's
 # _partition_by_individual docstring. Sourced from build_flow.py's own
 # INFLOW_BUCKET_KEYS/OUTFLOW_BUCKET_KEYS (with the "indiv_" prefix those
 # flow_types are actually published under — see build_flow_rows) so this
@@ -107,11 +115,31 @@ def _scope_to_window(df: pd.DataFrame, date_col: str, start: date, end: date) ->
 
 
 def _to_json_records(df: pd.DataFrame, date_cols: list[str]) -> list[dict]:
-    df = df.drop(columns=[TRUE_COUNT_COL], errors="ignore").copy()
+    # "Unknown" categories took part in suppression as hidden cells but are
+    # never shown, so they're never published (see config.UNPUBLISHED_CATEGORIES).
+    df = df[~unpublished_rows(df)]
+    df = df.drop(columns=[TRUE_COUNT_COL, DECEASED_COMBINED_HIGH_COL], errors="ignore").copy()
     for col in date_cols:
         df[col] = pd.to_datetime(df[col]).dt.strftime("%Y-%m-%d")
     # NaN/NaT -> null in the JSON output, not the string "NaN"
-    return json.loads(df.to_json(orient="records", date_format="iso"))
+    records = json.loads(df.to_json(orient="records", date_format="iso"))
+    # count_low/count_high only exist on deceased_in_inactive rows published
+    # as a band (see suppression.apply_deceased_bands); leaving them null on
+    # every other row would just bloat the flow files.
+    if DECEASED_LOW_COL in df.columns:
+        for record in records:
+            if record.get(DECEASED_LOW_COL) is None:
+                record.pop(DECEASED_LOW_COL, None)
+                record.pop(DECEASED_HIGH_COL, None)
+    return records
+
+
+def _split_deceased(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """(flow rows, DECEASED_IN_INACTIVE_FLOW_TYPE rows). The deceased rows
+    skip every count-suppression pass: they're published only as bands
+    (see suppression.apply_deceased_bands), never as counts."""
+    is_deceased = df["flow_type"] == DECEASED_IN_INACTIVE_FLOW_TYPE
+    return df[~is_deceased].reset_index(drop=True), df[is_deceased].reset_index(drop=True)
 
 
 # Timing instrumentation for the silent stretch between the event_systemwide
@@ -220,6 +248,20 @@ def _suppress_capacity_household_count(df: pd.DataFrame, period_col: str, count_
     marker_col = f"{count_col}_suppression_marker"
     df = df.rename(columns={"suppression_marker": marker_col}).drop(columns=[TRUE_COUNT_COL], errors="ignore")
     return df, violations
+
+
+LENGTH_STAT_COLS = ["median_days", "p25_days", "p75_days", "mean_days"]
+
+
+def _publish_length_stats(df: pd.DataFrame, count_col: str = "count") -> pd.DataFrame:
+    """Length-of-time rows as published: no small-cell suppression and no
+    n. Every group with at least one person gets its median; one smaller
+    than LENGTH_FULL_STATS_MIN_N gets only the median (see config.py)."""
+    df = df.copy()
+    n = pd.to_numeric(df[count_col], errors="coerce").fillna(0)
+    df.loc[n == 0, LENGTH_STAT_COLS] = None
+    df.loc[n < LENGTH_FULL_STATS_MIN_N, ["p25_days", "p75_days", "mean_days"]] = None
+    return df.drop(columns=[count_col, "suppression_marker"], errors="ignore")
 
 
 def main():
@@ -464,6 +506,7 @@ def main():
     # --- dashboard_flow_monthly ---
     flow_df = build_flow_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
     flow_df = _drop_overlap_not_included(flow_df)
+    flow_df, flow_deceased_df = _split_deceased(flow_df)
     t = _checkpoint("build_flow_rows", t)
 
     flow_df = apply_full_suppression_pipeline(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
@@ -500,7 +543,11 @@ def main():
         crosstab_group_cols=["month", "population_segment", "dimension", "category"],
         sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
+    # How many of each inactive count are deceased, as a band (see
+    # suppression.apply_deceased_bands). Needs the inactive cells' final markers.
+    flow_deceased_df = apply_deceased_bands(flow_deceased_df, flow_df, period_col="month")
     flow_violations = validate(flow_df, group_cols=["month", "population_segment", "dimension", "flow_type"])
+    flow_violations += validate_deceased_bands(flow_deceased_df, flow_df, period_col="month")
     flow_violations += validate_crosstab(flow_df, group_cols=["month", "population_segment", "dimension", "category"])
     flow_violations += validate_sankey_marginal(flow_df, group_cols=["month", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
     t = _checkpoint("flow_df suppression+validate", t)
@@ -511,6 +558,7 @@ def main():
     # figures) ---
     flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, enrollments, events, month_pop_cache, window_start=pd.Timestamp(start))
     flow_yearly_df = _drop_overlap_not_included(flow_yearly_df)
+    flow_yearly_df, flow_yearly_deceased_df = _split_deceased(flow_yearly_df)
     t = _checkpoint("build_flow_yearly_rows", t)
     flow_yearly_df = apply_full_suppression_pipeline(
         flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
@@ -524,7 +572,11 @@ def main():
         crosstab_group_cols=["year", "population_segment", "dimension", "category"],
         sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
+    # How many of each inactive count are deceased, as a band (see
+    # suppression.apply_deceased_bands). Needs the inactive cells' final markers.
+    flow_yearly_deceased_df = apply_deceased_bands(flow_yearly_deceased_df, flow_yearly_df, period_col="year")
     flow_yearly_violations = validate(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"])
+    flow_yearly_violations += validate_deceased_bands(flow_yearly_deceased_df, flow_yearly_df, period_col="year")
     flow_yearly_violations += validate_crosstab(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
     flow_yearly_violations += validate_sankey_marginal(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
     t = _checkpoint("flow_yearly_df suppression+validate", t)
@@ -534,6 +586,7 @@ def main():
     # see build_flow_quarterly_rows) ---
     flow_quarterly_df = build_flow_quarterly_rows(episodes_with_lookback, enrollments, events, month_pop_cache, window_start=pd.Timestamp(start))
     flow_quarterly_df = _drop_overlap_not_included(flow_quarterly_df)
+    flow_quarterly_df, flow_quarterly_deceased_df = _split_deceased(flow_quarterly_df)
     t = _checkpoint("build_flow_quarterly_rows", t)
     flow_quarterly_df = apply_full_suppression_pipeline(
         flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"]
@@ -549,138 +602,51 @@ def main():
         crosstab_group_cols=["quarter", "population_segment", "dimension", "category"],
         sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
     )
+    # How many of each inactive count are deceased, as a band (see
+    # suppression.apply_deceased_bands). Needs the inactive cells' final markers.
+    flow_quarterly_deceased_df = apply_deceased_bands(flow_quarterly_deceased_df, flow_quarterly_df, period_col="quarter")
     flow_quarterly_violations = validate(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "flow_type"])
+    flow_quarterly_violations += validate_deceased_bands(flow_quarterly_deceased_df, flow_quarterly_df, period_col="quarter")
     flow_quarterly_violations += validate_crosstab(flow_quarterly_df, group_cols=["quarter", "population_segment", "dimension", "category"])
     flow_quarterly_violations += validate_sankey_marginal(
         flow_quarterly_df, group_cols=["quarter", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS
     )
     t = _checkpoint("flow_quarterly_df suppression+validate", t)
 
-    # --- dashboard_length_monthly ---
+    # --- dashboard_length_* tables ---
+    # Medians of days experiencing homelessness never name how many people
+    # are in a group, so these skip small-cell suppression entirely: every
+    # group with at least one person is published, n itself never is, and
+    # groups under LENGTH_FULL_STATS_MIN_N get only their median (see
+    # _publish_length_stats).
     length_df = build_length_rows(episodes_in_window, enrollments, events)
-    length_df = _drop_overlap_not_included(length_df)
+    length_df = _publish_length_stats(_drop_overlap_not_included(length_df))
     t = _checkpoint("build_length_rows", t)
-    length_df = apply_full_suppression_pipeline(length_df, group_cols=["month", "population_segment", "dimension"], count_col="count")
-    # No indiv_flow_* cross-tab in this table (crosstab_group_cols is
-    # unused — see apply_insufficient_population_fallback's own guard).
-    length_df = apply_insufficient_population_fallback(
-        length_df,
-        period_col="month",
-        main_group_cols=["month", "population_segment", "dimension"],
-        crosstab_group_cols=[],
-        count_col="count",
-    )
-    length_violations = validate(length_df, group_cols=["month", "population_segment", "dimension"], count_col="count")
-    # The suppression pipeline only nulls the count column itself — the
-    # derived distribution stats are just as revealing for a small n, so they
-    # must be nulled alongside it, not left populated next to a "*"/"**".
-    length_df.loc[length_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
-    length_df = length_df.rename(columns={"count": "n"})
-    t = _checkpoint("length_df suppression+validate", t)
 
-    # --- dashboard_length_by_exit_monthly (split by permanently_housed/
-    # inactive/aged_out — see build_length_by_exit.py's module docstring for
-    # why the plain dashboard_length_monthly above pools everyone together
-    # in a way that was causing confusion about what it actually measured).
-    # episodes_with_lookback + window_start, not episodes_in_window: aged-out
-    # detection needs a true prior_month for the window's own first
-    # published month, same reason build_flow_rows needs it.
+    # dashboard_length_by_exit_monthly: split by permanently_housed/
+    # inactive/aged_out, deceased excluded (see build_length_by_exit.py's
+    # module docstring). episodes_with_lookback + window_start, not
+    # episodes_in_window: aged-out detection needs a true prior_month for
+    # the window's own first published month, same reason build_flow_rows
+    # needs it.
     length_by_exit_df = build_length_by_exit_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
-    length_by_exit_df = _drop_overlap_not_included(length_by_exit_df)
+    length_by_exit_df = _publish_length_stats(_drop_overlap_not_included(length_by_exit_df))
     t = _checkpoint("build_length_by_exit_rows", t)
-    length_by_exit_df = apply_full_suppression_pipeline(
-        length_by_exit_df, group_cols=["month", "population_segment", "dimension", "exit_type"], count_col="count"
-    )
-    # apply_insufficient_population_fallback's blanking key only recognizes
-    # a column literally named "flow_type" (see its own _key/has_flow_type —
-    # every dashboard_flow_* table already uses that name) — alias exit_type
-    # to it for this one call so blanking stays scoped to the specific
-    # exit_type that triggered it, instead of collapsing to (month,
-    # population_segment, dimension, category) alone and blanking every
-    # exit_type in that slice together.
-    length_by_exit_df = length_by_exit_df.rename(columns={"exit_type": "flow_type"})
-    length_by_exit_df = apply_insufficient_population_fallback(
-        length_by_exit_df,
-        period_col="month",
-        main_group_cols=["month", "population_segment", "dimension", "flow_type"],
-        crosstab_group_cols=[],
-        count_col="count",
-    )
-    length_by_exit_df = length_by_exit_df.rename(columns={"flow_type": "exit_type"})
-    length_by_exit_violations = validate(
-        length_by_exit_df, group_cols=["month", "population_segment", "dimension", "exit_type"], count_col="count"
-    )
-    length_by_exit_df.loc[length_by_exit_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
-    length_by_exit_df = length_by_exit_df.rename(columns={"count": "n"})
-    t = _checkpoint("length_by_exit_df suppression+validate", t)
 
-    # --- dashboard_length_headline_yearly (single pooled median — see
-    # build_length_by_exit.py's own docstring for exactly what this pools) ---
+    # dashboard_length_headline_yearly/_monthly/_quarterly: single pooled
+    # median (deceased included) — see build_length_by_exit.py's own
+    # docstring for exactly what this pools. Monthly/quarterly power
+    # LengthSection's headline KPI card when a reader drills into a
+    # specific month/quarter.
     length_headline_df = build_length_headline_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
-    length_headline_df = _drop_overlap_not_included(length_headline_df)
+    length_headline_df = _publish_length_stats(_drop_overlap_not_included(length_headline_df))
     t = _checkpoint("build_length_headline_rows", t)
-    length_headline_df = apply_full_suppression_pipeline(
-        length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count"
-    )
-    length_headline_df = apply_insufficient_population_fallback(
-        length_headline_df,
-        period_col="year",
-        main_group_cols=["year", "population_segment", "dimension"],
-        crosstab_group_cols=[],
-        count_col="count",
-    )
-    length_headline_violations = validate(length_headline_df, group_cols=["year", "population_segment", "dimension"], count_col="count")
-    length_headline_df.loc[length_headline_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]] = None
-    length_headline_df = length_headline_df.rename(columns={"count": "n"})
-    t = _checkpoint("length_headline_df suppression+validate", t)
-
-    # --- dashboard_length_headline_monthly / _quarterly (same pooled
-    # definition as the yearly table above, just at finer grain — powers
-    # LengthSection's headline KPI card whenever a reader drills into a
-    # specific month/quarter instead of browsing the full year) ---
     length_headline_monthly_df = build_length_headline_monthly_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
-    length_headline_monthly_df = _drop_overlap_not_included(length_headline_monthly_df)
+    length_headline_monthly_df = _publish_length_stats(_drop_overlap_not_included(length_headline_monthly_df))
     t = _checkpoint("build_length_headline_monthly_rows", t)
-    length_headline_monthly_df = apply_full_suppression_pipeline(
-        length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], count_col="count"
-    )
-    length_headline_monthly_df = apply_insufficient_population_fallback(
-        length_headline_monthly_df,
-        period_col="month",
-        main_group_cols=["month", "population_segment", "dimension"],
-        crosstab_group_cols=[],
-        count_col="count",
-    )
-    length_headline_monthly_violations = validate(
-        length_headline_monthly_df, group_cols=["month", "population_segment", "dimension"], count_col="count"
-    )
-    length_headline_monthly_df.loc[
-        length_headline_monthly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
-    ] = None
-    length_headline_monthly_df = length_headline_monthly_df.rename(columns={"count": "n"})
-    t = _checkpoint("length_headline_monthly_df suppression+validate", t)
-
     length_headline_quarterly_df = build_length_headline_quarterly_rows(episodes_with_lookback, enrollments, events, window_start=pd.Timestamp(start))
-    length_headline_quarterly_df = _drop_overlap_not_included(length_headline_quarterly_df)
+    length_headline_quarterly_df = _publish_length_stats(_drop_overlap_not_included(length_headline_quarterly_df))
     t = _checkpoint("build_length_headline_quarterly_rows", t)
-    length_headline_quarterly_df = apply_full_suppression_pipeline(
-        length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], count_col="count"
-    )
-    length_headline_quarterly_df = apply_insufficient_population_fallback(
-        length_headline_quarterly_df,
-        period_col="quarter",
-        main_group_cols=["quarter", "population_segment", "dimension"],
-        crosstab_group_cols=[],
-        count_col="count",
-    )
-    length_headline_quarterly_violations = validate(
-        length_headline_quarterly_df, group_cols=["quarter", "population_segment", "dimension"], count_col="count"
-    )
-    length_headline_quarterly_df.loc[
-        length_headline_quarterly_df["suppression_marker"].notna(), ["median_days", "p25_days", "p75_days", "mean_days"]
-    ] = None
-    length_headline_quarterly_df = length_headline_quarterly_df.rename(columns={"count": "n"})
-    t = _checkpoint("length_headline_quarterly_df suppression+validate", t)
 
     # --- dashboard_return_cohorts ---
     return_df = build_return_cohort_rows(episodes_in_window, all_episodes, enrollments, events, as_of=as_of)
@@ -763,11 +729,6 @@ def main():
         flow_violations
         + flow_yearly_violations
         + flow_quarterly_violations
-        + length_violations
-        + length_by_exit_violations
-        + length_headline_violations
-        + length_headline_monthly_violations
-        + length_headline_quarterly_violations
         + return_violations
         + capacity_violations
         + capacity_quarterly_violations
@@ -782,6 +743,9 @@ def main():
     # inflow_bucket/outflow_bucket only exist to give
     # apply_crosstab_secondary_suppression a clean grouping key — internal,
     # like TRUE_COUNT_COL, never written to the exported JSON.
+    flow_df = pd.concat([flow_df, flow_deceased_df], ignore_index=True)
+    flow_yearly_df = pd.concat([flow_yearly_df, flow_yearly_deceased_df], ignore_index=True)
+    flow_quarterly_df = pd.concat([flow_quarterly_df, flow_quarterly_deceased_df], ignore_index=True)
     flow_df = flow_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")
     flow_yearly_df = flow_yearly_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")
     flow_quarterly_df = flow_quarterly_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")

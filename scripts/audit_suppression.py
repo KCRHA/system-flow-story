@@ -22,12 +22,21 @@ Checks
      relationship (total minus visible parts). Relationship families
      (crosstab rows/cols, sankey in/out, each dimension's categories vs
      overall, subregions vs Overall) are only used if they're EXACT on
-     every fully-visible group in that file, so non-partitions (gender,
-     ...) can't produce false positives.
+     every fully-visible group in that file, or if their parts never exceed
+     the total (a dimension whose "Unknown" isn't published): those get one
+     extra hidden remainder cell that is 0 or more; that remainder itself
+     is never reported.
   D  a relationship whose k hidden cells are all "*" (so each is >= 1) and
      sum to exactly k, forcing each one to 1
   H  derived field published next to a suppressed count it was built from
-     (length stats, pct_returned, capacity per-household ratios)
+     (pct_returned, capacity per-household ratios)
+  N  deceased_in_inactive (how many of an inactive count are deceased,
+     published only as a band of 10): a nonzero count published as a
+     number, a band that isn't 1-10/11-20/..., a band next to an inactive
+     cell hidden by anything but "*", or a deceased count of 1..10 pinned
+     by one dimension's categories vs overall
+  O  a length-of-time table publishing n (it never should: medians are
+     published for every group with anyone in it, so n is what identifies)
   INFO  relationships whose hidden cells sum to < 11 (bounded, not exact)
 
 Not a finding: capacity pct_utilization/bed_pct_utilization are unit/bed
@@ -43,7 +52,11 @@ import sys
 T = 11
 DATA = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "..", "public", "data")
 INFLOW = ["already_active", "newly_homeless", "return_from_housed", "return_from_inactive"]
-OUTFLOW = ["still_active", "aged_out", "permanently_housed", "inactive", "deceased"]
+OUTFLOW = ["still_active", "aged_out", "permanently_housed", "inactive"]  # deceased is folded into inactive
+DECEASED = "deceased_in_inactive"
+REMAINDER = "<unpublished remainder>"  # key prefix for a subset family's implied hidden cell
+DECEASED_BAND_WIDTH = 10
+INF = float("inf")
 PERIODS = ("month", "quarter", "year", "exit_quarter")
 
 findings = collections.defaultdict(list)
@@ -63,34 +76,51 @@ def pcol(row):
 
 # ---------------------------------------------------------------- C/D
 def exact_families(vals, cons):
-    tot, ok = collections.Counter(), collections.Counter()
+    """Families exact on every fully-visible instance, and families whose
+    parts never exceed the total (a dimension whose "Unknown" category isn't
+    published): a reader treats the latter as exact plus one hidden
+    remainder that is 0 or more."""
+    tot, ok, le = collections.Counter(), collections.Counter(), collections.Counter()
     for fam, tk, pks in cons:
         if vals[tk] is None or any(vals[k] is None for k in pks):
             continue
         tot[fam] += 1
-        ok[fam] += abs(vals[tk] - sum(vals[k] for k in pks)) < 1e-6
-    return {f for f in tot if ok[f] == tot[f]}, {f: (ok[f], tot[f]) for f in tot}
+        diff = vals[tk] - sum(vals[k] for k in pks)
+        ok[fam] += abs(diff) < 1e-6
+        le[fam] += diff > -1e-6
+    exact = {f for f in tot if ok[f] == tot[f]}
+    subset = {f for f in tot if le[f] == tot[f]} - exact
+    return exact, subset, {f: (ok[f], tot[f]) for f in tot}
+
+
+def is_remainder(k):
+    return isinstance(k, tuple) and len(k) and k[0] == REMAINDER
 
 
 def selection_attack(label, vals, cons, describe, markers):
     cons = [c for c in cons if c[1] in vals and all(k in vals for k in c[2])]
-    exact, table = exact_families(vals, cons)
-    skipped = sorted(f for f in table if f not in exact)
-    cons = [c for c in cons if c[0] in exact]
-    known = vals
+    exact, subset, table = exact_families(vals, cons)
+    skipped = sorted(f for f in table if f not in exact and f not in subset)
+    # A subset family gets its unpublished remainder as one more hidden part.
+    cons = [c if c[0] in exact else (c[0], c[1], [*c[2], (REMAINDER, c[0], c[1])]) for c in cons if c[0] in exact or c[0] in subset]
+    known = collections.defaultdict(lambda: None, vals)
     for fam, tk, pks in cons:
         unknown = [k for k in (tk, *pks) if known[k] is None]
         if len(unknown) != 1:
             continue
         u = unknown[0]
+        if is_remainder(u):
+            continue  # an unpublished "Unknown" may be derivable; it identifies nobody
         v = sum(known[k] for k in pks) if u == tk else known[tk] - sum(known[k] for k in pks if k != u)
         if 0 < v < T:
             findings["C. small value recoverable within its selection"].append(f"{label}: {describe(u)} = {v:g} (via {fam})")
         if v < 0:
             findings["C. small value recoverable within its selection"].append(f"{label}: {describe(u)} solved NEGATIVE {v:g} (data inconsistent)")
     for fam, tk, pks in cons:
-        unk = [k for k in (tk, *pks) if known[k] is None]
-        if len(unk) < 2 or tk in unk:
+        # A remainder is 0 or more, so it can't stop k "*" cells summing to k
+        # from all being 1 (it's then 0); it's left out of the count.
+        unk = [k for k in (tk, *pks) if known[k] is None and not is_remainder(k)]
+        if not unk or (len(unk) < 2 and not any(is_remainder(k) for k in pks)) or tk in unk:
             continue
         resid = known[tk] - sum(known[k] for k in pks if known[k] is not None)
         # Only "*" cells are known to be >= 1. "**" can be a hidden zero (a
@@ -137,9 +167,12 @@ def flow_constraints(vals):
 
 
 def audit_flow(label, paths):
-    vals, rows = {}, {}
+    vals, rows, deceased_rows = {}, {}, []
     for path in paths:
         for r in load(path):
+            if r["flow_type"] == DECEASED:
+                deceased_rows.append(r)
+                continue
             v = r["count"]
             if isnum(v) and 0 < v < T:
                 findings["A. visible count 1..10"].append(f"{label}: {flow_key(r)} = {v:g}")
@@ -148,31 +181,78 @@ def audit_flow(label, paths):
             vals[flow_key(r)] = v if isnum(v) else None
             rows[flow_key(r)] = r
     cons = flow_constraints(vals)
-    selection_attack(label, vals, cons, lambda k: "/".join(map(str, k)), {k: r["suppression_marker"] for k, r in rows.items()})
+    markers = {k: r["suppression_marker"] for k, r in rows.items()}
+    selection_attack(label, vals, cons, lambda k: "/".join(map(str, k)), markers)
+    audit_deceased(label, deceased_rows, vals, markers, cons)
+
+
+def audit_deceased(label, rows, vals, markers, cons):
+    """N: the deceased_in_inactive bands (see the module docstring)."""
+    d_bounds = {}
+    for r in rows:
+        k = flow_key(r)[:4]
+        inactive = (*k, "indiv_inactive")
+        m, v = r["suppression_marker"], r["count"]
+        if m is None:
+            if not isnum(v) or v != 0:
+                findings["N. deceased band problem"].append(f"{label}: {'/'.join(map(str, k))} deceased published as {v}")
+            d_bounds[k] = (0, 0)
+            continue
+        if isnum(v):
+            findings["B. marked but value published"].append(f"{label}: {'/'.join(map(str, k))} deceased")
+        if m == "range":
+            lo, hi = r.get("count_low"), r.get("count_high")
+            if not (isnum(lo) and isnum(hi)) or hi - lo != DECEASED_BAND_WIDTH - 1 or (lo - 1) % DECEASED_BAND_WIDTH:
+                findings["N. deceased band problem"].append(f"{label}: {'/'.join(map(str, k))} band [{lo}, {hi}] isn't a band of {DECEASED_BAND_WIDTH}")
+                continue
+            if markers.get(inactive) not in (None, "*"):
+                findings["N. deceased band problem"].append(f"{label}: {'/'.join(map(str, k))} band next to inactive marked {markers.get(inactive)!r}")
+            b = (lo, hi)
+        elif m == "withheld":
+            b = (1, INF)
+        else:
+            b = (0, INF)
+        # A deceased count can't exceed its inactive cell: the number when
+        # visible, 10 when "*".
+        if inactive in vals:
+            cap = vals[inactive] if vals[inactive] is not None else (T - 1 if markers.get(inactive) == "*" else INF)
+            b = (b[0], min(b[1], cap))
+        d_bounds[k] = b
+    # Categories vs overall, only for dimensions whose indiv_inactive
+    # categories add up exactly to overall in the published data.
+    exact, subset, _ = exact_families(vals, [c for c in cons if c[1] in vals and all(k in vals for k in c[2]) and c[1][4] == "indiv_inactive"])
+    groups = collections.defaultdict(list)
+    for k in d_bounds:
+        if k[2] != "overall":
+            groups[(k[0], k[1], k[2])].append(k)
+    for (p, s, d), ks in groups.items():
+        fam = f"categories:{d}"
+        tk = (p, s, "overall", "Overall")
+        if tk not in d_bounds or (fam not in exact and fam not in subset):
+            continue
+        rk = (REMAINDER, fam, tk)
+        members = [(tk, -1)] + [(k, 1) for k in ks] + ([(rk, 1)] if fam in subset else [])
+        b = {**{k: d_bounds[k] for k in [tk, *ks]}, rk: (0, INF)}
+        for k, c in members:
+            if is_remainder(k) or b[k][1] == 0:
+                continue
+            o_lo = sum(b[k2][0] if c2 > 0 else -b[k2][1] for k2, c2 in members if k2 != k)
+            o_hi = sum(b[k2][1] if c2 > 0 else -b[k2][0] for k2, c2 in members if k2 != k)
+            x_lo, x_hi = (-o_hi, -o_lo) if c > 0 else (o_lo, o_hi)
+            lo, hi = max(x_lo, b[k][0]), min(x_hi, b[k][1])
+            if hi - lo < 0.5 and 0 < lo < T:
+                findings["N. deceased band problem"].append(f"{label}: {'/'.join(map(str, k))} deceased pinned to {lo:g} (via {fam})")
 
 
 # ---------------------------------------------------------------- length
 def audit_length(path):
+    """O: length tables publish medians for every group with anyone in it,
+    so they must never publish the group's size."""
     label = os.path.basename(path)
-    rows = load(path)
-    vals, markers = {}, {}
-    for r in rows:
-        n = r["n"]
-        k = (r[pcol(r)], r["population_segment"], r.get("exit_type"), r["dimension"], r["category"])
-        if isnum(n) and 0 < n < T:
-            findings["A. visible count 1..10"].append(f"{label}: {k} n={n:g}")
-        if r["suppression_marker"] is not None and isnum(n):
-            findings["B. marked but value published"].append(f"{label}: {k}")
-        if not isnum(n) and any(isnum(r.get(c)) for c in ("median_days", "p25_days", "p75_days", "mean_days")):
-            findings["H. derived field published with its count hidden"].append(f"{label}: {k} stats shown, n hidden")
-        vals[k] = n if isnum(n) else None
-        markers[k] = r["suppression_marker"]
-    cons = collections.defaultdict(list)
-    for (p, s, e, d, c) in vals:
-        if d != "overall":
-            cons[(p, s, e, d)].append((p, s, e, d, c))
-    selection_attack(label, vals, [(f"categories:{d}", (p, s, e, "overall", "Overall"), ks) for (p, s, e, d), ks in cons.items()],
-                     lambda k: "/".join(map(str, k)), markers)
+    for r in load(path):
+        if "n" in r:
+            k = (r[pcol(r)], r["population_segment"], r.get("exit_type"), r["dimension"], r["category"])
+            findings["O. length table publishes n"].append(f"{label}: {k} n={r['n']}")
 
 
 # ---------------------------------------------------------------- returns

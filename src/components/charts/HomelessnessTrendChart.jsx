@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
-import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
+import { INSUFFICIENT_POPULATION_MARKER, suppressedMessage } from "../../lib/loadData.js";
 import ChartLegend from "../ChartLegend.jsx";
 
 const ABOVE_MEDIAN_COLOR = "var(--color-navy)";
@@ -43,7 +43,7 @@ function quarterLabel(date) {
  * at the axis instead of being silently read as zero.
  *
  * `measureLabel` names the line in the legend ("Active in our system",
- * "Deceased", ...); `unitLabel`/`axisLabel` are the short/long noun phrases
+ * "Inactive", ...); `unitLabel`/`axisLabel` are the short/long noun phrases
  * for "X ___ ___" in the panel and "___ ___" on the y-axis (see FilterBar's
  * MEASURES). `subject` is who "___" actually means — plain "people" when no
  * demographic filter is active, or e.g. "people who identify as Black" when
@@ -213,6 +213,10 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
     // both sides of it renders as two separate segments with a visible
     // break between them; one with no visible neighbor on either side (a
     // single isolated point) renders as a lone dot instead.
+    // A point's optional `note` (e.g. how many of an Inactive count are
+    // deceased), shown italic at the bottom of its panel.
+    const noteHtml = (p) => `<div style="font-style:italic">${p.note}</div>`;
+
     const line = d3
       .line()
       .defined((p) => !p.marker && p.value != null)
@@ -244,6 +248,7 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
           lines.push(`<div>${p.value > prev.value ? "▲" : "▼"} ${percent}% vs. ${quarterLabel(prev.date)}</div>`);
         }
       }
+      if (p.note) lines.push(noteHtml(p));
       return lines.join("");
     }
 
@@ -303,11 +308,8 @@ export default function HomelessnessTrendChart({ points, measureLabel, unitLabel
       .attr("fill", "var(--gray-mid)")
       .text((p) => (p.marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : p.marker))
       .on("mouseenter", (event, p) => {
-        const message =
-          p.marker === INSUFFICIENT_POPULATION_MARKER
-            ? "Population too small to safely display for this combination"
-            : "Data suppressed (small cell)";
-        tooltip.show(`<div style="font-weight:600">${quarterLabel(p.date)}</div><div>${message}</div>`, event);
+        const message = suppressedMessage(p.marker);
+        tooltip.show(`<div style="font-weight:600">${quarterLabel(p.date)}</div><div>${message}</div>${p.note ? noteHtml(p) : ""}`, event);
       })
       .on("mousemove", (event) => tooltip.move(event))
       .on("mouseleave", () => tooltip.hide());

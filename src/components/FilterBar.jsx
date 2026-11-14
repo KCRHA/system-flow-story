@@ -8,10 +8,6 @@ const POPULATION_SEGMENTS = [
   { value: "family", label: "Families with Children" },
 ];
 
-// household_type is intentionally left out here — the user asked to start
-// this filter with these three demographic types only, even though
-// household_type exists as a full dimension in the exported data.
-//
 // age_category is offered for every population segment, including YYA and
 // Seniors — App.jsx's YYA_AGE_CATEGORIES/SENIORS_AGE_CATEGORIES narrow its
 // *options* to the tiers each segment can actually contain (YYA: "0 to 11",
@@ -89,11 +85,19 @@ export const MEASURES = [
     unitLabel: "exiting the system",
     axisLabel: "exiting the system",
     group: "Exited the system",
-    components: ["indiv_inactive", "indiv_permanently_housed", "indiv_deceased", "indiv_aged_out"],
+    components: ["indiv_inactive", "indiv_permanently_housed", "indiv_aged_out"],
   },
-  { value: "indiv_inactive", label: "Inactive", unitLabel: "inactive", axisLabel: "inactive", group: "Exited the system" },
+  // Inactive includes deceased; deceasedFlowType is the band of how many
+  // (see OutflowSection's trendPoints).
+  {
+    value: "indiv_inactive",
+    label: "Inactive",
+    unitLabel: "inactive",
+    axisLabel: "inactive",
+    group: "Exited the system",
+    deceasedFlowType: "deceased_in_inactive",
+  },
   { value: "indiv_permanently_housed", label: "Permanently housed", unitLabel: "permanently housed", axisLabel: "permanently housed", group: "Exited the system" },
-  { value: "indiv_deceased", label: "Deceased", unitLabel: "deceased", axisLabel: "deceased", group: "Exited the system" },
   { value: "indiv_aged_out", label: "Aged Out", unitLabel: "aged out", axisLabel: "aged out", group: "Exited the system", yyaOnly: true },
 ];
 

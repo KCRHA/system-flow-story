@@ -10,6 +10,7 @@ import { filterRows, distinctValues, resolveCell, INSUFFICIENT_POPULATION_MARKER
 import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, buildFlowPeriod, sumCellsForQuarter } from "../../lib/sankeyData.js";
 import { subjectFor } from "../../lib/demographics.js";
 import { trendDirectionFor, trendPillText } from "../../lib/trend.js";
+import { deceasedNote } from "../../lib/deceased.js";
 import { formatMonthLabel, formatQuarterLabel, quarterAbbrevLabel } from "../../lib/periodLabels.js";
 
 // Plain-text definitions for every flow-type term shown in this section's
@@ -33,9 +34,12 @@ const INFLOW_TERM_DEFINITIONS = [
   { term: "Returned from inactive", definition: "The person's last experience of homelessness ended due to inactivity (30+ days with no recorded contact), and they became homeless again within 2 years." },
 ];
 const OUTFLOW_TERM_DEFINITIONS = [
-  { term: "Inactive", definition: "No qualifying activity recorded in HMIS for more than 30 days. This does not mean the person found housing." },
+  {
+    term: "Inactive",
+    definition:
+      "No qualifying activity recorded in HMIS for more than 30 days, or the person passed away while experiencing homelessness. This does not mean the person found housing.",
+  },
   { term: "Permanently housed", definition: "The person moved into permanent housing, based on their most recent activity in the system." },
-  { term: "Deceased", definition: "The person passed away while experiencing homelessness." },
 ];
 const AGED_OUT_DEFINITION = {
   term: "Aged Out",
@@ -84,11 +88,6 @@ const KPI_CARD_INFO = {
     body: OUTFLOW_TERM_DEFINITIONS[1].definition,
     linkHref: FULL_DEFINITIONS_LINK,
   },
-  deceased: {
-    title: "Deceased",
-    body: OUTFLOW_TERM_DEFINITIONS[2].definition,
-    linkHref: FULL_DEFINITIONS_LINK,
-  },
 };
 
 // Short, always-visible line shown directly under each outflow card's label
@@ -96,9 +95,8 @@ const KPI_CARD_INFO = {
 // hover definition above. Outflow-only, per the approved mockup: the inflow
 // and hero cards don't carry one.
 const KPI_CARD_DESCRIPTION = {
-  inactive: "No activity for 30+ days, not confirmed housed",
+  inactive: "No activity for 30+ days or deceased, not confirmed housed",
   permanently_housed: "Moved into permanent housing",
-  deceased: "Exit destination recorded as deceased",
 };
 
 // `cell`'s share of `total` (a plain number, not a resolveCell object — see
@@ -346,6 +344,10 @@ export default function OutflowSection({
     () =>
       trendQuarters.map((q) => ({
         quarter: q,
+        // Inactive includes deceased; the panel says roughly how many.
+        note: activeTrendMeasure.deceasedFlowType
+          ? deceasedNote(resolveCell(scopedQuarterly.find((r) => r.quarter === q && r.flow_type === activeTrendMeasure.deceasedFlowType), "count"))
+          : null,
         ...(activeTrendMeasure.components
           ? sumCellsForQuarter(scopedQuarterly, q, activeTrendMeasure.components)
           : resolveCell(
@@ -519,7 +521,6 @@ export default function OutflowSection({
   const totalExits = sumValues([
     period.outflow.inactive,
     period.outflow.permanently_housed,
-    period.outflow.deceased,
     period.outflow.aged_out,
   ]);
   // Set together, for every flow_type, whenever this exact (period,
@@ -656,7 +657,7 @@ export default function OutflowSection({
                 trendDirection={trendDirectionFor(period.outflow.inactive, previousPeriod?.outflow?.inactive)}
                 trendText={trendPillText(period.outflow.inactive, previousPeriod?.outflow?.inactive, previousPeriodLabel)}
                 goodDirection={null}
-                info={KPI_CARD_INFO.inactive}
+                info={{ ...KPI_CARD_INFO.inactive, note: deceasedNote(period.inactiveDeceased) }}
               />
               <KpiCard
                 label="Permanently housed"
@@ -669,18 +670,6 @@ export default function OutflowSection({
                 trendText={trendPillText(period.outflow.permanently_housed, previousPeriod?.outflow?.permanently_housed, previousPeriodLabel)}
                 goodDirection="up"
                 info={KPI_CARD_INFO.permanently_housed}
-              />
-              <KpiCard
-                label="Deceased"
-                value={period.outflow.deceased.value?.toLocaleString()}
-                marker={period.outflow.deceased.marker}
-                percent={percentOfTotal(period.outflow.deceased, totalExits)}
-                percentLabel="of total exits"
-                description={KPI_CARD_DESCRIPTION.deceased}
-                trendDirection={trendDirectionFor(period.outflow.deceased, previousPeriod?.outflow?.deceased)}
-                trendText={trendPillText(period.outflow.deceased, previousPeriod?.outflow?.deceased, previousPeriodLabel)}
-                goodDirection={null}
-                info={KPI_CARD_INFO.deceased}
               />
               {/* Only meaningful for the YYA population — every other segment's
                   aged_out count is always 0 (see build_flow.py's

@@ -51,7 +51,9 @@ def compute_gender_rollups(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
     gender_expanded = df["GenderExpanded"]
-    is_unknown = gender_expanded == _UNKNOWN
+    # A null GenderExpanded is unknown too; without the isna() it would
+    # fall through to the "Non-binary or Other"/"Likely Transgender" defaults.
+    is_unknown = (gender_expanded == _UNKNOWN) | gender_expanded.isna()
 
     labels = _selected_labels(gender_expanded)
     has_man = labels.apply(lambda tokens: "Man" in tokens)

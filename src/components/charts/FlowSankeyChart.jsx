@@ -3,8 +3,9 @@ import * as d3 from "d3";
 import { sankey } from "d3-sankey";
 import { FLOW_COLORS } from "../../lib/flowColors.js";
 import { INFLOW_BUCKET_KEYS, OUTFLOW_BUCKET_KEYS } from "../../lib/sankeyData.js";
-import { PRIMARY_SUPPRESSION_MARKER, SECONDARY_SUPPRESSION_MARKER } from "../../lib/loadData.js";
+import { PRIMARY_SUPPRESSION_MARKER, SECONDARY_SUPPRESSION_MARKER, suppressedMessage } from "../../lib/loadData.js";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
+import { deceasedNote } from "../../lib/deceased.js";
 
 export const ACTIVE_COLOR = "var(--chart-2)";
 
@@ -17,7 +18,6 @@ const NODE_LABELS = {
   aged_out: "Aged Out",
   permanently_housed: "Permanently Housed",
   inactive: "Inactive",
-  deceased: "Deceased",
 };
 
 const ACTIVE_NODE_IDS = new Set(["already_active", "still_active"]);
@@ -41,6 +41,14 @@ function formatCell(cell) {
   if (!cell) return "";
   if (cell.marker) return cell.marker;
   return (cell.value ?? 0).toLocaleString();
+}
+
+// Hover text for a cell: the same as formatCell, except a hidden cell says
+// why (see suppressedMessage) instead of showing a bare marker. The
+// on-chart labels keep the marker itself.
+function formatTooltipCell(cell) {
+  if (cell?.marker) return suppressedMessage(cell.marker);
+  return formatCell(cell);
 }
 
 // The max true value a primary-suppressed ("*") cell can hold — HUD
@@ -430,7 +438,7 @@ export default function FlowSankeyChart({ data, periodLabel, isFullYear, populat
       .on("mouseenter", (event, d) => {
         d3.select(event.currentTarget).attr("fill-opacity", 0.65);
         tooltip.show(
-          `<div style="font-weight:600">${d.source.label} → ${d.target.label}</div><div>${formatCell(d.cell)}${formatLinkPercentOfInflow(d)}</div>`,
+          `<div style="font-weight:600">${d.source.label} → ${d.target.label}</div><div>${formatTooltipCell(d.cell)}${formatLinkPercentOfInflow(d)}</div>`,
           event
         );
       })
@@ -450,7 +458,10 @@ export default function FlowSankeyChart({ data, periodLabel, isFullYear, populat
       .attr("height", (d) => Math.max(1, d.y1 - d.y0))
       .attr("fill", (d) => nodeColor(d.id))
       .on("mouseenter", (event, d) => {
-        tooltip.show(`<div style="font-weight:600">${d.label}</div><div>${formatCell(d.cell)}</div>`, event);
+        // Inactive includes deceased; say roughly how many (see deceasedNote).
+        const note = d.id === "inactive" ? deceasedNote(data.inactiveDeceased) : null;
+        const noteHtml = note ? `<div style="font-style:italic">${note}</div>` : "";
+        tooltip.show(`<div style="font-weight:600">${d.label}</div><div>${formatTooltipCell(d.cell)}</div>${noteHtml}`, event);
       })
       .on("mousemove", (event) => tooltip.move(event))
       .on("mouseleave", () => tooltip.hide());

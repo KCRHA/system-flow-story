@@ -87,9 +87,16 @@ import time
 from datetime import datetime
 from functools import wraps
 
+import numpy as np
 import pandas as pd
 
-from .config import PRIMARY_SUPPRESSION_MARKER, SECONDARY_SUPPRESSION_MARKER, SUPPRESSION_THRESHOLD
+from .config import (
+    DECEASED_BAND_WIDTH,
+    PRIMARY_SUPPRESSION_MARKER,
+    SECONDARY_SUPPRESSION_MARKER,
+    SUPPRESSION_THRESHOLD,
+    UNPUBLISHED_CATEGORIES,
+)
 
 TRUE_COUNT_COL = "_true_count"  # internal only — never written to exported JSON
 # Distinct from PRIMARY_SUPPRESSION_MARKER/SECONDARY_SUPPRESSION_MARKER (a
@@ -97,6 +104,19 @@ TRUE_COUNT_COL = "_true_count"  # internal only — never written to exported JS
 # safely shown," which the frontend renders as its own message rather than
 # folding it into a normal per-cell "*"/"**" display.
 INSUFFICIENT_POPULATION_MARKER = "insufficient_population"
+
+# Internal only: rows in config.UNPUBLISHED_CATEGORIES, which are never
+# written to the JSON (export._to_json_records drops them). Marked so every
+# pass treats them as hidden cells a reader knows nothing about ("0 or
+# more"): they protect their siblings, but never need protecting themselves.
+UNPUBLISHED_MARKER = "unpublished"
+
+
+def unpublished_rows(df: pd.DataFrame) -> pd.Series:
+    """Rows in an UNPUBLISHED_CATEGORIES category of a non-overall dimension."""
+    if "category" not in df.columns or "dimension" not in df.columns:
+        return pd.Series(False, index=df.index)
+    return df["category"].isin(UNPUBLISHED_CATEGORIES) & (df["dimension"] != "overall")
 
 
 def _timed(func):
@@ -135,6 +155,7 @@ def apply_full_suppression_pipeline(df: pd.DataFrame, group_cols: list[str], cou
     df["suppression_marker"] = None
     # > 0: a true zero is never suppressed — it can't identify a person.
     df.loc[(df[TRUE_COUNT_COL] > 0) & (df[TRUE_COUNT_COL] < SUPPRESSION_THRESHOLD), "suppression_marker"] = PRIMARY_SUPPRESSION_MARKER
+    df.loc[unpublished_rows(df), "suppression_marker"] = UNPUBLISHED_MARKER
 
     if "dimension" in df.columns:
         eligible = df[df["dimension"] != "overall"]
@@ -216,8 +237,9 @@ def _secondary_picks(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
     _resolve_crosstab_period: there, a single pick can satisfy both a row's
     and a column's need at once, so picks must be resolved jointly and
     sequentially, not independently per group — see that function's own
-    docstring."""
-    needing = _groups_needing_secondary(df, group_cols)
+    docstring. Groups already protected (see _groups_with_protection, e.g.
+    by an unpublished "Unknown" sibling) get no pick."""
+    needing = _violating_groups(df, group_cols)
     if len(needing) == 0:
         return pd.Index([])
 
@@ -251,12 +273,23 @@ def _secondary_picks(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
 def _groups_with_protection(df: pd.DataFrame, group_cols: list[str]) -> pd.Index:
     """Group keys (same Index/MultiIndex shape _groups_needing_secondary
     returns) that already have >=1 SECONDARY_SUPPRESSION_MARKER/
-    INSUFFICIENT_POPULATION_MARKER row — both count as protection, same
-    "repurposed into a whole-scope blank is still just as hidden" reasoning
-    validate()'s own has_secondary check already documents."""
-    protected = df[df["suppression_marker"].isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER])]
+    INSUFFICIENT_POPULATION_MARKER/UNPUBLISHED_MARKER row — all count as
+    protection: each is a hidden sibling a reader can't subtract out.
+
+    An unpublished cell only counts when its true count is above 0. A zero
+    "Unknown" hides nothing: where Unknown is always 0, the published
+    categories add up exactly to overall, a reader sees that, and a lone
+    "*" next to it is as recoverable as if Unknown weren't there. (A
+    nonzero one also rules out the all-1s case: the hidden cells then add
+    up to more than the number of "*" cells.)"""
+    empty = pd.MultiIndex.from_arrays([[] for _ in group_cols]) if len(group_cols) > 1 else pd.Index([])
+    marker = df["suppression_marker"]
+    protected = df[
+        marker.isin([SECONDARY_SUPPRESSION_MARKER, INSUFFICIENT_POPULATION_MARKER])
+        | ((marker == UNPUBLISHED_MARKER) & (df[TRUE_COUNT_COL] > 0))
+    ]
     if protected.empty:
-        return pd.MultiIndex.from_arrays([[] for _ in group_cols]) if len(group_cols) > 1 else pd.Index([])
+        return empty
     return protected.groupby(group_cols, dropna=False).size().index
 
 
@@ -326,6 +359,7 @@ def apply_return_count_suppression(
     work.loc[row_hidden & (work[count_col] >= SUPPRESSION_THRESHOLD), "suppression_marker"] = SECONDARY_SUPPRESSION_MARKER
     is_primary = (work[count_col] > 0) & (work[count_col] < SUPPRESSION_THRESHOLD)
     work.loc[is_primary, "suppression_marker"] = PRIMARY_SUPPRESSION_MARKER
+    work.loc[df["suppression_marker"] == UNPUBLISHED_MARKER, "suppression_marker"] = UNPUBLISHED_MARKER
 
     eligible = work[work["dimension"] != "overall"]
     unprotected = _violating_groups(eligible, group_cols)
@@ -336,7 +370,8 @@ def apply_return_count_suppression(
     eligible = work[work["dimension"] != "overall"]
     unresolved = _violating_groups(eligible, group_cols)
     if len(unresolved):
-        work.loc[eligible.index[_group_keys(eligible, group_cols).isin(unresolved)], "suppression_marker"] = INSUFFICIENT_POPULATION_MARKER
+        in_unresolved = _group_keys(eligible, group_cols).isin(unresolved) & (eligible["suppression_marker"] != UNPUBLISHED_MARKER).to_numpy()
+        work.loc[eligible.index[in_unresolved], "suppression_marker"] = INSUFFICIENT_POPULATION_MARKER
 
     violations = []
     for key in _violating_groups(work[work["dimension"] != "overall"], group_cols):
@@ -380,7 +415,7 @@ def apply_crosstab_secondary_suppression(df: pd.DataFrame, group_cols: list[str]
     Resolves both axes (rows = inflow_bucket, columns = outflow_bucket)
     JOINTLY within each period, not as two independent sequential passes
     — see _resolve_crosstab_period for why: a rare category (e.g.
-    "deceased," which tends to be the smallest value in many rows at
+    "aged_out," which tends to be the smallest value in many rows at
     once for a small population segment) can otherwise get greedily
     claimed as several different rows' own secondary pick before its own
     column ever gets a turn, leaving that column's own primary-suppressed
@@ -416,7 +451,7 @@ def apply_sankey_marginal_suppression(
     return_from_housed/return_from_inactive, published as their indiv_*
     flow_types) are a true partition of experienced_homelessness, and so
     are its outflow buckets (still_active/aged_out/permanently_housed/
-    inactive/deceased) — see build_flow.py's _partition_by_individual
+    inactive, deceased included) — see build_flow.py's _partition_by_individual
     docstring. Both sets exist for every (dimension, category), not just
     overall: picking a category on the dashboard shows that category's own
     sankey, whose buckets add up to that category's own
@@ -547,8 +582,8 @@ def apply_insufficient_population_fallback(
     category via crosstab_group_cols): the implicated category is the
     group's own category value directly. Blanked here: every
     indiv_flow_* cell sharing that row/column (the group itself), PLUS
-    that row/column's own published total flow_type (e.g. indiv_deceased
-    for an outflow_bucket="deceased" column, indiv_newly_homeless for an
+    that row/column's own published total flow_type (e.g. indiv_aged_out
+    for an outflow_bucket="aged_out" column, indiv_newly_homeless for an
     inflow_bucket="newly_homeless" row) — a visible total is exactly what
     would make the hidden cells in that row/column arithmetically
     recoverable, so closing it off is what actually resolves the
@@ -557,7 +592,7 @@ def apply_insufficient_population_fallback(
     row/column's own cells, etc. — has nothing to do with this specific
     row/column and is left alone: a large, well-populated category (e.g.
     a common race) can easily have one narrow, naturally-small crosstab
-    slice (like a specific inflow reason crossed with "Deceased") without
+    slice (like a specific inflow reason crossed with "Aged Out") without
     the category's other, unrelated numbers needing to go dark too.
 
     For a sankey-marginal group (one of `sankey_bucket_flow_type_groups`
@@ -640,7 +675,7 @@ def apply_insufficient_population_fallback(
     blank_df = pd.concat(blank_frames, ignore_index=True).drop_duplicates()
     blank_df["_blank"] = True
     merged = df.merge(blank_df, on=key_cols, how="left")
-    mask = merged["_blank"].fillna(False).to_numpy()
+    mask = merged["_blank"].fillna(False).to_numpy() & (df["suppression_marker"] != UNPUBLISHED_MARKER).to_numpy()
     df.loc[mask, "suppression_marker"] = INSUFFICIENT_POPULATION_MARKER
     df.loc[mask, count_col] = pd.NA
     return df
@@ -710,4 +745,235 @@ def validate(df: pd.DataFrame, group_cols: list[str], count_col: str = "count") 
         key_dict = dict(zip(group_cols, key if isinstance(key, tuple) else (key,)))
         violations.append(f"group {key_dict} needs secondary suppression (single suppressed cell, or multiple suppressed cells all equal to 1 or 10) but has none")
 
+    return violations
+
+
+# --------------------------------------------------------------------------
+# Deceased-in-inactive bands
+#
+# The flow tables fold deceased into inactive (config.FLOW_OUTFLOW_BUCKET_MAP).
+# How many of an inactive count are deceased is published separately, per
+# (period, population_segment, dimension, category), as one of:
+#   - count 0 (no marker): nobody in it died. Zero is never suppressed.
+#   - DECEASED_RANGE_MARKER with count_low/count_high: a fixed band of
+#     config.DECEASED_BAND_WIDTH (1-10, 11-20, ...) holding the true count.
+#     A band is fixed by the true count alone, so showing it says nothing
+#     about the cells around it.
+#   - DECEASED_WITHHELD_MARKER: at least one, number withheld. Used when the
+#     combined inactive cell is hidden by anything but a primary marker (a
+#     band could tighten what a reader knows about that hidden cell, and so
+#     about its sankey neighbors), and for bands the check below finds a
+#     reader could narrow to one value.
+#   - INSUFFICIENT_POPULATION_MARKER: the inactive cell's whole slice is
+#     blanked, so this is too.
+# Never derivable: inactive alone is never published, and the combined
+# count minus a band of 10 still leaves a span of 10.
+#
+# What a band CAN leak is through categories adding up: overall "1-10"
+# with ten categories each "1-10" pins every category to exactly 1. Each
+# dimension's categories-vs-overall relationship is checked on its own
+# (only where the true categories add up to overall exactly), and every
+# band in one that pins a small value is withheld.
+# --------------------------------------------------------------------------
+
+DECEASED_RANGE_MARKER = "range"
+DECEASED_WITHHELD_MARKER = "withheld"
+DECEASED_LOW_COL = "count_low"
+DECEASED_HIGH_COL = "count_high"
+# Internal only: the most the combined inactive cell can be, from what's
+# published about it ("*" means 10 at most). A deceased count can't exceed
+# it, so the checks below use it as a reader would.
+DECEASED_COMBINED_HIGH_COL = "_combined_high"
+
+
+def deceased_band(true_counts: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """(low, high) of the DECEASED_BAND_WIDTH band holding each count >= 1."""
+    low = np.floor((true_counts - 1) / DECEASED_BAND_WIDTH) * DECEASED_BAND_WIDTH + 1
+    return low, low + DECEASED_BAND_WIDTH - 1
+
+
+def _combined_high(flow_df: pd.DataFrame, keys: list[str], lookup: pd.DataFrame, combined_flow_type: str, count_col: str):
+    """(marker, high, found) of each `lookup` row's combined inactive cell:
+    its marker as published, and the most a reader knows it can be (the
+    count if visible, SUPPRESSION_THRESHOLD - 1 for "*", unbounded otherwise)."""
+    rows = flow_df[flow_df["flow_type"] == combined_flow_type]
+    marker = rows["suppression_marker"].to_numpy(dtype=object)
+    count = pd.to_numeric(rows[count_col], errors="coerce").to_numpy(dtype=float)
+    high = np.where(pd.isna(marker) & ~np.isnan(count), count, np.inf)
+    high[marker == PRIMARY_SUPPRESSION_MARKER] = SUPPRESSION_THRESHOLD - 1
+    combined = pd.DataFrame({"marker": marker, "high": high}, index=pd.MultiIndex.from_frame(rows[keys]))
+    index = pd.MultiIndex.from_frame(lookup[keys])
+    found = index.isin(combined.index)
+    combined = combined.reindex(index)
+    return combined["marker"].to_numpy(dtype=object), combined["high"].to_numpy(dtype=float), found
+
+
+def _deceased_bounds(df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    """What a reader knows about each deceased count from the published data."""
+    marker = df["suppression_marker"].to_numpy(dtype=object)
+    count = pd.to_numeric(df["count"], errors="coerce").to_numpy(dtype=float)
+    exact = ~np.isnan(count) & pd.isna(marker)
+    lo = np.where(exact, count, 0.0)
+    hi = np.where(exact, count, np.inf)
+    is_range = marker == DECEASED_RANGE_MARKER
+    lo[is_range] = df.loc[is_range, DECEASED_LOW_COL].astype(float).to_numpy()
+    hi[is_range] = df.loc[is_range, DECEASED_HIGH_COL].astype(float).to_numpy()
+    lo[marker == DECEASED_WITHHELD_MARKER] = 1.0
+    # An unpublished "Unknown" is "0 or more", except a true zero, which is
+    # treated as known (see _groups_with_protection for why).
+    known_zero = (marker == UNPUBLISHED_MARKER) & (df[TRUE_COUNT_COL].to_numpy(dtype=float) == 0)
+    hi[known_zero] = 0.0
+    hi = np.minimum(hi, df[DECEASED_COMBINED_HIGH_COL].astype(float).fillna(np.inf).to_numpy())
+    return lo, hi
+
+
+def _deceased_relationships(df: pd.DataFrame, period_col: str) -> list[tuple[int, list[int], str]]:
+    """(overall position, category positions, dimension) for every
+    dimension's categories-vs-overall relationship among the deceased rows
+    whose true categories add up to the true overall exactly."""
+    true = df[TRUE_COUNT_COL].to_numpy(dtype=float)
+    scope = [period_col, "population_segment"]
+    is_overall = (df["dimension"] == "overall").to_numpy()
+    overall_pos = {key: pos for pos, key in zip(np.flatnonzero(is_overall), df.loc[is_overall, scope].itertuples(index=False, name=None))}
+    rels = []
+    parts = df[~is_overall]
+    for (*key, dimension), group in parts.groupby([*scope, "dimension"], sort=False):
+        total = overall_pos.get(tuple(key))
+        if total is None:
+            continue
+        pos = [df.index.get_loc(i) for i in group.index]
+        if abs(true[pos].sum() - true[total]) < 1e-6:
+            rels.append((total, pos, dimension))
+    return rels
+
+
+def _pinned_deceased(df: pd.DataFrame, rels: list) -> list[tuple[int, int]]:
+    """(position, index into `rels`) of each deceased row whose true count is 1-10,
+    published as a band or withheld, that one relationship's published
+    bounds pin to a single value."""
+    lo, hi = _deceased_bounds(df)
+    true = df[TRUE_COUNT_COL].to_numpy(dtype=float)
+    hidden = df["suppression_marker"].isin([DECEASED_RANGE_MARKER, DECEASED_WITHHELD_MARKER]).to_numpy()
+    pinned = []
+    for r, (total, parts, _dimension) in enumerate(rels):
+        p_lo, p_hi = lo[parts], hi[parts]
+        sum_lo = p_lo.sum()
+        n_inf = int(np.isinf(p_hi).sum())
+        sum_hi_finite = p_hi[~np.isinf(p_hi)].sum()
+        candidates = [(total, max(lo[total], sum_lo), min(hi[total], np.inf if n_inf else sum_hi_finite))]
+        for i, p in enumerate(parts):
+            others_lo = sum_lo - p_lo[i]
+            others_inf = n_inf - int(np.isinf(p_hi[i]))
+            others_hi = np.inf if others_inf else sum_hi_finite - (0.0 if np.isinf(p_hi[i]) else p_hi[i])
+            candidates.append((p, max(lo[p], lo[total] - others_hi), min(hi[p], hi[total] - others_lo)))
+        for p, x_lo, x_hi in candidates:
+            if hidden[p] and 0 < true[p] < SUPPRESSION_THRESHOLD and x_hi - x_lo < 0.5:
+                pinned.append((p, r))
+    return pinned
+
+
+@_timed
+def apply_deceased_bands(
+    df: pd.DataFrame,
+    flow_df: pd.DataFrame,
+    period_col: str,
+    combined_flow_type: str = "indiv_inactive",
+    count_col: str = "count",
+) -> pd.DataFrame:
+    """`df`: one flow table's config.DECEASED_IN_INACTIVE_FLOW_TYPE rows,
+    with their true counts and no suppression applied. `flow_df`: the same
+    table's other rows, after every suppression pass (so each
+    `combined_flow_type` row's marker is final). Returns `df` published as
+    described in the section comment above, with TRUE_COUNT_COL and
+    DECEASED_COMBINED_HIGH_COL kept for validate_deceased_bands."""
+    df = df.reset_index(drop=True).copy()
+    true = pd.to_numeric(df[count_col], errors="coerce").to_numpy(dtype=float)
+    df[TRUE_COUNT_COL] = true
+    keys = [period_col, "population_segment", "dimension", "category"]
+
+    comb_marker, comb_high, found = _combined_high(flow_df, keys, df, combined_flow_type, count_col)
+    df[DECEASED_COMBINED_HIGH_COL] = comb_high
+
+    zero = true == 0
+    unpublished = unpublished_rows(df).to_numpy()
+    insufficient = comb_marker == INSUFFICIENT_POPULATION_MARKER
+    comb_hidden = pd.notna(comb_marker) & (comb_marker != PRIMARY_SUPPRESSION_MARKER)
+    withheld = ~found | comb_hidden
+
+    marker = np.full(len(df), None, dtype=object)
+    count = np.full(len(df), np.nan)
+    band_lo, band_hi = deceased_band(true)
+    marker[~zero] = DECEASED_RANGE_MARKER
+    marker[~zero & withheld] = DECEASED_WITHHELD_MARKER
+    marker[insufficient] = INSUFFICIENT_POPULATION_MARKER
+    # Unpublished rows still sit in their dimension's relationship below,
+    # as a "0 or more" member (see _deceased_bounds).
+    marker[unpublished] = UNPUBLISHED_MARKER
+    count[zero & pd.isna(marker)] = 0
+    is_range = marker == DECEASED_RANGE_MARKER
+
+    df["suppression_marker"] = marker
+    df[count_col] = count
+    df[DECEASED_LOW_COL] = np.where(is_range, band_lo, np.nan)
+    df[DECEASED_HIGH_COL] = np.where(is_range, band_hi, np.nan)
+
+    rels = _deceased_relationships(df, period_col)
+    while True:
+        pinned = _pinned_deceased(df, rels)
+        if not pinned:
+            break
+        # Withhold every band in each relationship that pins something:
+        # the categories' first, keeping the overall one (shared by every
+        # dimension's relationship) unless nothing else is left.
+        to_withhold = set()
+        for r in {r for _, r in pinned}:
+            total, parts, _dimension = rels[r]
+            ranged = [p for p in parts if df.at[p, "suppression_marker"] == DECEASED_RANGE_MARKER]
+            if not ranged and df.at[total, "suppression_marker"] == DECEASED_RANGE_MARKER:
+                ranged = [total]
+            to_withhold.update(ranged)
+        if not to_withhold:
+            break  # validate_deceased_bands reports it
+        idx = sorted(to_withhold)
+        df.loc[idx, "suppression_marker"] = DECEASED_WITHHELD_MARKER
+        df.loc[idx, [DECEASED_LOW_COL, DECEASED_HIGH_COL]] = np.nan
+
+    df[DECEASED_LOW_COL] = df[DECEASED_LOW_COL].round().astype("Int64")
+    df[DECEASED_HIGH_COL] = df[DECEASED_HIGH_COL].round().astype("Int64")
+    return df
+
+
+@_timed
+def validate_deceased_bands(df: pd.DataFrame, flow_df: pd.DataFrame, period_col: str, combined_flow_type: str = "indiv_inactive") -> list[str]:
+    """Hard gate for apply_deceased_bands, same contract as validate().
+    Checks, using the true counts:
+      - no nonzero count is published as a number;
+      - every band is a DECEASED_BAND_WIDTH band holding the true count;
+      - a band only appears where the combined inactive cell is visible or
+        primary-suppressed;
+      - no deceased count of 1-10 can be pinned to one value from a single
+        dimension's categories-vs-overall relationship."""
+    violations = []
+    true = df[TRUE_COUNT_COL]
+    marker = df["suppression_marker"]
+    shown = marker.isna()
+    for idx in df.index[shown & (true != 0)][:20]:
+        violations.append(f"deceased count {true[idx]:g} published as a number: {df.loc[idx].to_dict()}")
+
+    is_range = marker == DECEASED_RANGE_MARKER
+    low, high = df[DECEASED_LOW_COL].astype(float), df[DECEASED_HIGH_COL].astype(float)
+    exp_low, exp_high = deceased_band(true.to_numpy(dtype=float))
+    bad = is_range & ((low != exp_low) | (high != exp_high))
+    for idx in df.index[bad][:20]:
+        violations.append(f"deceased band [{low[idx]}, {high[idx]}] is not the band of true count {true[idx]:g}: {df.loc[idx].to_dict()}")
+
+    keys = [period_col, "population_segment", "dimension", "category"]
+    comb_marker, _, _ = _combined_high(flow_df, keys, df, combined_flow_type, "count")
+    comb_hidden = pd.notna(comb_marker) & (comb_marker != PRIMARY_SUPPRESSION_MARKER)
+    for idx in df.index[is_range.to_numpy() & comb_hidden][:20]:
+        violations.append(f"deceased band published next to a hidden inactive cell: {df.loc[idx].to_dict()}")
+
+    rels = _deceased_relationships(df, period_col)
+    for p, r in _pinned_deceased(df, rels)[:20]:
+        violations.append(f"deceased band can be pinned from published numbers via {rels[r][2]}'s categories: {df.iloc[p].to_dict()}")
     return violations

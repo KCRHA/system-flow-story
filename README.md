@@ -22,7 +22,7 @@ One row per `(month, population_segment, dimension, category, flow_type)`.
 |---|---|
 | `month` | first of month |
 | `population_segment` | `all_population`, `yya`, `seniors`, `chronic`, `single_adults`, `veterans`, `family` — segments are allowed to overlap (e.g. a chronic veteran, or a YYA household that's also a family); each is its own independent filter over the same people, not a mutually-exclusive bucket |
-| `dimension` | `overall` · `race_aian`, `race_asian`, `race_black`, `race_nhpi`, `race_white`, `race_hl`, `race_mena`, `race_multiracial` · `gender_identity`, `gender_alignment` · `household_type` · `age_category` · `last_known_subregion` · `unsheltered_in_period` · `project_engaged_es`, `project_engaged_so`, `project_engaged_housing`, `project_engaged_th`, `project_engaged_ce` · `engaged_in_subregion_east`, `engaged_in_subregion_north`, `engaged_in_subregion_seattle`, `engaged_in_subregion_snoqualmie`, `engaged_in_subregion_south`, `engaged_in_subregion_southeast` — see below |
+| `dimension` | `overall` · `race_aian`, `race_asian`, `race_black`, `race_nhpi`, `race_white`, `race_hl`, `race_mena`, `race_multiracial` · `gender_identity`, `gender_alignment` · `age_category` · `last_known_subregion` · `unsheltered_in_period` · `project_engaged_es`, `project_engaged_so`, `project_engaged_housing`, `project_engaged_th`, `project_engaged_ce` · `engaged_in_subregion_east`, `engaged_in_subregion_north`, `engaged_in_subregion_seattle`, `engaged_in_subregion_snoqualmie`, `engaged_in_subregion_south`, `engaged_in_subregion_southeast` — see below |
 | `category` | value within that dimension; `Overall` when `dimension = overall` |
 | `flow_type` | see enum below |
 | `inflow_bucket` / `outflow_bucket` | only present on `indiv_flow_*` rows (see below) — the two bucket keys that flow_type encodes, broken into their own columns so the suppression pipeline can group "every cell sharing this row" / "every cell sharing this column" without parsing the flow_type string |
@@ -31,7 +31,7 @@ One row per `(month, population_segment, dimension, category, flow_type)`.
 
 The 8 `race_*` dimensions are each their own independent binary dimension (`Included` / `Not Included`), not 8 categories of one `race_ethnicity` dimension — a person can be `Included` in more than one at once (e.g. Black AND Hispanic/Latina/o), which a single overlapping dimension can't represent cleanly. Only each one's `Included` row is exported: `Not Included` is dropped before suppression (the frontend never shows it, and published next to `Overall` it would hand back `Included` by subtraction). The frontend's "Race / Ethnicity" filter is a virtual demographic type layered on top of these 8 (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), not a dimension that exists in the exported data itself. `age_category` isn't offered as a frontend filter for the `yya` population segment — everyone there already falls in the same one or two age tiers by definition.
 
-`household_type` and `age_category` are episode-scoped (a person's household composition, or age tier at episode start, can differ between two of their own episodes), unlike the other dimensions, which are person-level constants from `client_demographics`. That distinction matters for one thing: the `indiv_*`/`indiv_flow_*` flow_types below (which rely on a single static category per person) are never broken out by these two dimensions — they're only ever emitted under `overall` and the remaining (person-level) dimensions.
+`age_category` is episode-scoped (age tier at episode start can differ between two of a person's own episodes), unlike the other dimensions, which are person-level constants from `client_demographics`. For the `indiv_*`/`indiv_flow_*` flow_types below, each person gets one age category per period and population segment (their latest row among that segment's rows, with the later episode winning when two share a month), so a person never counts in two age categories in the same period (see `build_flow.py`'s `_person_category_for_period` and `_segment_scoped_category`).
 
 `unsheltered_in_period`, `project_engaged_*` and `engaged_in_subregion_*` are binary (`Included` / `Not Included`) and resolved fresh for each period (month, quarter or year) — "did this happen at any point in the period," not a fixed per-person value. Like `race_*`, the `project_engaged_*` and `engaged_in_subregion_*` dimensions overlap (someone can use Street Outreach and Emergency Shelter in the same month), so each is its own dimension, and like `race_*` only its `Included` row is exported. `unsheltered_in_period` doesn't overlap with anything and keeps both categories.
 
@@ -41,11 +41,12 @@ The 8 `race_*` dimensions are each their own independent binary dimension (`Incl
 
 `flow_type` values:
 - **Inflow** (per-episode events): `newly_homeless`, `return_from_housed`, `return_from_inactive`
-- **Outflow** (per-episode events): `permanently_housed`, `inactive`, `deceased`
+- **Outflow** (per-episode events): `permanently_housed`, `inactive` (deceased is folded into `inactive` everywhere in the flow tables; see `deceased_in_inactive` below)
 - **Active / status**: `active_total`, `unsheltered`, `sheltered`, `temporarily_housed` (all "active as of month end"). CE engagement is the `project_engaged_ce` dimension above, not a flow_type.
 - **Distinct-person total**: `experienced_homelessness` — everyone who touched the system at all that month, including someone who arrived and exited within the same month (unlike `active_total`, which is "active as of month end")
-- **Individual partition** (`indiv_*`): every person who experienced homelessness that month is assigned to exactly one inflow bucket and exactly one outflow bucket — `indiv_already_active`, `indiv_newly_homeless`, `indiv_return_from_housed`, `indiv_return_from_inactive` (inflow buckets, sum to `experienced_homelessness`) and `indiv_still_active`, `indiv_aged_out`, `indiv_permanently_housed`, `indiv_inactive`, `indiv_deceased` (outflow buckets, also sum to `experienced_homelessness`). Unlike the per-episode inflow/outflow counts above (which the same person can contribute to more than once in a month), this is a true one-bucket-per-person partition — built for the sankey and KPI cards, which represent individuals, not episodes. `indiv_aged_out` is always 0 outside the `yya` segment; it captures someone dropping out of YYA tracking mid-episode with no HMIS inflow/outflow event of its own.
-- **Individual cross-tab** (`indiv_flow_{inflow_bucket}_to_{outflow_bucket}`): the per-person pairing of the two buckets above (all 4 × 5 = 20 combinations) — e.g. "of the people newly homeless this month, how many were still active vs. permanently housed by month's end." Powers the sankey's actual links. These rows also carry `inflow_bucket`/`outflow_bucket` columns (see the table above).
+- **Individual partition** (`indiv_*`): every person who experienced homelessness that month is assigned to exactly one inflow bucket and exactly one outflow bucket — `indiv_already_active`, `indiv_newly_homeless`, `indiv_return_from_housed`, `indiv_return_from_inactive` (inflow buckets, sum to `experienced_homelessness`) and `indiv_still_active`, `indiv_aged_out`, `indiv_permanently_housed`, `indiv_inactive` (deceased included) (outflow buckets, also sum to `experienced_homelessness`). Unlike the per-episode inflow/outflow counts above (which the same person can contribute to more than once in a month), this is a true one-bucket-per-person partition — built for the sankey and KPI cards, which represent individuals, not episodes. `indiv_aged_out` is always 0 outside the `yya` segment; it captures someone dropping out of YYA tracking mid-episode with no HMIS inflow/outflow event of its own.
+- **Individual cross-tab** (`indiv_flow_{inflow_bucket}_to_{outflow_bucket}`): the per-person pairing of the two buckets above (all 4 × 4 = 16 combinations) — e.g. "of the people newly homeless this month, how many were still active vs. permanently housed by month's end." Powers the sankey's actual links. These rows also carry `inflow_bucket`/`outflow_bucket` columns (see the table above).
+- **Deceased in inactive** (`deceased_in_inactive`): how many of `indiv_inactive` are deceased, per `(dimension, category)`. Never published as a count above 0: it's `0`, or marker `"range"` with `count_low`/`count_high` set to the band of 10 holding it (1-10, 11-20, ...), or `"withheld"` (at least one; used when the inactive cell is hidden by anything but `"*"`, and for any band a reader could narrow to one value by adding up one dimension's categories), or `insufficient_population` alongside its slice. See `suppression.apply_deceased_bands`. The dashboard shows it as an italic line under Inactive.
 
 ### `dashboard_flow_yearly.json` / `dashboard_flow_quarterly.json`
 
@@ -55,7 +56,7 @@ These exist because `experienced_homelessness` and the `indiv_*`/`indiv_flow_*` 
 
 ### `dashboard_length_monthly.json`
 
-One row per `(month, population_segment, dimension, category)` — length-of-time-homeless distribution stats among people active that month: `n`, `median_days`, `p25_days`, `p75_days`, `mean_days`, `suppression_marker` (based on `n < 11`). All five numeric fields are nulled together when `suppression_marker` is set — the distribution stats are just as revealing as `n` itself for a small group, so they can't be left populated next to a suppressed count.
+One row per `(month, population_segment, dimension, category)` — length-of-time-homeless distribution stats among people active that month: `median_days`, `p25_days`, `p75_days`, `mean_days`. None of the `dashboard_length_*` tables go through small-cell suppression or publish `n`: a median never says how many people are in a group, so every group with at least one person gets one. A group of three or fewer people (under `config.LENGTH_FULL_STATS_MIN_N` = 4) gets only `median_days`, since its percentiles and mean would give away each person's exact duration. The by-exit table's `inactive` excludes people who died, unlike the flow tables.
 
 ### `dashboard_return_cohorts.json`
 
@@ -144,7 +145,13 @@ into another relationship) is deliberately out of scope.
    left (there's no privacy reason to hide one otherwise). A group
    with only one category in it (e.g. `race_aian`, whose only exported
    category is `Included`) never needs secondary suppression: there's no
-   other category to calculate it from.
+   other category to calculate it from. "Unknown" categories (gender
+   identity, gender alignment, age, subregion) are never published or
+   suppressed themselves (`UNPUBLISHED_CATEGORIES` in `config.py`), but they
+   take part in suppression as hidden cells: a nonzero Unknown already
+   keeps a lone `"*"` in its group from being calculated, so that group
+   needs no secondary. An Unknown whose true count is 0 doesn't count as
+   protection, since a reader can see the categories add up exactly.
 3. **Cross-tab secondary suppression** (`apply_crosstab_secondary_suppression`)
    — the `indiv_flow_*` cross-tab cells (see the flow_type enum above) aren't
    a dimension/category breakdown, so pass 2's grouping never sees them as
@@ -267,7 +274,7 @@ The Plan phrases the returns metric as 6/12/24-month windows; this dashboard app
 
 React + Vite + D3 (`d3-sankey` for the entries→active→exits alluvial) + Scrollama for scroll-triggered step transitions. Brand styling (`src/styles/tokens.css`) follows the KCRHA 2025 Brand Style Guide: Avenir Next LT Pro for headlines, Arial Nova for body text, and the approved priority-ordered charts & graphs palette.
 
-The demographic filter (`FilterBar.jsx`) offers "All", "Race / Ethnicity", "Gender Identity", "Gender Alignment", and "Age Category" (`household_type` exists in the export but isn't offered as a filter). "Race / Ethnicity" is the one option that isn't a 1-to-1 stand-in for a single pipeline dimension — it's a virtual demographic type that maps the picked category label to the matching `race_*` dimension with `category = "Included"` (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), since there's no single overlap-free `race_ethnicity` dimension in the data. "Age Category" is hidden when the `yya` population segment is selected, since everyone there already falls in the same one or two age tiers.
+The demographic filter (`FilterBar.jsx`) offers "All", "Race / Ethnicity", "Gender Identity", "Gender Alignment", and "Age Category". "Race / Ethnicity" is the one option that isn't a 1-to-1 stand-in for a single pipeline dimension — it's a virtual demographic type that maps the picked category label to the matching `race_*` dimension with `category = "Included"` (see `App.jsx`'s `RACE_ETHNICITY_CATEGORY_DIMENSIONS`), since there's no single overlap-free `race_ethnicity` dimension in the data. "Age Category" is hidden when the `yya` population segment is selected, since everyone there already falls in the same one or two age tiers.
 
 ```
 npm install

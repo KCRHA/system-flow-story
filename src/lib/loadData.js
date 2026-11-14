@@ -25,6 +25,14 @@ export const INSUFFICIENT_POPULATION_MARKER = "insufficient_population";
 export const PRIMARY_SUPPRESSION_MARKER = "*";
 export const SECONDARY_SUPPRESSION_MARKER = "**";
 
+/** Plain-language hover text for a hidden cell, by its marker — shared by
+ * every chart tooltip and KPI card so the wording stays the same everywhere. */
+export function suppressedMessage(marker) {
+  if (marker === INSUFFICIENT_POPULATION_MARKER) return "Population too small to safely display for this combination";
+  if (marker === SECONDARY_SUPPRESSION_MARKER) return "Hidden so a nearby small number can't be calculated";
+  return "Small number hidden to preserve client privacy";
+}
+
 async function fetchJson(path) {
   const res = await fetch(`${BASE}data/${path}`);
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
@@ -124,7 +132,15 @@ export function distinctValues(rows, key) {
 // Suppressed cells carry a "*" (primary) or "**" (secondary/complementary)
 // marker instead of a count. Never treat a suppressed cell as 0 — 0 is a
 // real, reportable value; suppressed means "we withheld this number."
+// deceased_in_inactive rows published as a band also carry count_low/
+// count_high (see lib/deceased.js); low/high carry it through.
 export function resolveCell(row, countKey = "count") {
   const marker = row?.suppression_marker ?? null;
-  return { value: marker ? null : row?.[countKey] ?? 0, marker };
+  const hasBand = countKey === "count" && marker && row?.count_low != null && row?.count_high != null;
+  return {
+    value: marker ? null : row?.[countKey] ?? 0,
+    marker,
+    low: hasBand ? row.count_low : null,
+    high: hasBand ? row.count_high : null,
+  };
 }

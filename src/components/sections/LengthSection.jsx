@@ -209,12 +209,12 @@ export default function LengthSection({
             title: "Median days experiencing homelessness",
             body:
               headlineGrain === "month"
-                ? `All ${subject}, active at any point in ${headlinePeriodLabel}, counted as of their exit date if they left the system (Permanently Housed, Inactive, Deceased, or Aged Out) or as of ${headlinePeriodLabel}'s month-end if they're still active.`
+                ? `All ${subject}, active at any point in ${headlinePeriodLabel}, counted as of their exit date if they left the system (Permanently Housed, Inactive, or Aged Out) or as of ${headlinePeriodLabel}'s month-end if they're still active.`
                 : headlineGrain === "quarter"
-                  ? `All ${subject}, active at any point in ${headlinePeriodLabel}, counted as of their exit date if they left the system (Permanently Housed, Inactive, Deceased, or Aged Out) or as of ${headlinePeriodLabel}'s quarter-end if they're still active.`
+                  ? `All ${subject}, active at any point in ${headlinePeriodLabel}, counted as of their exit date if they left the system (Permanently Housed, Inactive, or Aged Out) or as of ${headlinePeriodLabel}'s quarter-end if they're still active.`
                   : isPartialYear
-                    ? `All ${subject}, active at any point in ${year} so far (through ${throughLabel}), counted as of their exit date if they left the system (Permanently Housed, Inactive, Deceased, or Aged Out) or as of the most recent available month if they're still active.`
-                    : `All ${subject}, active at any point in ${year}, counted as of their exit date if they left the system (Permanently Housed, Inactive, Deceased, or Aged Out) or as of ${year}'s year-end if they're still active.`,
+                    ? `All ${subject}, active at any point in ${year} so far (through ${throughLabel}), counted as of their exit date if they left the system (Permanently Housed, Inactive, or Aged Out) or as of the most recent available month if they're still active.`
+                    : `All ${subject}, active at any point in ${year}, counted as of their exit date if they left the system (Permanently Housed, Inactive, or Aged Out) or as of ${year}'s year-end if they're still active.`,
           }}
         />
       </div>

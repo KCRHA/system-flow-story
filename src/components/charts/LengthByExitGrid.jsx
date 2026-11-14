@@ -8,7 +8,10 @@ import LengthChart from "./LengthChart.jsx";
 // uses for its own aged_out node.
 const PANELS = [
   { key: "permanently_housed", label: "Permanently Housed" },
-  { key: "inactive", label: "Inactive" },
+  // Unlike the rest of the dashboard, this panel's Inactive leaves out
+  // people who died (see the pipeline's build_length_by_exit.py), so its
+  // title says so.
+  { key: "inactive", label: "Inactive (excluding deceased)" },
   { key: "still_active", label: "Still Active" },
   { key: "aged_out", label: "Aged Out" },
 ];
@@ -74,7 +77,7 @@ export default function LengthByExitGrid({ byExitRows, stillActiveRows, populati
       </div>
       <p className="chart-group-caption">
         One line per month, for whoever exited to that status (or remained active) that month. Every panel uses the
-        same scale. Hover or tap a point for exact values.
+        same scale. Hover or tap a point for exact values. Months with three or fewer people show the median only.
       </p>
     </div>
   );

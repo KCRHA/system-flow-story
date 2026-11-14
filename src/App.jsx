@@ -79,9 +79,9 @@ const ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS = {
   "Southeast King County": "engaged_in_subregion_southeast",
 };
 
-// Hidden from every demographic type's category dropdown for now — a
-// deliberate, revisitable choice (not a data error) to keep "we don't know"
-// buckets out of the filter until there's a considered way to present them.
+// "We don't know" buckets. The export no longer publishes them at all
+// (pipeline/config.py's UNPUBLISHED_CATEGORIES); this filter is just a guard
+// in case an older data file still has them.
 // Covers GenderIdentity/GenderAlignment's "Unknown" (see demographics.py),
 // age_category's "Undefined" (EpisodeAgeTier/AgeTierAtEnrollment rows with
 // no usable birth date — see build_flow.py), and last_known_subregion's own

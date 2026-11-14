@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { clearTooltip, createTooltip } from "../../lib/tooltip.js";
-import { INSUFFICIENT_POPULATION_MARKER } from "../../lib/loadData.js";
+import { INSUFFICIENT_POPULATION_MARKER, suppressedMessage } from "../../lib/loadData.js";
 
 const monthFormat = d3.utcFormat("%b %Y");
 
@@ -199,10 +199,7 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
       .attr("fill", "var(--gray-mid)")
       .text((d) => (d.suppression_marker === INSUFFICIENT_POPULATION_MARKER ? "too small" : d.suppression_marker))
       .on("mouseenter", (event, d) => {
-        const message =
-          d.suppression_marker === INSUFFICIENT_POPULATION_MARKER
-            ? "Population too small to safely display for this combination"
-            : "Data suppressed (small cell)";
+        const message = suppressedMessage(d.suppression_marker);
         tooltip.show(`<div style="font-weight:600">${monthFormat(d.date)}</div><div>${message}</div>`, event);
       })
       .on("mousemove", (event) => tooltip.move(event))
@@ -244,7 +241,12 @@ export default function LengthChart({ rows, width = 720, height = 380, compact =
         tooltip.show(
           `<div style="font-weight:600">${monthFormat(d.date)}</div>` +
             `<div>Median: ${Math.round(d.median_days).toLocaleString()} days</div>` +
-            `<div>50% of people ${isExit ? "experienced homelessness for" : "were experiencing homelessness between"} ${Math.round(d.p25_days).toLocaleString()}–${Math.round(d.p75_days).toLocaleString()} days</div>`,
+            // Groups of three or fewer people publish only the median (the
+            // pipeline's LENGTH_FULL_STATS_MIN_N), so the middle-50% range
+            // can be missing.
+            (d.p25_days != null && d.p75_days != null
+              ? `<div>50% of people ${isExit ? "experienced homelessness for" : "were experiencing homelessness between"} ${Math.round(d.p25_days).toLocaleString()}–${Math.round(d.p75_days).toLocaleString()} days</div>`
+              : ""),
           event
         );
       })

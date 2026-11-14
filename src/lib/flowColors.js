@@ -16,12 +16,11 @@ export const FLOW_COLORS = {
   return_from_inactive: "var(--chart-6)",
   permanently_housed: "var(--chart-3)",
   inactive: "var(--chart-11)",
-  deceased: "var(--chart-gray, #404040)",
   // Aged out of the YYA population (see build_flow.py's
   // _partition_by_individual) — chart-4 (yellow), the next unused color in
   // tokens.css's priority order. Deliberately not chart-11 (inactive)'s
-  // muted blue-gray or deceased's neutral gray: aging out isn't a negative
-  // outcome the way those are, it's a system-eligibility transition, so it
+  // muted blue-gray: aging out isn't a negative outcome the way inactivity
+  // is, it's a system-eligibility transition, so it
   // gets a color of its own rather than borrowing one that reads as "bad."
   aged_out: "var(--chart-4)",
 };

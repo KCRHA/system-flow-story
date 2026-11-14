@@ -7,8 +7,10 @@ import pandas as pd
 
 from .config import (
     DIMENSION_COLUMNS,
+    DECEASED_HUD_VALUE,
+    DECEASED_IN_INACTIVE_FLOW_TYPE,
+    FLOW_OUTFLOW_BUCKET_MAP,
     INFLOW_TYPE_MAP,
-    OUTFLOW_TYPE_MAP,
     POPULATION_SEGMENTS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
     SUBREGION_ENGAGEMENT_DIMENSIONS,
@@ -146,11 +148,12 @@ _AGED_OUT = "aged_out"
 # still_active first, so a caller that wants them pinned to the top of
 # the sankey's left/right columns can just preserve this order. aged_out
 # sits right after still_active: like still_active, it's not one of
-# episode_systemwide's own EpisodeOutflowType values (see OUTFLOW_TYPE_MAP)
-# — it's specific to this partition's own bucketing, not a real HUD outflow
-# reason.
+# episode_systemwide's own EpisodeOutflowType values (see
+# FLOW_OUTFLOW_BUCKET_MAP) — it's specific to this partition's own
+# bucketing, not a real HUD outflow reason. Deceased has no bucket of its
+# own: FLOW_OUTFLOW_BUCKET_MAP folds it into inactive.
 INFLOW_BUCKET_KEYS = [_ALREADY_ACTIVE, *INFLOW_TYPE_MAP.values()]
-OUTFLOW_BUCKET_KEYS = [_STILL_ACTIVE, _AGED_OUT, *OUTFLOW_TYPE_MAP.values()]
+OUTFLOW_BUCKET_KEYS = [_STILL_ACTIVE, _AGED_OUT, *dict.fromkeys(FLOW_OUTFLOW_BUCKET_MAP.values())]
 
 
 def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: list, prior_month) -> dict:
@@ -162,14 +165,15 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
     bucket and exactly one outflow bucket, AND pairs the two per person —
     e.g. "of the people newly homeless this period, how many were still
     active vs. permanently housed by period's end?" Unlike
-    INFLOW_TYPE_MAP/OUTFLOW_TYPE_MAP's per-episode event counts (which the
+    INFLOW_TYPE_MAP/FLOW_OUTFLOW_BUCKET_MAP's per-episode event counts (which the
     same person can contribute to more than once — e.g. newly homeless in
     February, returns from housed in October, or even a same-month
     episode transition, since the minimum 30-day episode gap fits inside
     a 31-day month), this is a true partition: the four inflow buckets
-    sum to the same distinct-person total as the five outflow buckets,
-    both equal to the period's experienced_homelessness count, and the
-    20 (inflow, outflow) pairs sum to that same total again. Built for
+    sum to the same distinct-person total as the four outflow buckets
+    (deceased is folded into inactive), both equal to the period's
+    experienced_homelessness count, and the 16 (inflow, outflow) pairs
+    sum to that same total again. Built for
     the sankey/KPI cards, which need to represent individuals, not
     episodes.
 
@@ -352,7 +356,14 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         row_month = period_raw_df["TimePeriodStartDate"].dt.to_period("M")
         is_aged_out_row = aged_out_of_yya.notna() & (row_month == exclusion_start_month)
 
-        aged_out_ids = ever_active_ids & set(period_raw_df.loc[is_aged_out_row, "PersonalID"])
+        # & period_ids: someone whose AgedOutOfYYA month is the month just
+        # before the period was still YYA (and still_active) at the end of
+        # the previous period, and has no YYA-passing row in this one, so
+        # they aren't part of this period's population at all. Without the
+        # intersection they landed in indiv_aged_out but not in
+        # experienced_homelessness, so the outflow buckets summed to more
+        # than the total.
+        aged_out_ids = ever_active_ids & period_ids & set(period_raw_df.loc[is_aged_out_row, "PersonalID"])
 
         # Second, complementary signal closing the months-window boundary
         # gap AgedOutOfYYA's exact-row match can miss (see this function's
@@ -368,7 +379,11 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         # the period), not someone who was never YYA at any point in it.
         raw_end_df = period_raw_df[period_raw_df["TimePeriodStartDate"] == months[-1]]
         raw_end_open_ids = set(raw_end_df.loc[~raw_end_df["_is_outflow_row"], "PersonalID"])
-        aged_out_ids |= (ever_active_ids & raw_end_open_ids) - still_active_ids
+        # & period_ids: ever_active_ids is seeded from the PRIOR month's
+        # roster, so without it someone whose last YYA month was the end of
+        # the previous period (still_active there, not YYA at all here)
+        # landed in this period's aged_out without being in its population.
+        aged_out_ids |= (ever_active_ids & raw_end_open_ids & period_ids) - still_active_ids
 
         # "Still active" wins over "aged out" per this function's own
         # documented outflow priority (see docstring) — without this, a
@@ -378,6 +393,20 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         # one concurrent episode) could land in both buckets at once,
         # double-counting them across outflow_buckets.
         aged_out_ids -= still_active_ids
+
+        # Except when the period's last month IS their last YYA month
+        # (AgedOutOfYYA falls in it): they're still YYA and active at the
+        # end of this period but won't be in the next period's population
+        # at all, so this period is the only place their aging out can be
+        # counted. Without this, every monthly aging out fell into the
+        # following month, where they aren't part of the population.
+        end_aged = pd.to_datetime(end_pop_df["AgedOutOfYYA"], errors="coerce").dt.to_period("M")
+        ages_out_now = set(
+            end_pop_df.loc[~end_pop_df["_is_outflow_row"] & (end_aged == pd.Period(months[-1], "M")), "PersonalID"]
+        )
+        aged_out_now = still_active_ids & ages_out_now
+        aged_out_ids |= aged_out_now
+        still_active_ids -= aged_out_now
 
     inflow_buckets = {_ALREADY_ACTIVE: already_active_ids}
     # period_raw_df, not period_pop_df: same reasoning as already_active_ids
@@ -427,8 +456,12 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         if not outflow_candidates.empty
         else outflow_candidates
     )
-    for hud_value, key in OUTFLOW_TYPE_MAP.items():
-        outflow_buckets[key] = set(latest_outflow.loc[latest_outflow["EpisodeOutflowType"] == hud_value, "PersonalID"])
+    latest_bucket = latest_outflow["EpisodeOutflowType"].map(FLOW_OUTFLOW_BUCKET_MAP)
+    for key in dict.fromkeys(FLOW_OUTFLOW_BUCKET_MAP.values()):
+        outflow_buckets[key] = set(latest_outflow.loc[latest_bucket == key, "PersonalID"])
+    # The deceased share of the inactive bucket, published only as a band
+    # (see suppression.apply_deceased_bands).
+    deceased_ids = set(latest_outflow.loc[latest_outflow["EpisodeOutflowType"] == DECEASED_HUD_VALUE, "PersonalID"])
 
     # Per-person (inflow_bucket, outflow_bucket) pairing, then collapsed to
     # a count per pair — e.g. "how many of the people who were newly
@@ -453,6 +486,7 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
         "inflow": inflow_buckets,
         "outflow": outflow_buckets,
         "pairs": {(a, b): int(n) for (a, b), n in pair_counts.items()},
+        "deceased_in_inactive": deceased_ids,
         # Person-indexed, pre-collapse — kept alongside the already-collapsed
         # "pairs" counts above so a caller that wants a demographic
         # breakdown (see _partition_counts_by_category) can join a category
@@ -467,12 +501,10 @@ def _partition_by_individual(episodes: pd.DataFrame, pop_label: str, months: lis
 # "unsheltered_in_period" gets this same indiv_* breakdown.
 PARTITION_CATEGORY_DIMENSIONS = [d for d in FLOW_DIMENSIONS if d != "overall"]
 
-# "household_type" and "age_category", unlike race_ethnicity/gender_identity/
-# gender_alignment (client_demographics columns, genuinely constant for a
-# person regardless of which episode they're in), are themselves
-# episode-scoped: EpisodeHouseholdType/EpisodeAgeTier can differ between two
-# of a person's own episodes (a household's composition can change; age
-# tier can too — episode_systemwide computes EpisodeAgeTier fresh per row,
+# "age_category", unlike race_ethnicity/gender_identity/gender_alignment
+# (client_demographics columns, genuinely constant for a person regardless
+# of which episode they're in), is episode-scoped: EpisodeAgeTier can differ
+# between two of a person's own episodes (age tier can change — episode_systemwide computes EpisodeAgeTier fresh per row,
 # as of the later of the episode's own start or that row's own
 # TimePeriodStartDate). A single person_category
 # snapshot taken once across the WHOLE window — safe for every other
@@ -483,7 +515,7 @@ PARTITION_CATEGORY_DIMENSIONS = [d for d in FLOW_DIMENSIONS if d != "overall"]
 # build_flow_rows/build_flow_yearly_rows/build_flow_quarterly_rows use for
 # these two instead, resolving each person's category fresh from just the
 # period being built rather than a single global snapshot.
-EPISODE_SCOPED_CATEGORY_DIMENSIONS = ["household_type", "age_category"]
+EPISODE_SCOPED_CATEGORY_DIMENSIONS = ["age_category"]
 
 
 def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.Series:
@@ -515,19 +547,21 @@ def _person_category_for_period(period_df: pd.DataFrame, dimension: str) -> pd.S
     for Senior (age only increases, so the latest row's tier is always >=
     whatever earlier row made them Senior) but false for YYA (a bounded age
     window — the latest row can have aged OUT of it past an earlier
-    qualifying row) and false for Family's household_type (composition can
-    change either direction mid-period). For those, callers must use
-    _segment_scoped_category below instead, which resolves these same two
-    dimensions from a specific segment's own filter_population-passing rows
+    qualifying row). For those, callers must use
+    _segment_scoped_category below instead, which resolves age_category
+    from a specific segment's own filter_population-passing rows
     rather than this whole-period, segment-agnostic set."""
     category_col = DIMENSION_COLUMNS[dimension]
-    ordered = period_df.sort_values("TimePeriodStartDate")
+    # EpisodeStartDate breaks ties: two episodes in the same month (one
+    # closing, the next opening) share a TimePeriodStartDate, and the later
+    # episode is the one that's current.
+    ordered = period_df.sort_values(["TimePeriodStartDate", "EpisodeStartDate"], kind="stable")
     return ordered.drop_duplicates("PersonalID", keep="last").set_index("PersonalID")[category_col]
 
 
 def _segment_scoped_category(period_category: dict, segment_rows: pd.DataFrame) -> dict:
     """`period_category`, with EPISODE_SCOPED_CATEGORY_DIMENSIONS
-    (household_type/age_category) overridden to be resolved from
+    (age_category) overridden to be resolved from
     `segment_rows` alone — one specific population segment's own
     filter_population-passing rows for this period (the same per-month
     union already built to get that segment's person_ids/indiv_* partition
@@ -537,7 +571,7 @@ def _segment_scoped_category(period_category: dict, segment_rows: pd.DataFrame) 
     Why this matters: _person_category_for_period's "pick the latest row"
     rule is only safe when a dimension's category can't un-qualify someone
     from the segment being broken down (see its own docstring) — true for
-    Senior, false for YYA and for Family's household_type. Picking the
+    Senior, false for YYA. Picking the
     latest row from the whole, segment-unfiltered period in those cases can
     land on a category value that wouldn't itself pass this segment's own
     filter_population check (e.g. a YYA member who ages out partway through
@@ -604,6 +638,13 @@ def _partition_counts_by_category(partition: dict, cat_series: pd.Series, catego
         pair_counts[(inflow_key, outflow_key)] = {cat: int(n) for (_, _, cat), n in sub.items()}
 
     return bucket_counts, pair_counts
+
+
+def _deceased_counts_by_category(partition: dict, cat_series: pd.Series, categories: list) -> dict:
+    """{category: count} of the inactive bucket's deceased members — the
+    per-category counterpart of partition["deceased_in_inactive"]."""
+    counts = cat_series.reindex(list(partition["deceased_in_inactive"])).value_counts()
+    return counts.reindex(categories, fill_value=0).astype(int).to_dict()
 
 
 def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
@@ -722,6 +763,17 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
 
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(month_df, pop_label, month)
+            # One age_category per person per month (latest row among this
+            # segment's own rows — see _segment_scoped_category). A person
+            # whose episode closes and the next opens in the same month has
+            # two rows, possibly with different EpisodeAgeTier values;
+            # counting the raw column would put them in both categories but
+            # only once in overall. Applied after filter_population, whose
+            # YYA branch reads the raw per-row EpisodeAgeTier itself.
+            segment_category = _segment_scoped_category(period_category, pop_df)
+            pop_df = pop_df.assign(
+                **{DIMENSION_COLUMNS[dim]: pop_df["PersonalID"].map(segment_category[dim]) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS}
+            )
             inflow_df = pop_df[pop_df["_is_inflow_row"]]
             outflow_df = pop_df[pop_df["_is_outflow_row"]]
             active_df = pop_df[~pop_df["_is_outflow_row"]]
@@ -732,8 +784,9 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
                     matched = inflow_df[inflow_df["EpisodeInflowType"] == hud_value]
                     _emit(rows, month, segment_key, dimension, flow_type, _count_by_category(matched, dimension, categories))
 
-                for hud_value, flow_type in OUTFLOW_TYPE_MAP.items():
-                    matched = outflow_df[outflow_df["EpisodeOutflowType"] == hud_value]
+                outflow_bucket = outflow_df["EpisodeOutflowType"].map(FLOW_OUTFLOW_BUCKET_MAP)
+                for flow_type in dict.fromkeys(FLOW_OUTFLOW_BUCKET_MAP.values()):
+                    matched = outflow_df[outflow_bucket == flow_type]
                     _emit(rows, month, segment_key, dimension, flow_type, _count_by_category(matched, dimension, categories))
 
                 _emit(rows, month, segment_key, dimension, "active_total", _count_by_category(active_df, dimension, categories))
@@ -767,6 +820,7 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
             partition = _partition_by_individual(episodes, pop_label, [month], prior_month)
             for key, ids in {**partition["inflow"], **partition["outflow"]}.items():
                 _emit(rows, month, segment_key, "overall", f"indiv_{key}", {"Overall": len(ids)})
+            _emit(rows, month, segment_key, "overall", DECEASED_IN_INACTIVE_FLOW_TYPE, {"Overall": len(partition["deceased_in_inactive"])})
 
             # Per-person (inflow, outflow) pairing — lets the sankey trace,
             # e.g., where people who were newly homeless this period ended
@@ -797,9 +851,17 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
             # dashboard do.
             for dimension in PARTITION_CATEGORY_DIMENSIONS:
                 categories = all_categories[dimension]
-                bucket_counts, pair_counts = _partition_counts_by_category(partition, period_category[dimension], categories)
+                bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():
                     _emit(rows, month, segment_key, dimension, f"indiv_{key}", counts)
+                _emit(
+                    rows,
+                    month,
+                    segment_key,
+                    dimension,
+                    DECEASED_IN_INACTIVE_FLOW_TYPE,
+                    _deceased_counts_by_category(partition, segment_category[dimension], categories),
+                )
                 for (inflow_key, outflow_key), counts in pair_counts.items():
                     _emit(
                         rows,
@@ -847,8 +909,8 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
       month's matching PersonalIDs into one set per year before counting.
 
     - indiv_already_active/indiv_newly_homeless/indiv_return_from_housed/
-      indiv_return_from_inactive/indiv_permanently_housed/indiv_inactive/
-      indiv_deceased/indiv_still_active: the same true one-bucket-per-
+      indiv_return_from_inactive/indiv_permanently_housed/indiv_inactive
+      (deceased included)/indiv_still_active: the same true one-bucket-per-
       person partition as dashboard_flow_monthly's indiv_* flow_types,
       just over the whole year instead of one month — see
       _partition_by_individual.
@@ -929,7 +991,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
                 pop_df = month_pop_cache[(month, pop_label)]
                 person_ids.update(pop_df["PersonalID"])
                 segment_frames.append(pop_df)
-            # This segment's own age_category/household_type lookup — see
+            # This segment's own age_category lookup — see
             # build_flow_quarterly_rows' identical comment and
             # _segment_scoped_category's own docstring for why the whole-
             # year, segment-agnostic period_category isn't safe to reuse
@@ -972,6 +1034,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
             partition = _partition_by_individual(episodes, pop_label, months, prior_month)
             for key, ids in {**partition["inflow"], **partition["outflow"]}.items():
                 _add(f"indiv_{key}", len(ids))
+            _add(DECEASED_IN_INACTIVE_FLOW_TYPE, len(partition["deceased_in_inactive"]))
             # See build_flow_rows's own comment on indiv_flow_* /
             # inflow_bucket/outflow_bucket — same reasoning applies here.
             for (inflow_key, outflow_key), count in partition["pairs"].items():
@@ -990,6 +1053,8 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
+                for category, count in _deceased_counts_by_category(partition, segment_category[dimension], categories).items():
+                    _add(DECEASED_IN_INACTIVE_FLOW_TYPE, count, dimension=dimension, category=category)
                 for (inflow_key, outflow_key), counts in pair_counts.items():
                     for category, count in counts.items():
                         _add(
@@ -1085,12 +1150,11 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
                 pop_df = month_pop_cache[(month, pop_label)]
                 person_ids.update(pop_df["PersonalID"])
                 segment_frames.append(pop_df)
-            # This segment's own age_category/household_type lookup (see
+            # This segment's own age_category lookup (see
             # _segment_scoped_category) — resolved from just the rows that
             # passed filter_population above, not the quarter's whole,
             # segment-agnostic period_category, so a person who ages out of
-            # a bounded window (YYA) or whose household composition changes
-            # out of Family partway through the quarter still gets
+            # a bounded window (YYA) partway through the quarter still gets
             # attributed to a category they actually qualified under.
             segment_rows = pd.concat(segment_frames, ignore_index=True) if segment_frames else quarter_df.iloc[0:0]
             segment_category = _segment_scoped_category(period_category, segment_rows)
@@ -1124,6 +1188,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
             partition = _partition_by_individual(episodes, pop_label, months, prior_month)
             for key, ids in {**partition["inflow"], **partition["outflow"]}.items():
                 _add(f"indiv_{key}", len(ids))
+            _add(DECEASED_IN_INACTIVE_FLOW_TYPE, len(partition["deceased_in_inactive"]))
             for (inflow_key, outflow_key), count in partition["pairs"].items():
                 _add(
                     f"indiv_flow_{inflow_key}_to_{outflow_key}",
@@ -1137,6 +1202,8 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
                 for key, counts in bucket_counts.items():
                     for category, count in counts.items():
                         _add(f"indiv_{key}", count, dimension=dimension, category=category)
+                for category, count in _deceased_counts_by_category(partition, segment_category[dimension], categories).items():
+                    _add(DECEASED_IN_INACTIVE_FLOW_TYPE, count, dimension=dimension, category=category)
                 for (inflow_key, outflow_key), counts in pair_counts.items():
                     for category, count in counts.items():
                         _add(
