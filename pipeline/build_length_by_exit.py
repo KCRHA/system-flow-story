@@ -26,7 +26,7 @@ logic ever changes in build_flow.py, this copy needs the same change.
 """
 import pandas as pd
 
-from .config import DIMENSION_COLUMNS, OUTFLOW_TYPE_MAP, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
+from .config import dimensions_for_segment, DIMENSION_COLUMNS, OUTFLOW_TYPE_MAP, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS,
@@ -36,6 +36,7 @@ from .period_dimensions import (
     _project_engagement_category,
     _subregion_engagement_category,
     _unsheltered_in_period_category,
+    household_type_categories,
 )
 from .population import filter_population
 
@@ -246,6 +247,7 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
         period_end = period_start + pd.offsets.MonthEnd(0)
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(month_full_df),
+            **household_type_categories(month_full_df),
             **{
                 dim: _project_engagement_category(month_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -276,7 +278,7 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
             # whichever episode was longest — not get counted once in each.
             combined = _dedupe_keep_longest_episode(combined)
 
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 categories = all_categories[dimension]
                 for exit_type in _PANEL_EXIT_TYPES:
                     sub = combined[combined["exit_type"] == exit_type]
@@ -296,7 +298,14 @@ def build_length_by_exit_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
     return df
 
 
-def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, window_start=None) -> pd.DataFrame:
+def build_length_headline_rows(
+    episodes: pd.DataFrame,
+    enrollments: pd.DataFrame,
+    events: pd.DataFrame,
+    window_start=None,
+    only_year: int | None = None,
+    through_month: int | None = None,
+) -> pd.DataFrame:
     """dashboard_length_headline_yearly: one row per (year, population_segment,
     dimension, category) — a single pooled median/p25/p75 of days active,
     counting everyone active at any point that year: every real exit's
@@ -320,6 +329,12 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
     "Homeless" and joined to program_attributes.Subregion via ProgramID,
     used only to resolve the engaged_in_subregion_* dimensions (see
     _subregion_engagement_category).
+
+    only_year/through_month: same contract as build_flow_yearly_rows' —
+    emit just `only_year`, capped to its months 1..through_month
+    (dashboard_length_headline_ytd_prior). Still-active people are then
+    measured as of through_month, and only exits/aged-outs in those months
+    are pooled, matching how the current partial year's own row is built.
     """
     episodes = _flag_outflow_rows(episodes)
     exit_df = _real_exit_duration_df(episodes)
@@ -328,7 +343,19 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
         aged_out_df = aged_out_df.assign(_year=aged_out_df["_cutoff_date"].dt.year)
 
     all_months = sorted(episodes["TimePeriodStartDate"].unique())
-    months = [m for m in all_months if window_start is None or m >= window_start]
+    months = [
+        m
+        for m in all_months
+        if (window_start is None or m >= window_start)
+        and (only_year is None or pd.Timestamp(m).year == only_year)
+        and (through_month is None or pd.Timestamp(m).month <= through_month)
+    ]
+    if through_month is not None:
+        # Exits/aged-outs are pooled per calendar year below; drop anything
+        # after the cap so a capped year doesn't pick up Nov/Dec events.
+        exit_df = exit_df[exit_df["TimePeriodStartDate"].dt.month <= through_month]
+        if not aged_out_df.empty:
+            aged_out_df = aged_out_df[aged_out_df["TimePeriodStartDate"].dt.month <= through_month]
     years = sorted({pd.Timestamp(m).year for m in months})
     last_month_of_year = {}
     for m in months:
@@ -337,7 +364,10 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
             last_month_of_year[y] = m
 
     published = episodes[episodes["TimePeriodStartDate"].isin(months)]
-    all_categories = {dimension: _all_categories(published, dimension) for dimension in EXTENDED_DIMENSIONS}
+    # Uncapped window, so a capped run emits the same category rows as the
+    # full yearly table.
+    window_published = episodes if window_start is None else episodes[episodes["TimePeriodStartDate"] >= window_start]
+    all_categories = {dimension: _all_categories(window_published, dimension) for dimension in EXTENDED_DIMENSIONS}
     group_enrollments = _group_enrollments_by_dimension(enrollments)
     group_events = _group_events_by_subregion(events)
 
@@ -362,6 +392,7 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
         period_end = pd.Timestamp(year_months[-1]) + pd.offsets.MonthEnd(0)
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(year_full_df),
+            **household_type_categories(year_full_df),
             **{
                 dim: _project_engagement_category(year_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -398,7 +429,7 @@ def build_length_headline_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame
             combined = combined.assign(
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 categories = all_categories[dimension]
                 for stat_row in _stats_by_category(combined, dimension, categories):
                     rows.append(
@@ -466,6 +497,7 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
         period_end = period_start + pd.offsets.MonthEnd(0)
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(month_full_df),
+            **household_type_categories(month_full_df),
             **{
                 dim: _project_engagement_category(month_full_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -490,7 +522,7 @@ def build_length_headline_monthly_rows(episodes: pd.DataFrame, enrollments: pd.D
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
 
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 categories = all_categories[dimension]
                 for stat_row in _stats_by_category(combined, dimension, categories):
                     rows.append(
@@ -555,6 +587,7 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
         period_end = pd.Timestamp(quarter_months[-1]) + pd.offsets.MonthEnd(0)
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(quarter_df),
+            **household_type_categories(quarter_df),
             **{
                 dim: _project_engagement_category(quarter_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -585,7 +618,7 @@ def build_length_headline_quarterly_rows(episodes: pd.DataFrame, enrollments: pd
                 **{DIMENSION_COLUMNS[dim]: combined["PersonalID"].map(period_category[dim]) for dim in PERIOD_AGGREGATE_CATEGORY_DIMENSIONS}
             )
 
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 categories = all_categories[dimension]
                 for stat_row in _stats_by_category(combined, dimension, categories):
                     rows.append(

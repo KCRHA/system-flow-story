@@ -7,7 +7,9 @@ trimmed to the segments this dashboard needs (the source notebook also
 has a "Chronic Veteran" variant this dashboard doesn't use; its own
 "Families" branch — `EpisodeMaxCountChildren/Adults >= 1` — was left out
 in favor of the HouseholdType-based definition below, not because it's
-wrong, just a different valid lever over the same underlying data).
+wrong, just a different valid lever over the same underlying data). Single
+Adults also departs from the source notebook's count-based branch and uses
+EpisodeHouseholdType, for the same consistency with household type.
 Requires `VeteranStatus` joined in from Client_Demographics on
 PersonalID first — episode_systemwide itself has no veteran column.
 
@@ -37,7 +39,13 @@ import pandas as pd
 
 def filter_population(df: pd.DataFrame, pop_label: str, month_start) -> pd.DataFrame:
     if pop_label == "Single Adults":
-        return df[df["EpisodeMaxCountChildren"].fillna(0) == 0]
+        # EpisodeHouseholdType, same field as Family below, so this segment
+        # matches the household_type_adults_only dimension. Replaced
+        # `EpisodeMaxCountChildren.fillna(0) == 0` (2026-11-16): that
+        # counted blank child counts as zero, pulling in episodes with no
+        # known household type, and diverged from Adults Only whenever an
+        # episode's most common type was adults-only but one event had a child.
+        return df[df["EpisodeHouseholdType"] == "Household without Children"]
     if pop_label == "Chronic":
         return df[df["EpisodeChronicStatus"] == "Yes"]
     if pop_label == "Veteran":

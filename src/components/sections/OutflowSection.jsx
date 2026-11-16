@@ -11,7 +11,7 @@ import { quartersInYear, monthsInYear, monthsInQuarter, quarterStartOfMonth, bui
 import { subjectFor } from "../../lib/demographics.js";
 import { trendDirectionFor, trendPillText } from "../../lib/trend.js";
 import { deceasedNote } from "../../lib/deceased.js";
-import { formatMonthLabel, formatQuarterLabel, quarterAbbrevLabel } from "../../lib/periodLabels.js";
+import { formatMonthLabel, formatQuarterLabel, formatYtdPriorLabel, quarterAbbrevLabel } from "../../lib/periodLabels.js";
 
 // Plain-text definitions for every flow-type term shown in this section's
 // KPI cards and sankey, for the section header's definitions popover —
@@ -123,6 +123,7 @@ function sumValues(cells) {
 
 export default function OutflowSection({
   flowYearlyRows,
+  flowYtdPriorRows = [],
   flowQuarterlyRows,
   flowQuarterlyLoading,
   flowMonthlyRows,
@@ -134,6 +135,7 @@ export default function OutflowSection({
   onYearChange,
   demographicType,
   onDemographicTypeChange,
+  demographicTypeOptions,
   demographicCategory,
   onDemographicCategoryChange,
   demographicCategoryOptions,
@@ -168,6 +170,13 @@ export default function OutflowSection({
         (r) => r.population_segment === populationSegment && r.dimension === filterDimension && r.category === filterCategory
       ),
     [flowYearlyRows, populationSegment, filterDimension, filterCategory]
+  );
+  const scopedYtdPrior = useMemo(
+    () =>
+      flowYtdPriorRows.filter(
+        (r) => r.population_segment === populationSegment && r.dimension === filterDimension && r.category === filterCategory
+      ),
+    [flowYtdPriorRows, populationSegment, filterDimension, filterCategory]
   );
   const allQuarters = useMemo(() => distinctValues(scopedQuarterly, "quarter").sort(), [scopedQuarterly]);
   const allMonths = useMemo(() => distinctValues(scopedMonthly, "month").sort(), [scopedMonthly]);
@@ -252,8 +261,11 @@ export default function OutflowSection({
   // a year with fewer than all 4 of its quarters present is necessarily the
   // current, still-in-progress one. Comparing that partial year-to-date
   // total against a full prior year would always read as "down" regardless
-  // of the real trend, so the comparison is skipped entirely rather than
-  // shown misleadingly.
+  // of the real trend, so it compares against the prior year capped to the
+  // same months instead (dashboard_flow_ytd_prior, e.g. Jan-Oct 2025 for
+  // Jan-Oct 2026), and is skipped entirely when that table has no row for
+  // year - 1.
+  const ytdPriorRow = !quarter && !month && quartersForYear.length < 4 ? scopedYtdPrior.find((r) => r.year === year - 1) : undefined;
   const previousPeriod = useMemo(() => {
     if (!year) return null;
     if (month) {
@@ -266,9 +278,9 @@ export default function OutflowSection({
       const prevQuarter = idx > 0 ? allQuarters[idx - 1] : null;
       return prevQuarter ? buildFlowPeriod(scopedYearly, scopedQuarterly, scopedMonthly, { quarter: prevQuarter }) : null;
     }
-    if (quartersForYear.length < 4) return null;
+    if (quartersForYear.length < 4) return ytdPriorRow ? buildFlowPeriod(scopedYtdPrior, [], [], { year: year - 1 }) : null;
     return years.includes(year - 1) ? buildFlowPeriod(scopedYearly, scopedQuarterly, scopedMonthly, { year: year - 1 }) : null;
-  }, [scopedYearly, scopedQuarterly, scopedMonthly, allQuarters, allMonths, years, year, quarter, month, quartersForYear]);
+  }, [scopedYearly, scopedQuarterly, scopedMonthly, scopedYtdPrior, ytdPriorRow, allQuarters, allMonths, years, year, quarter, month, quartersForYear]);
 
   // A human-readable label for whatever period previousPeriod above landed
   // on, for the KPI cards' trend-arrow tooltip ("...in Q1 2026") — mirrors
@@ -286,9 +298,9 @@ export default function OutflowSection({
       const prevQuarter = idx > 0 ? allQuarters[idx - 1] : null;
       return prevQuarter ? formatQuarterLabel(prevQuarter) : null;
     }
-    if (quartersForYear.length < 4) return null;
+    if (quartersForYear.length < 4) return ytdPriorRow ? formatYtdPriorLabel(ytdPriorRow.year, ytdPriorRow.through_month) : null;
     return years.includes(year - 1) ? String(year - 1) : null;
-  }, [allQuarters, allMonths, years, year, quarter, month, quartersForYear]);
+  }, [allQuarters, allMonths, years, year, quarter, month, quartersForYear, ytdPriorRow]);
 
   // Population/year live in App.jsx now (shared across every section) — a
   // population switch there keeps browsing the same quarter/month here (see
@@ -388,6 +400,14 @@ export default function OutflowSection({
         to more than the overall total. "Engaged" includes anyone with an enrollment overlapping any part of the
         selected period, not just enrollments still open at the end of it.
       </p>
+    ) : demographicType === "household_type" ? (
+      // Same overlap caveat as project type engagement: categories count
+      // anyone in that household type at any point in the period.
+      <p>
+        A person can be in more than one household type in the same period, so category totals can add up to more
+        than the overall total. Each category includes anyone who was in that household type at any point in the
+        selected period.
+      </p>
     ) : (
       // Unlike race/ethnicity or project type engagement, this isn't about
       // overlapping categories — it's a data-completeness caveat, since
@@ -485,7 +505,7 @@ export default function OutflowSection({
         <FilterBar>
           <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
           <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
-          <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} />
+          <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
           <DemographicCategorySelect
             options={demographicCategoryOptions}
             value={demographicCategory}
@@ -544,7 +564,7 @@ export default function OutflowSection({
       <FilterBar>
         <PopulationSegmentSelect value={populationSegment} onChange={onPopulationChange} />
         <YearSelect years={years} value={year} onChange={onYearChange} partialYears={partialYears} />
-        <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} />
+        <DemographicTypeSelect value={demographicType} onChange={onDemographicTypeChange} options={demographicTypeOptions} />
         <DemographicCategorySelect
           options={demographicCategoryOptions}
           value={demographicCategory}

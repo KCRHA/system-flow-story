@@ -27,6 +27,8 @@ import pandas as pd
 
 from .config import (
     DIMENSIONS,
+    HOUSEHOLD_TYPE_DIMENSIONS,
+    HOUSEHOLD_TYPE_GROUPS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
     PROJECT_ENGAGEMENT_PROGRAM_IDS,
     PROJECT_ENGAGEMENT_GROUPS,
@@ -39,7 +41,12 @@ _BINARY_CATEGORIES = ["Included", "Not Included"]
 # PERIOD_AGGREGATE_CATEGORY_DIMENSIONS layered on top of config.DIMENSIONS —
 # every build_*.py module that wants this breakdown uses EXTENDED_DIMENSIONS
 # in its own per-dimension loops instead of plain DIMENSIONS.
-PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = ["unsheltered_in_period", *PROJECT_ENGAGEMENT_DIMENSIONS, *SUBREGION_ENGAGEMENT_DIMENSIONS]
+PERIOD_AGGREGATE_CATEGORY_DIMENSIONS = [
+    "unsheltered_in_period",
+    *PROJECT_ENGAGEMENT_DIMENSIONS,
+    *SUBREGION_ENGAGEMENT_DIMENSIONS,
+    *HOUSEHOLD_TYPE_DIMENSIONS,
+]
 EXTENDED_DIMENSIONS = [*DIMENSIONS, *PERIOD_AGGREGATE_CATEGORY_DIMENSIONS]
 
 
@@ -59,6 +66,23 @@ def _unsheltered_in_period_category(period_df: pd.DataFrame) -> pd.Series:
     ids = period_df["PersonalID"].unique()
     unsheltered_ids = set(period_df.loc[period_df["LastShelterStatusInTimeframe"] == "Unsheltered", "PersonalID"])
     return pd.Series(np.where(pd.Index(ids).isin(unsheltered_ids), "Included", "Not Included"), index=ids)
+
+
+def _household_type_category(period_df: pd.DataFrame, dimension: str) -> pd.Series:
+    """PersonalID -> "Included"/"Not Included" for one household_type_*
+    dimension, true if ANY of the person's rows within `period_df` has that
+    dimension's EpisodeHouseholdType (config.py's HOUSEHOLD_TYPE_GROUPS).
+    Same OR-across-the-period contract as _unsheltered_in_period_category,
+    so the categories overlap for anyone whose household type changed
+    between episodes in the period."""
+    ids = period_df["PersonalID"].unique()
+    matched_ids = set(period_df.loc[period_df["EpisodeHouseholdType"] == HOUSEHOLD_TYPE_GROUPS[dimension], "PersonalID"])
+    return pd.Series(np.where(pd.Index(ids).isin(matched_ids), "Included", "Not Included"), index=ids)
+
+
+def household_type_categories(period_df: pd.DataFrame) -> dict:
+    """Every household_type_* dimension's category series for one period."""
+    return {dim: _household_type_category(period_df, dim) for dim in HOUSEHOLD_TYPE_DIMENSIONS}
 
 
 def _project_engagement_category(period_df: pd.DataFrame, group_enrollments: pd.DataFrame, period_start, period_end) -> pd.Series:

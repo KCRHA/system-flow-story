@@ -4,7 +4,7 @@ from episode_systemwide's LengthOfTimeExperiencingHomelessness field.
 """
 import pandas as pd
 
-from .config import DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
+from .config import dimensions_for_segment, DIMENSION_COLUMNS, POPULATION_SEGMENTS, PROJECT_ENGAGEMENT_DIMENSIONS, SUBREGION_ENGAGEMENT_DIMENSIONS
 from .period_dimensions import (
     _BINARY_CATEGORIES,
     EXTENDED_DIMENSIONS,
@@ -14,6 +14,7 @@ from .period_dimensions import (
     _project_engagement_category,
     _subregion_engagement_category,
     _unsheltered_in_period_category,
+    household_type_categories,
 )
 from .population import filter_population
 
@@ -118,6 +119,7 @@ def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events:
         period_end = period_start + pd.offsets.MonthEnd(0)
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(month_df),
+            **household_type_categories(month_df),
             **{
                 dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -135,7 +137,7 @@ def build_length_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events:
         for segment_key, pop_label in POPULATION_SEGMENTS.items():
             pop_df = filter_population(active_df, pop_label, month)
 
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 for stat_row in _stats_by_category(pop_df, dimension, all_categories[dimension]):
                     rows.append(
                         {

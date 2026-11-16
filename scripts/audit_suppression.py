@@ -318,6 +318,11 @@ def audit_capacity(path):
 # ---------------------------------------------------------------- main
 def main():
     audit_flow("flow_yearly", [f"{DATA}/dashboard_flow_yearly.json"])
+    # Its own selection (prior year, capped to the current year's months), so
+    # audited on its own like every other table — see the module docstring's
+    # within-selection scope.
+    if os.path.exists(f"{DATA}/dashboard_flow_ytd_prior.json"):
+        audit_flow("flow_ytd_prior", [f"{DATA}/dashboard_flow_ytd_prior.json"])
     audit_flow("flow_quarterly", sorted(glob.glob(f"{DATA}/dashboard_flow_quarterly_*.json")))
     for p in sorted(glob.glob(f"{DATA}/dashboard_flow_monthly_*.json")):
         audit_flow(os.path.basename(p), [p])

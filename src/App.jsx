@@ -79,6 +79,41 @@ const ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS = {
   "Southeast King County": "engaged_in_subregion_southeast",
 };
 
+// Same pattern as PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS above: household
+// type is 3 independent binary dimensions (see pipeline/config.py's
+// HOUSEHOLD_TYPE_GROUPS), Included if the person was in that household type
+// at any point in the selected period, so someone whose household changed
+// between episodes counts in more than one. People with an unknown
+// household type aren't in any of them.
+const HOUSEHOLD_TYPE_CATEGORY_DIMENSIONS = {
+  "Adults and Children": "household_type_adults_children",
+  "Adults Only": "household_type_adults_only",
+  "Children Only": "household_type_children_only",
+};
+
+// Population segments that are themselves defined by household composition
+// (pipeline/population.py: Single Adults = "Household without Children",
+// Families = "Household with Children and Adults"), so a household type
+// breakdown would only restate the segment. The filter is hidden for these,
+// and the pipeline doesn't build it for them either (keep in sync with
+// pipeline/config.py's SEGMENT_SKIPPED_DIMENSIONS).
+const HOUSEHOLD_TYPE_HIDDEN_SEGMENTS = new Set(["single_adults", "family"]);
+
+// Household types a segment can't contain. Seniors (55+) and veterans are
+// adults, so they can never be in a children-only household. A segment
+// missing here offers every household type. The pipeline skips these too
+// (pipeline/config.py's SEGMENT_SKIPPED_DIMENSIONS).
+const RESTRICTED_HOUSEHOLD_TYPES = {
+  seniors: new Set(["Children Only"]),
+  veterans: new Set(["Children Only"]),
+};
+
+// The Demographic/Characteristic options offered for a population segment.
+function demographicTypesFor(populationSegment) {
+  if (!HOUSEHOLD_TYPE_HIDDEN_SEGMENTS.has(populationSegment)) return DEMOGRAPHIC_TYPES;
+  return DEMOGRAPHIC_TYPES.filter((opt) => opt.value !== "household_type");
+}
+
 // "We don't know" buckets. The export no longer publishes them at all
 // (pipeline/config.py's UNPUBLISHED_CATEGORIES); this filter is just a guard
 // in case an older data file still has them.
@@ -141,6 +176,9 @@ function resolveDemographicScope(demographicType, demographicCategory) {
   }
   if (demographicType === "engaged_in_subregion") {
     return { dimension: ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
+  }
+  if (demographicType === "household_type") {
+    return { dimension: HOUSEHOLD_TYPE_CATEGORY_DIMENSIONS[demographicCategory], category: "Included" };
   }
   return { dimension: demographicType, category: demographicCategory };
 }
@@ -217,7 +255,10 @@ export default function App() {
   // is resolved, and loadData.js's loadQuarterlyFlowForDimension.
   const [quarterlyFlowByDimension, setQuarterlyFlowByDimension] = useState({});
 
-  const demographicType = DEMOGRAPHIC_TYPES.some((opt) => opt.value === selectedDemographicType)
+  // Falls back to "overall" when the selected type isn't offered for this
+  // population (e.g. household_type after switching to Single Adults).
+  const demographicTypeOptions = useMemo(() => demographicTypesFor(populationSegment), [populationSegment]);
+  const demographicType = demographicTypeOptions.some((opt) => opt.value === selectedDemographicType)
     ? selectedDemographicType
     : "overall";
 
@@ -237,6 +278,12 @@ export default function App() {
     if (demographicType === "unsheltered_in_period") return Object.keys(UNSHELTERED_CATEGORY_LABELS);
     if (demographicType === "project_type_engagement") return Object.keys(PROJECT_ENGAGEMENT_CATEGORY_DIMENSIONS);
     if (demographicType === "engaged_in_subregion") return Object.keys(ENGAGED_IN_SUBREGION_CATEGORY_DIMENSIONS);
+    if (demographicType === "household_type") {
+      // Minus the household types this segment can't contain (see
+      // RESTRICTED_HOUSEHOLD_TYPES).
+      const excluded = RESTRICTED_HOUSEHOLD_TYPES[populationSegment];
+      return Object.keys(HOUSEHOLD_TYPE_CATEGORY_DIMENSIONS).filter((category) => !excluded?.has(category));
+    }
     const categories = distinctValues(
       filterRows(quarterlyFlowByDimension[demographicType] ?? [], { dimension: demographicType }),
       "category"
@@ -343,6 +390,7 @@ export default function App() {
       </section>
       <OutflowSection
         flowYearlyRows={data.flowYearly}
+        flowYtdPriorRows={data.flowYtdPrior}
         flowQuarterlyRows={quarterlyFlowByDimension[filterDimension] ?? []}
         flowQuarterlyLoading={!quarterlyFlowByDimension[filterDimension]}
         flowMonthlyRows={monthlyFlowByYear[year] ?? []}
@@ -354,6 +402,7 @@ export default function App() {
         onYearChange={setSelectedYear}
         demographicType={demographicType}
         onDemographicTypeChange={setSelectedDemographicType}
+        demographicTypeOptions={demographicTypeOptions}
         demographicCategory={demographicCategory}
         onDemographicCategoryChange={setSelectedDemographicCategory}
         demographicCategoryOptions={demographicCategories}
@@ -366,6 +415,7 @@ export default function App() {
         lengthRows={data.length}
         lengthByExitRows={data.lengthByExit}
         lengthHeadlineRows={data.lengthHeadline}
+        lengthHeadlineYtdPriorRows={data.lengthHeadlineYtdPrior}
         lengthHeadlineMonthlyRows={data.lengthHeadlineMonthly}
         lengthHeadlineQuarterlyRows={data.lengthHeadlineQuarterly}
         returnCohortRows={data.returnCohorts}

@@ -51,6 +51,8 @@ export async function loadDashboardData() {
     capacity,
     capacityQuarterly,
     capacityYearly,
+    flowYtdPrior,
+    lengthHeadlineYtdPrior,
   ] = await Promise.all([
     fetchJson("dashboard_flow_yearly.json"),
     // dashboard_flow_quarterly is NOT fetched here — it's pre-split one
@@ -75,8 +77,16 @@ export async function loadDashboardData() {
     fetchJson("dashboard_capacity_monthly.json"),
     fetchJson("dashboard_capacity_quarterly.json"),
     fetchJson("dashboard_capacity_yearly.json"),
+    // The prior year capped to the current partial year's months (e.g.
+    // Jan-Oct 2025 next to Jan-Oct 2026), for the full-year view's trend
+    // pills — see pipeline/export.py. Empty once the current year is
+    // complete; a missing file resolves to [] the same way.
+    fetchJson("dashboard_flow_ytd_prior.json").catch(() => []),
+    fetchJson("dashboard_length_headline_ytd_prior.json").catch(() => []),
   ]);
   return {
+    flowYtdPrior,
+    lengthHeadlineYtdPrior,
     flowYearly,
     length,
     lengthByExit,

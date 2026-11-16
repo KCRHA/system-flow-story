@@ -905,7 +905,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 388.0,
+    "count": 394.0,
     "suppression_marker": null
   },
   {
@@ -914,7 +914,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 184.0,
+    "count": 189.0,
     "suppression_marker": null
   },
   {
@@ -923,7 +923,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 121.0,
+    "count": 122.0,
     "suppression_marker": null
   },
   {
@@ -950,7 +950,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 226.0,
+    "count": 232.0,
     "suppression_marker": null
   },
   {
@@ -1013,7 +1013,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 104.0,
+    "count": 109.0,
     "suppression_marker": null
   },
   {
@@ -1049,7 +1049,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 73.0,
+    "count": 74.0,
     "suppression_marker": null
   },
   {
@@ -2480,7 +2480,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 415.0,
+    "count": 420.0,
     "suppression_marker": null
   },
   {
@@ -2489,7 +2489,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 227.0,
+    "count": 232.0,
     "suppression_marker": null
   },
   {
@@ -2525,7 +2525,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 196.0,
+    "count": 200.0,
     "suppression_marker": null
   },
   {
@@ -2543,7 +2543,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 37.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {
@@ -2579,7 +2579,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -2588,7 +2588,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 102.0,
+    "count": 106.0,
     "suppression_marker": null
   },
   {
@@ -4055,7 +4055,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 361.0,
+    "count": 369.0,
     "suppression_marker": null
   },
   {
@@ -4064,7 +4064,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 198.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -4073,7 +4073,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 88.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -4091,7 +4091,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 58.0,
+    "count": 59.0,
     "suppression_marker": null
   },
   {
@@ -4100,7 +4100,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 188.0,
+    "count": 193.0,
     "suppression_marker": null
   },
   {
@@ -4118,7 +4118,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 28.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -4127,7 +4127,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 145.0,
+    "count": 147.0,
     "suppression_marker": null
   },
   {
@@ -4145,7 +4145,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 75.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -4163,7 +4163,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 104.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -4199,7 +4199,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 47.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -4253,7 +4253,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 29.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -5630,7 +5630,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 359.0,
+    "count": 365.0,
     "suppression_marker": null
   },
   {
@@ -5639,7 +5639,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 191.0,
+    "count": 196.0,
     "suppression_marker": null
   },
   {
@@ -5648,7 +5648,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 92.0,
+    "count": 93.0,
     "suppression_marker": null
   },
   {
@@ -5675,7 +5675,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 183.0,
+    "count": 187.0,
     "suppression_marker": null
   },
   {
@@ -5702,7 +5702,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 143.0,
+    "count": 145.0,
     "suppression_marker": null
   },
   {
@@ -5720,7 +5720,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 76.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -5738,7 +5738,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 97.0,
+    "count": 101.0,
     "suppression_marker": null
   },
   {
@@ -5756,7 +5756,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 42.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -7205,7 +7205,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 364.0,
+    "count": 367.0,
     "suppression_marker": null
   },
   {
@@ -7214,7 +7214,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 185.0,
+    "count": 188.0,
     "suppression_marker": null
   },
   {
@@ -7250,7 +7250,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 180.0,
+    "count": 183.0,
     "suppression_marker": null
   },
   {
@@ -7313,7 +7313,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 95.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -8780,7 +8780,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 295.0,
+    "count": 300.0,
     "suppression_marker": null
   },
   {
@@ -8789,7 +8789,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 180.0,
+    "count": 183.0,
     "suppression_marker": null
   },
   {
@@ -8798,7 +8798,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 62.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -8816,7 +8816,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 42.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -8825,7 +8825,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 136.0,
+    "count": 139.0,
     "suppression_marker": null
   },
   {
@@ -8843,7 +8843,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 17.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -8852,7 +8852,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 142.0,
+    "count": 143.0,
     "suppression_marker": null
   },
   {
@@ -8888,7 +8888,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 81.0,
+    "count": 84.0,
     "suppression_marker": null
   },
   {
@@ -8978,7 +8978,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 26.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -10355,7 +10355,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 264.0,
+    "count": 269.0,
     "suppression_marker": null
   },
   {
@@ -10364,7 +10364,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 137.0,
+    "count": 140.0,
     "suppression_marker": null
   },
   {
@@ -10373,7 +10373,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 77.0,
+    "count": 79.0,
     "suppression_marker": null
   },
   {
@@ -10400,7 +10400,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 157.0,
+    "count": 160.0,
     "suppression_marker": null
   },
   {
@@ -10418,7 +10418,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 18.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -10454,7 +10454,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 14.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -10463,7 +10463,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 85.0,
+    "count": 86.0,
     "suppression_marker": null
   },
   {
@@ -10499,7 +10499,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 42.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -11930,7 +11930,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 266.0,
+    "count": 271.0,
     "suppression_marker": null
   },
   {
@@ -11939,7 +11939,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 157.0,
+    "count": 160.0,
     "suppression_marker": null
   },
   {
@@ -11948,7 +11948,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 56.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -11975,7 +11975,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 124.0,
+    "count": 127.0,
     "suppression_marker": null
   },
   {
@@ -12002,7 +12002,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 116.0,
+    "count": 118.0,
     "suppression_marker": null
   },
   {
@@ -12020,7 +12020,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 59.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -12038,7 +12038,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 80.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -13505,7 +13505,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 238.0,
+    "count": 242.0,
     "suppression_marker": null
   },
   {
@@ -13514,7 +13514,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 124.0,
+    "count": 127.0,
     "suppression_marker": null
   },
   {
@@ -13523,7 +13523,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 63.0,
+    "count": 64.0,
     "suppression_marker": null
   },
   {
@@ -13550,7 +13550,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 136.0,
+    "count": 138.0,
     "suppression_marker": null
   },
   {
@@ -13568,7 +13568,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -13577,7 +13577,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 84.0,
+    "count": 85.0,
     "suppression_marker": null
   },
   {
@@ -13604,7 +13604,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 11.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -13613,7 +13613,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 77.0,
+    "count": 79.0,
     "suppression_marker": null
   },
   {
@@ -15080,7 +15080,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 260.0,
+    "count": 263.0,
     "suppression_marker": null
   },
   {
@@ -15089,7 +15089,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 137.0,
+    "count": 139.0,
     "suppression_marker": null
   },
   {
@@ -15125,7 +15125,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 153.0,
+    "count": 154.0,
     "suppression_marker": null
   },
   {
@@ -15143,7 +15143,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 17.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -15152,7 +15152,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 90.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -15188,7 +15188,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 80.0,
+    "count": 81.0,
     "suppression_marker": null
   },
   {
@@ -16655,7 +16655,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 270.0,
+    "count": 274.0,
     "suppression_marker": null
   },
   {
@@ -16664,7 +16664,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 154.0,
+    "count": 155.0,
     "suppression_marker": null
   },
   {
@@ -16673,7 +16673,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 72.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -16700,7 +16700,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 154.0,
+    "count": 158.0,
     "suppression_marker": null
   },
   {
@@ -16763,7 +16763,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 89.0,
+    "count": 90.0,
     "suppression_marker": null
   },
   {
@@ -16799,7 +16799,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 40.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -18230,7 +18230,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 285.0,
+    "count": 288.0,
     "suppression_marker": null
   },
   {
@@ -18239,7 +18239,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 155.0,
+    "count": 158.0,
     "suppression_marker": null
   },
   {
@@ -18275,7 +18275,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 166.0,
+    "count": 168.0,
     "suppression_marker": null
   },
   {
@@ -18302,7 +18302,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 106.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -18320,7 +18320,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 48.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -18338,7 +18338,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 95.0,
+    "count": 97.0,
     "suppression_marker": null
   },
   {
@@ -19805,7 +19805,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 302.0,
+    "count": 304.0,
     "suppression_marker": null
   },
   {
@@ -19814,7 +19814,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 167.0,
+    "count": 169.0,
     "suppression_marker": null
   },
   {
@@ -19850,7 +19850,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 176.0,
+    "count": 177.0,
     "suppression_marker": null
   },
   {
@@ -19868,7 +19868,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 28.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -19904,7 +19904,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -19913,7 +19913,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 99.0,
+    "count": 100.0,
     "suppression_marker": null
   },
   {
@@ -20507,7 +20507,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 52.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -20516,7 +20516,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 79.0,
+    "count": 80.0,
     "suppression_marker": null
   },
   {
@@ -20660,7 +20660,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 30.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -21380,7 +21380,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 320.0,
+    "count": 324.0,
     "suppression_marker": null
   },
   {
@@ -21389,7 +21389,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 176.0,
+    "count": 177.0,
     "suppression_marker": null
   },
   {
@@ -21398,7 +21398,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 88.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -21416,7 +21416,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 42.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -21425,7 +21425,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 167.0,
+    "count": 169.0,
     "suppression_marker": null
   },
   {
@@ -21443,7 +21443,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 27.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -21452,7 +21452,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 126.0,
+    "count": 127.0,
     "suppression_marker": null
   },
   {
@@ -21488,7 +21488,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 104.0,
+    "count": 105.0,
     "suppression_marker": null
   },
   {
@@ -21515,7 +21515,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 11.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -22955,7 +22955,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 334.0,
+    "count": 340.0,
     "suppression_marker": null
   },
   {
@@ -22964,7 +22964,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 167.0,
+    "count": 169.0,
     "suppression_marker": null
   },
   {
@@ -22973,7 +22973,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 110.0,
+    "count": 113.0,
     "suppression_marker": null
   },
   {
@@ -22991,7 +22991,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 45.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -23000,7 +23000,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 191.0,
+    "count": 193.0,
     "suppression_marker": null
   },
   {
@@ -23018,7 +23018,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 24.0,
+    "count": 27.0,
     "suppression_marker": null
   },
   {
@@ -23027,7 +23027,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 119.0,
+    "count": 120.0,
     "suppression_marker": null
   },
   {
@@ -23054,7 +23054,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 15.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -23063,7 +23063,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 102.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -23099,7 +23099,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 55.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -24530,7 +24530,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 344.0,
+    "count": 346.0,
     "suppression_marker": null
   },
   {
@@ -24539,7 +24539,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 191.0,
+    "count": 193.0,
     "suppression_marker": null
   },
   {
@@ -24575,7 +24575,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 186.0,
+    "count": 188.0,
     "suppression_marker": null
   },
   {
@@ -24638,7 +24638,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 109.0,
+    "count": 111.0,
     "suppression_marker": null
   },
   {
@@ -26105,7 +26105,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 356.0,
+    "count": 360.0,
     "suppression_marker": null
   },
   {
@@ -26114,7 +26114,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 187.0,
+    "count": 189.0,
     "suppression_marker": null
   },
   {
@@ -26123,7 +26123,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 93.0,
+    "count": 95.0,
     "suppression_marker": null
   },
   {
@@ -26150,7 +26150,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 196.0,
+    "count": 198.0,
     "suppression_marker": null
   },
   {
@@ -26177,7 +26177,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 121.0,
+    "count": 123.0,
     "suppression_marker": null
   },
   {
@@ -26195,7 +26195,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 51.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -26213,7 +26213,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 109.0,
+    "count": 110.0,
     "suppression_marker": null
   },
   {
@@ -26249,7 +26249,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 43.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -27680,7 +27680,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 372.0,
+    "count": 378.0,
     "suppression_marker": null
   },
   {
@@ -27689,7 +27689,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 196.0,
+    "count": 198.0,
     "suppression_marker": null
   },
   {
@@ -27698,7 +27698,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 101.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -27707,7 +27707,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 23.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -27716,7 +27716,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 52.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -27725,7 +27725,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 194.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -27743,7 +27743,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 33.0,
+    "count": 35.0,
     "suppression_marker": null
   },
   {
@@ -27752,7 +27752,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 145.0,
+    "count": 146.0,
     "suppression_marker": null
   },
   {
@@ -27779,7 +27779,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 22.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -27824,7 +27824,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 56.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -27860,7 +27860,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 12.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -29255,7 +29255,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 371.0,
+    "count": 373.0,
     "suppression_marker": null
   },
   {
@@ -29264,7 +29264,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 194.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -29273,7 +29273,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 101.0,
+    "count": 100.0,
     "suppression_marker": null
   },
   {
@@ -29318,7 +29318,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 30.0,
+    "count": 32.0,
     "suppression_marker": null
   },
   {
@@ -29345,7 +29345,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 79.0,
+    "count": 80.0,
     "suppression_marker": null
   },
   {
@@ -29354,7 +29354,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 21.0,
+    "count": 23.0,
     "suppression_marker": null
   },
   {
@@ -30830,7 +30830,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 351.0,
+    "count": 353.0,
     "suppression_marker": null
   },
   {
@@ -30848,7 +30848,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 82.0,
+    "count": 83.0,
     "suppression_marker": null
   },
   {
@@ -30866,7 +30866,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 60.0,
+    "count": 61.0,
     "suppression_marker": null
   },
   {
@@ -30875,7 +30875,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 155.0,
+    "count": 156.0,
     "suppression_marker": null
   },
   {
@@ -30902,7 +30902,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 159.0,
+    "count": 160.0,
     "suppression_marker": null
   },
   {
@@ -32405,7 +32405,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 305.0,
+    "count": 310.0,
     "suppression_marker": null
   },
   {
@@ -32414,7 +32414,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 155.0,
+    "count": 156.0,
     "suppression_marker": null
   },
   {
@@ -32423,7 +32423,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 77.0,
+    "count": 80.0,
     "suppression_marker": null
   },
   {
@@ -32432,7 +32432,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 14.0,
+    "count": 15.0,
     "suppression_marker": null
   },
   {
@@ -32450,7 +32450,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 161.0,
+    "count": 164.0,
     "suppression_marker": null
   },
   {
@@ -32468,7 +32468,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 25.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -32477,7 +32477,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 119.0,
+    "count": 120.0,
     "suppression_marker": null
   },
   {
@@ -32513,7 +32513,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 87.0,
+    "count": 88.0,
     "suppression_marker": null
   },
   {
@@ -32549,7 +32549,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 37.0,
+    "count": 39.0,
     "suppression_marker": null
   },
   {
@@ -33980,7 +33980,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 301.0,
+    "count": 309.0,
     "suppression_marker": null
   },
   {
@@ -33989,7 +33989,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 165.0,
+    "count": 169.0,
     "suppression_marker": null
   },
   {
@@ -33998,7 +33998,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 76.0,
+    "count": 78.0,
     "suppression_marker": null
   },
   {
@@ -34007,7 +34007,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 17.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -34016,7 +34016,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 43.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -34025,7 +34025,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 178.0,
+    "count": 183.0,
     "suppression_marker": null
   },
   {
@@ -34043,7 +34043,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -34052,7 +34052,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 105.0,
+    "count": 107.0,
     "suppression_marker": null
   },
   {
@@ -34070,7 +34070,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 52.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -34088,7 +34088,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 102.0,
+    "count": 105.0,
     "suppression_marker": null
   },
   {
@@ -34124,7 +34124,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 49.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -34178,7 +34178,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 24.0,
+    "count": 25.0,
     "suppression_marker": null
   },
   {
@@ -35555,7 +35555,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 360.0,
+    "count": 369.0,
     "suppression_marker": null
   },
   {
@@ -35564,7 +35564,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 181.0,
+    "count": 186.0,
     "suppression_marker": null
   },
   {
@@ -35573,7 +35573,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 90.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -35591,7 +35591,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 73.0,
+    "count": 75.0,
     "suppression_marker": null
   },
   {
@@ -35600,7 +35600,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 184.0,
+    "count": 189.0,
     "suppression_marker": null
   },
   {
@@ -35618,7 +35618,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 23.0,
+    "count": 25.0,
     "suppression_marker": null
   },
   {
@@ -35627,7 +35627,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 153.0,
+    "count": 155.0,
     "suppression_marker": null
   },
   {
@@ -35645,7 +35645,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 65.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -35663,7 +35663,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 100.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -35771,7 +35771,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 41.0,
+    "count": 42.0,
     "suppression_marker": null
   },
   {
@@ -37130,7 +37130,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 341.0,
+    "count": 346.0,
     "suppression_marker": null
   },
   {
@@ -37139,7 +37139,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 184.0,
+    "count": 189.0,
     "suppression_marker": null
   },
   {
@@ -37175,7 +37175,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 169.0,
+    "count": 174.0,
     "suppression_marker": null
   },
   {
@@ -37238,7 +37238,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 99.0,
+    "count": 104.0,
     "suppression_marker": null
   },
   {
@@ -38705,7 +38705,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 319.0,
+    "count": 326.0,
     "suppression_marker": null
   },
   {
@@ -38714,7 +38714,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 169.0,
+    "count": 175.0,
     "suppression_marker": null
   },
   {
@@ -38723,7 +38723,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 73.0,
+    "count": 74.0,
     "suppression_marker": null
   },
   {
@@ -38750,7 +38750,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 182.0,
+    "count": 186.0,
     "suppression_marker": null
   },
   {
@@ -38768,7 +38768,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 21.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -38777,7 +38777,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 116.0,
+    "count": 118.0,
     "suppression_marker": null
   },
   {
@@ -38795,7 +38795,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 52.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -38804,7 +38804,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -38813,7 +38813,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 99.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -40280,7 +40280,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 363.0,
+    "count": 368.0,
     "suppression_marker": null
   },
   {
@@ -40289,7 +40289,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 183.0,
+    "count": 187.0,
     "suppression_marker": null
   },
   {
@@ -40298,7 +40298,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 82.0,
+    "count": 83.0,
     "suppression_marker": null
   },
   {
@@ -40325,7 +40325,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 194.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -40343,7 +40343,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 27.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -40352,7 +40352,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 142.0,
+    "count": 145.0,
     "suppression_marker": null
   },
   {
@@ -40370,7 +40370,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 66.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -40388,7 +40388,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 103.0,
+    "count": 105.0,
     "suppression_marker": null
   },
   {
@@ -41855,7 +41855,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 363.0,
+    "count": 366.0,
     "suppression_marker": null
   },
   {
@@ -41864,7 +41864,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 194.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -41900,7 +41900,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 188.0,
+    "count": 190.0,
     "suppression_marker": null
   },
   {
@@ -41918,7 +41918,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 13.0,
+    "count": 15.0,
     "suppression_marker": null
   },
   {
@@ -41927,7 +41927,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 162.0,
+    "count": 161.0,
     "suppression_marker": null
   },
   {
@@ -41963,7 +41963,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 107.0,
+    "count": 108.0,
     "suppression_marker": null
   },
   {
@@ -43430,7 +43430,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 346.0,
+    "count": 349.0,
     "suppression_marker": null
   },
   {
@@ -43439,7 +43439,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 189.0,
+    "count": 191.0,
     "suppression_marker": null
   },
   {
@@ -43448,7 +43448,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 76.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -43475,7 +43475,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 194.0,
+    "count": 200.0,
     "suppression_marker": null
   },
   {
@@ -43502,7 +43502,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 129.0,
+    "count": 126.0,
     "suppression_marker": null
   },
   {
@@ -43520,7 +43520,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 76.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -43538,7 +43538,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 98.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -43574,7 +43574,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 44.0,
+    "count": 45.0,
     "suppression_marker": null
   },
   {
@@ -44105,7 +44105,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 903.0,
+    "count": 904.0,
     "suppression_marker": null
   },
   {
@@ -44132,7 +44132,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 81.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -44177,7 +44177,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 215.0,
+    "count": 216.0,
     "suppression_marker": null
   },
   {
@@ -45005,7 +45005,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 358.0,
+    "count": 366.0,
     "suppression_marker": null
   },
   {
@@ -45014,7 +45014,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 195.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -45023,7 +45023,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 88.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -45050,7 +45050,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 201.0,
+    "count": 207.0,
     "suppression_marker": null
   },
   {
@@ -45077,7 +45077,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 133.0,
+    "count": 135.0,
     "suppression_marker": null
   },
   {
@@ -45095,7 +45095,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 59.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -45113,7 +45113,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 115.0,
+    "count": 121.0,
     "suppression_marker": null
   },
   {
@@ -45455,7 +45455,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 536.0,
+    "count": 537.0,
     "suppression_marker": null
   },
   {
@@ -45482,7 +45482,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 65.0,
+    "count": 66.0,
     "suppression_marker": null
   },
   {
@@ -45527,7 +45527,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 80.0,
+    "count": 81.0,
     "suppression_marker": null
   },
   {
@@ -46580,7 +46580,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 342.0,
+    "count": 349.0,
     "suppression_marker": null
   },
   {
@@ -46589,7 +46589,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 202.0,
+    "count": 208.0,
     "suppression_marker": null
   },
   {
@@ -46598,7 +46598,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 75.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -46625,7 +46625,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 197.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -46652,7 +46652,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 130.0,
+    "count": 132.0,
     "suppression_marker": null
   },
   {
@@ -46688,7 +46688,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 119.0,
+    "count": 123.0,
     "suppression_marker": null
   },
   {
@@ -46724,7 +46724,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 43.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -47300,7 +47300,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 510.0,
+    "count": 509.0,
     "suppression_marker": null
   },
   {
@@ -47327,7 +47327,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 225.0,
+    "count": 226.0,
     "suppression_marker": null
   },
   {
@@ -47345,7 +47345,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 93.0,
+    "count": 94.0,
     "suppression_marker": null
   },
   {
@@ -47363,7 +47363,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 348.0,
+    "count": 347.0,
     "suppression_marker": null
   },
   {
@@ -48155,7 +48155,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 338.0,
+    "count": 342.0,
     "suppression_marker": null
   },
   {
@@ -48164,7 +48164,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 197.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -48173,7 +48173,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 76.0,
+    "count": 75.0,
     "suppression_marker": null
   },
   {
@@ -48200,7 +48200,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 184.0,
+    "count": 186.0,
     "suppression_marker": null
   },
   {
@@ -48218,7 +48218,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 15.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -48245,7 +48245,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 65.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -48263,7 +48263,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 120.0,
+    "count": 122.0,
     "suppression_marker": null
   },
   {
@@ -48281,7 +48281,7 @@
     "dimension": "race_nhpi",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 40.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {

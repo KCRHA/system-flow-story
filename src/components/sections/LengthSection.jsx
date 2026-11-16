@@ -6,12 +6,13 @@ import ReturnCohortChart from "../charts/ReturnCohortChart.jsx";
 import { filterRows, distinctValues } from "../../lib/loadData.js";
 import { subjectFor } from "../../lib/demographics.js";
 import { trendDirectionFor, trendPillText, trendPillTextPoints } from "../../lib/trend.js";
-import { formatMonthLabel, formatQuarterLabel } from "../../lib/periodLabels.js";
+import { formatMonthLabel, formatQuarterLabel, formatYtdPriorLabel } from "../../lib/periodLabels.js";
 
 export default function LengthSection({
   lengthRows,
   lengthByExitRows,
   lengthHeadlineRows,
+  lengthHeadlineYtdPriorRows = [],
   lengthHeadlineMonthlyRows,
   lengthHeadlineQuarterlyRows,
   returnCohortRows,
@@ -141,24 +142,6 @@ export default function LengthSection({
         ? allHeadlineQuarters[allHeadlineQuarters.indexOf(selectedQuarter) - 1] ?? null
         : year - 1;
 
-  const headlineRow = headlineRows.find((r) => r[headlinePeriodCol] === headlinePeriodKey);
-  const previousHeadlineRow =
-    previousHeadlinePeriodKey != null ? headlineRows.find((r) => r[headlinePeriodCol] === previousHeadlinePeriodKey) : undefined;
-  const headlineCell = headlineRow && { value: headlineRow.median_days, marker: headlineRow.suppression_marker };
-  const previousHeadlineCell = previousHeadlineRow && {
-    value: previousHeadlineRow.median_days,
-    marker: previousHeadlineRow.suppression_marker,
-  };
-  const headlinePeriodLabel =
-    headlineGrain === "month" ? formatMonthLabel(selectedMonth) : headlineGrain === "quarter" ? formatQuarterLabel(selectedQuarter) : String(year);
-  const previousHeadlinePeriodLabel = !previousHeadlineRow
-    ? null
-    : headlineGrain === "month"
-      ? formatMonthLabel(previousHeadlinePeriodKey)
-      : headlineGrain === "quarter"
-        ? formatQuarterLabel(previousHeadlinePeriodKey)
-        : String(previousHeadlinePeriodKey);
-
   // The headline tooltip below says "still-active people are counted as of
   // {year}'s year-end" — true for a complete year, but wrong for the
   // current, still-in-progress one (build_length_headline_rows actually
@@ -187,6 +170,38 @@ export default function LengthSection({
   const throughLabel = isPartialYear
     ? new Date(monthsThisYear.at(-1)).toLocaleString("en-US", { month: "short", timeZone: "UTC" })
     : null;
+
+  // A partial year's full-year view compares against the prior year capped
+  // to the same months (dashboard_length_headline_ytd_prior, e.g. Jan-Oct
+  // 2025), not the whole prior year: both then measure still-active people
+  // as of the same point in the year. No pill if that row isn't published.
+  const headlineRow = headlineRows.find((r) => r[headlinePeriodCol] === headlinePeriodKey);
+  const ytdPriorHeadlineRow = isPartialYear
+    ? filterRows(lengthHeadlineYtdPriorRows, { populationSegment, dimension: filterDimension, category: filterCategory }).find(
+        (r) => r.year === year - 1
+      )
+    : undefined;
+  const previousHeadlineRow = isPartialYear
+    ? ytdPriorHeadlineRow
+    : previousHeadlinePeriodKey != null
+      ? headlineRows.find((r) => r[headlinePeriodCol] === previousHeadlinePeriodKey)
+      : undefined;
+  const headlineCell = headlineRow && { value: headlineRow.median_days, marker: headlineRow.suppression_marker };
+  const previousHeadlineCell = previousHeadlineRow && {
+    value: previousHeadlineRow.median_days,
+    marker: previousHeadlineRow.suppression_marker,
+  };
+  const headlinePeriodLabel =
+    headlineGrain === "month" ? formatMonthLabel(selectedMonth) : headlineGrain === "quarter" ? formatQuarterLabel(selectedQuarter) : String(year);
+  const previousHeadlinePeriodLabel = !previousHeadlineRow
+    ? null
+    : isPartialYear
+      ? formatYtdPriorLabel(previousHeadlineRow.year, previousHeadlineRow.through_month)
+      : headlineGrain === "month"
+        ? formatMonthLabel(previousHeadlinePeriodKey)
+        : headlineGrain === "quarter"
+          ? formatQuarterLabel(previousHeadlinePeriodKey)
+          : String(previousHeadlinePeriodKey);
 
   // Scoping to a demographic category isn't visible once a reader has
   // scrolled past the filter controls above (OutflowSection), so the

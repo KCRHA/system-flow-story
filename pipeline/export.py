@@ -36,6 +36,7 @@ from .build_return_cohorts import build_return_cohort_rows
 from .config import (
     DECEASED_IN_INACTIVE_FLOW_TYPE,
     DIMENSION_COLUMNS,
+    HOUSEHOLD_TYPE_DIMENSIONS,
     LENGTH_FULL_STATS_MIN_N,
     PROJECT_ENGAGEMENT_DIMENSIONS,
     PROJECT_TYPE_CODE_TEXT_TO_HUD,
@@ -54,15 +55,15 @@ from .config import (
 RACE_ROLLUP_COLUMNS = [DIMENSION_COLUMNS[d] for d in RACE_DIMENSIONS]
 
 # Overlapping binary dimensions: a person can be "Included" in more than
-# one race_* (or project_engaged_*, or engaged_in_subregion_*) dimension at
-# once. The frontend only ever shows each one's "Included" row (as one
-# category of the virtual Race/Ethnicity, Project Type Engagement or
-# Subregion Engagement selection), and those Included rows can't be
+# one race_* (or project_engaged_*, engaged_in_subregion_*, or
+# household_type_*) dimension at once. The frontend only ever shows each
+# one's "Included" row (as one category of the virtual Race/Ethnicity,
+# Project Type Engagement, Subregion Engagement or Household Type selection), and those Included rows can't be
 # calculated from each other. Their "Not Included" rows are dropped before
 # suppression (see _drop_overlap_not_included): published, they'd let anyone
 # get Included as overall minus Not Included, and nothing on the dashboard
 # uses them.
-OVERLAPPING_BINARY_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS, *SUBREGION_ENGAGEMENT_DIMENSIONS]
+OVERLAPPING_BINARY_DIMENSIONS = [*RACE_DIMENSIONS, *PROJECT_ENGAGEMENT_DIMENSIONS, *SUBREGION_ENGAGEMENT_DIMENSIONS, *HOUSEHOLD_TYPE_DIMENSIONS]
 
 
 def _drop_overlap_not_included(df: pd.DataFrame) -> pd.DataFrame:
@@ -208,6 +209,32 @@ def _write_quarterly_flow_split(records: list[dict]):
         _write(f"dashboard_flow_quarterly_{dimension}.json", dimension_records)
 
 
+def _suppress_flow_yearly(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
+    """Full suppression + validation chain for a year-keyed flow table —
+    shared by dashboard_flow_yearly and dashboard_flow_ytd_prior so the two
+    can never drift apart. Returns (flow rows, deceased band rows, violations)."""
+    df = _drop_overlap_not_included(df)
+    df, deceased_df = _split_deceased(df)
+    df = apply_full_suppression_pipeline(df, group_cols=["year", "population_segment", "dimension", "flow_type"])
+    df = apply_crosstab_secondary_suppression(df, group_cols=["year", "population_segment", "dimension", "category"])
+    df = apply_sankey_marginal_suppression(df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
+    df = apply_insufficient_population_fallback(
+        df,
+        period_col="year",
+        main_group_cols=["year", "population_segment", "dimension", "flow_type"],
+        crosstab_group_cols=["year", "population_segment", "dimension", "category"],
+        sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
+    )
+    # How many of each inactive count are deceased, as a band (see
+    # suppression.apply_deceased_bands). Needs the inactive cells' final markers.
+    deceased_df = apply_deceased_bands(deceased_df, df, period_col="year")
+    violations = validate(df, group_cols=["year", "population_segment", "dimension", "flow_type"])
+    violations += validate_deceased_bands(deceased_df, df, period_col="year")
+    violations += validate_crosstab(df, group_cols=["year", "population_segment", "dimension", "category"])
+    violations += validate_sankey_marginal(df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
+    return df, deceased_df, violations
+
+
 def _suppress_capacity_household_count(df: pd.DataFrame, period_col: str, count_col: str) -> tuple[pd.DataFrame, list[str]]:
     """Applies suppression.py's existing primary/secondary logic, reused
     unmodified, to one of dashboard_capacity_*'s household-count columns
@@ -338,7 +365,7 @@ def main():
         conn,
         """
         SELECT PersonalID, EpisodeID, TimePeriodStartDate, EpisodeStartDate, EpisodeEndDate,
-               EpisodeMaxCountChildren, EpisodeChronicStatus, EpisodeHouseholdType, EpisodeAgeTier,
+               EpisodeChronicStatus, EpisodeHouseholdType, EpisodeAgeTier,
                EpisodeInflowType, EpisodeOutflowType, LengthOfTimeExperiencingHomelessness,
                AgedOutOfYYA, FlagYYA, LastShelterStatusInTimeframe
         FROM episode_systemwide
@@ -557,29 +584,35 @@ def main():
     # these can't just be summed from dashboard_flow_monthly's per-month
     # figures) ---
     flow_yearly_df = build_flow_yearly_rows(episodes_with_lookback, enrollments, events, month_pop_cache, window_start=pd.Timestamp(start))
-    flow_yearly_df = _drop_overlap_not_included(flow_yearly_df)
-    flow_yearly_df, flow_yearly_deceased_df = _split_deceased(flow_yearly_df)
     t = _checkpoint("build_flow_yearly_rows", t)
-    flow_yearly_df = apply_full_suppression_pipeline(
-        flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"]
-    )
-    flow_yearly_df = apply_crosstab_secondary_suppression(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
-    flow_yearly_df = apply_sankey_marginal_suppression(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
-    flow_yearly_df = apply_insufficient_population_fallback(
-        flow_yearly_df,
-        period_col="year",
-        main_group_cols=["year", "population_segment", "dimension", "flow_type"],
-        crosstab_group_cols=["year", "population_segment", "dimension", "category"],
-        sankey_bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS,
-    )
-    # How many of each inactive count are deceased, as a band (see
-    # suppression.apply_deceased_bands). Needs the inactive cells' final markers.
-    flow_yearly_deceased_df = apply_deceased_bands(flow_yearly_deceased_df, flow_yearly_df, period_col="year")
-    flow_yearly_violations = validate(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "flow_type"])
-    flow_yearly_violations += validate_deceased_bands(flow_yearly_deceased_df, flow_yearly_df, period_col="year")
-    flow_yearly_violations += validate_crosstab(flow_yearly_df, group_cols=["year", "population_segment", "dimension", "category"])
-    flow_yearly_violations += validate_sankey_marginal(flow_yearly_df, group_cols=["year", "population_segment"], bucket_flow_type_groups=SANKEY_BUCKET_FLOW_TYPE_GROUPS)
+    flow_yearly_df, flow_yearly_deceased_df, flow_yearly_violations = _suppress_flow_yearly(flow_yearly_df)
     t = _checkpoint("flow_yearly_df suppression+validate", t)
+
+    # --- dashboard_flow_ytd_prior / dashboard_length_headline_ytd_prior ---
+    # The current year is partial (through `end`'s month), so comparing its
+    # year-to-date row against the prior FULL year would always read as a
+    # drop. These hold the prior year capped to the same months instead
+    # (e.g. Jan-Oct 2025 next to Jan-Oct 2026), for the dashboard's
+    # full-year trend pills. Empty when the current year is complete (a
+    # December `end`) or the prior year falls outside the window — the
+    # frontend then just compares full years as before.
+    ytd_year, ytd_through = end.year - 1, end.month
+    has_ytd_prior = ytd_through < 12 and ytd_year >= start.year
+    flow_ytd_prior_df = flow_ytd_prior_deceased_df = None
+    flow_ytd_prior_violations: list[str] = []
+    length_headline_ytd_prior_df = None
+    if has_ytd_prior:
+        flow_ytd_prior_df = build_flow_yearly_rows(
+            episodes_with_lookback, enrollments, events, month_pop_cache,
+            window_start=pd.Timestamp(start), only_year=ytd_year, through_month=ytd_through,
+        )
+        flow_ytd_prior_df, flow_ytd_prior_deceased_df, flow_ytd_prior_violations = _suppress_flow_yearly(flow_ytd_prior_df)
+        length_headline_ytd_prior_df = build_length_headline_rows(
+            episodes_with_lookback, enrollments, events,
+            window_start=pd.Timestamp(start), only_year=ytd_year, through_month=ytd_through,
+        )
+        length_headline_ytd_prior_df = _publish_length_stats(_drop_overlap_not_included(length_headline_ytd_prior_df))
+        t = _checkpoint(f"ytd_prior ({ytd_year} Jan-month {ytd_through}) build+suppression", t)
 
     # --- dashboard_flow_quarterly (drill-down granularity for OutflowSection's
     # pills — same "can't be summed from monthly cells" rationale as yearly,
@@ -728,6 +761,7 @@ def main():
     all_violations = (
         flow_violations
         + flow_yearly_violations
+        + flow_ytd_prior_violations
         + flow_quarterly_violations
         + return_violations
         + capacity_violations
@@ -753,6 +787,17 @@ def main():
     _write_monthly_flow_split(_to_json_records(flow_df, ["month"]))
     _write("dashboard_flow_yearly.json", _to_json_records(flow_yearly_df, []))
     _write_quarterly_flow_split(_to_json_records(flow_quarterly_df, ["quarter"]))
+    if has_ytd_prior:
+        flow_ytd_prior_df = pd.concat([flow_ytd_prior_df, flow_ytd_prior_deceased_df], ignore_index=True)
+        flow_ytd_prior_df = flow_ytd_prior_df.drop(columns=["inflow_bucket", "outflow_bucket"], errors="ignore")
+        _write("dashboard_flow_ytd_prior.json", _to_json_records(flow_ytd_prior_df.assign(through_month=ytd_through), []))
+        _write(
+            "dashboard_length_headline_ytd_prior.json",
+            _to_json_records(length_headline_ytd_prior_df.assign(through_month=ytd_through), []),
+        )
+    else:
+        _write("dashboard_flow_ytd_prior.json", [])
+        _write("dashboard_length_headline_ytd_prior.json", [])
     _write("dashboard_length_monthly.json", _to_json_records(length_df, ["month"]))
     _write("dashboard_length_by_exit_monthly.json", _to_json_records(length_by_exit_df, ["month"]))
     _write("dashboard_length_headline_yearly.json", _to_json_records(length_headline_df, []))

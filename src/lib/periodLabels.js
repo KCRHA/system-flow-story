@@ -18,6 +18,13 @@ export function quarterAbbrevLabel(quarter) {
   return `Q${Math.floor(new Date(quarter).getUTCMonth() / 3) + 1}`;
 }
 
+// Label for a dashboard_*_ytd_prior row ("Jan-Oct 2025"), the prior year
+// capped to the current partial year's months. Plain hyphen, not a dash.
+export function formatYtdPriorLabel(year, throughMonth) {
+  const end = new Date(Date.UTC(year, throughMonth - 1, 1)).toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+  return throughMonth === 1 ? `Jan ${year}` : `Jan-${end} ${year}`;
+}
+
 export function formatMonthLabel(month) {
   const d = new Date(month);
   return `${d.toLocaleString("en-US", { month: "long", timeZone: "UTC" })} ${d.getUTCFullYear()}`;

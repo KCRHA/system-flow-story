@@ -21,6 +21,7 @@ export const DEMOGRAPHIC_TYPES = [
   { value: "gender_identity", label: "Gender Identity" },
   { value: "gender_alignment", label: "Gender Alignment" },
   { value: "age_category", label: "Age Category" },
+  { value: "household_type", label: "Household Type" },
   { value: "unsheltered_in_period", label: "Unsheltered This Period" },
   { value: "project_type_engagement", label: "Project Type Engagement" },
   { value: "last_known_subregion", label: "Last Known Subregion" },

@@ -5630,7 +5630,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 66.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -5639,7 +5639,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 27.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -15080,7 +15080,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 66.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -15125,7 +15125,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 55.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -16655,7 +16655,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 67.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -16664,7 +16664,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 45.0,
+    "count": 47.0,
     "suppression_marker": null
   },
   {
@@ -16727,7 +16727,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 20.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -16745,7 +16745,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 11.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -19850,7 +19850,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 51.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -19913,7 +19913,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 30.0,
+    "count": 31.0,
     "suppression_marker": null
   },
   {
@@ -22955,7 +22955,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 62.0,
+    "count": 65.0,
     "suppression_marker": null
   },
   {
@@ -22964,7 +22964,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 29.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -22973,7 +22973,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 28.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -23000,7 +23000,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 40.0,
+    "count": 42.0,
     "suppression_marker": null
   },
   {
@@ -23063,7 +23063,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -23099,7 +23099,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 16.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -24530,7 +24530,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 69.0,
+    "count": 72.0,
     "suppression_marker": null
   },
   {
@@ -24539,7 +24539,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 28.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -24548,7 +24548,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 27.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -24575,7 +24575,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 41.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -24638,7 +24638,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 23.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -33980,7 +33980,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 21.0,
+    "count": 23.0,
     "suppression_marker": null
   },
   {
@@ -34025,7 +34025,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 15.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -34097,8 +34097,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2024-04-01",
@@ -34106,8 +34106,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2024-04-01",
@@ -35555,7 +35555,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 32.0,
+    "count": 35.0,
     "suppression_marker": null
   },
   {
@@ -35564,7 +35564,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 14.0,
+    "count": 15.0,
     "suppression_marker": null
   },
   {
@@ -35573,8 +35573,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 13.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2024-07-01",
@@ -35582,8 +35582,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2024-07-01",
@@ -35600,7 +35600,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 21.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -35708,8 +35708,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2024-07-01",
@@ -35717,8 +35717,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2024-07-01",
@@ -37130,7 +37130,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 39.0,
+    "count": 40.0,
     "suppression_marker": null
   },
   {
@@ -37139,7 +37139,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 17.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -37175,7 +37175,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 29.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -37238,7 +37238,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 12.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -38705,7 +38705,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 61.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -38714,7 +38714,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 23.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -38777,7 +38777,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 28.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -38876,8 +38876,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2025-01-01",
@@ -40955,7 +40955,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 80.0,
+    "count": 83.0,
     "suppression_marker": null
   },
   {
@@ -40973,7 +40973,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 48.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -41000,7 +41000,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 43.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -41099,7 +41099,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 33.0,
+    "count": 36.0,
     "suppression_marker": null
   },
   {
@@ -41855,7 +41855,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 44.0,
+    "count": 45.0,
     "suppression_marker": null
   },
   {
@@ -41900,7 +41900,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 21.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -42305,7 +42305,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 35.0,
+    "count": 39.0,
     "suppression_marker": null
   },
   {
@@ -42323,7 +42323,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 20.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -42350,7 +42350,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 20.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -42530,7 +42530,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 88.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -42539,7 +42539,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 23.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -42575,7 +42575,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 46.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -42638,7 +42638,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 13.0,
+    "count": 16.0,
     "suppression_marker": null
   },
   {
@@ -43430,7 +43430,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 57.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -43440,7 +43440,7 @@
     "category": "Included",
     "flow_type": "indiv_already_active",
     "count": null,
-    "suppression_marker": "*"
+    "suppression_marker": "**"
   },
   {
     "quarter": "2025-10-01",
@@ -43448,7 +43448,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 31.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -43502,7 +43502,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 30.0,
+    "count": 32.0,
     "suppression_marker": null
   },
   {
@@ -43556,350 +43556,350 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
+    "count": 17.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_still_active",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_aged_out",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_inactive",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_still_active",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_aged_out",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_inactive",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "single_adults",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_still_active",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "experienced_homelessness",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_already_active",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_newly_homeless",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_return_from_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_return_from_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_still_active",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_aged_out",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_already_active_to_aged_out",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_already_active_to_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_already_active_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_already_active_to_still_active",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_aged_out",
+    "count": null,
+    "suppression_marker": "**"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_newly_homeless_to_still_active",
+    "count": null,
+    "suppression_marker": "*"
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_aged_out",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_housed_to_still_active",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_aged_out",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_inactive",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "veterans",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_flow_return_from_inactive_to_still_active",
+    "count": 0.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "family",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "experienced_homelessness",
+    "count": 32.0,
+    "suppression_marker": null
+  },
+  {
+    "quarter": "2025-10-01",
+    "population_segment": "family",
+    "dimension": "engaged_in_subregion_snoqualmie",
+    "category": "Included",
+    "flow_type": "indiv_already_active",
     "count": 16.0,
     "suppression_marker": null
   },
   {
     "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "single_adults",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "experienced_homelessness",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_already_active",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_newly_homeless",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_return_from_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_return_from_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_still_active",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_aged_out",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": null,
-    "suppression_marker": "*"
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "veterans",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "family",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "experienced_homelessness",
-    "count": 28.0,
-    "suppression_marker": null
-  },
-  {
-    "quarter": "2025-10-01",
-    "population_segment": "family",
-    "dimension": "engaged_in_subregion_snoqualmie",
-    "category": "Included",
-    "flow_type": "indiv_already_active",
-    "count": null,
-    "suppression_marker": "**"
-  },
-  {
-    "quarter": "2025-10-01",
     "population_segment": "family",
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 13.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2025-10-01",
@@ -43925,7 +43925,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 20.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -43988,8 +43988,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 12.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2025-10-01",
@@ -45005,7 +45005,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 132.0,
+    "count": 137.0,
     "suppression_marker": null
   },
   {
@@ -45023,7 +45023,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 51.0,
+    "count": 55.0,
     "suppression_marker": null
   },
   {
@@ -45077,7 +45077,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 78.0,
+    "count": 80.0,
     "suppression_marker": null
   },
   {
@@ -45131,7 +45131,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 26.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -45455,7 +45455,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 51.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -45464,7 +45464,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 13.0,
+    "count": 14.0,
     "suppression_marker": null
   },
   {
@@ -45527,7 +45527,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 29.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -46580,7 +46580,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 89.0,
+    "count": 90.0,
     "suppression_marker": null
   },
   {
@@ -46589,7 +46589,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -46652,7 +46652,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 42.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -46670,8 +46670,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 11.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2026-04-01",
@@ -48155,7 +48155,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 72.0,
+    "count": 74.0,
     "suppression_marker": null
   },
   {
@@ -48173,7 +48173,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 39.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -48227,7 +48227,7 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 36.0,
+    "count": 37.0,
     "suppression_marker": null
   },
   {
@@ -48281,8 +48281,8 @@
     "dimension": "engaged_in_subregion_snoqualmie",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 18.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2026-07-01",
@@ -48291,7 +48291,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "quarter": "2026-07-01",

@@ -119,6 +119,46 @@ DIMENSIONS = [
     # "last_known_city",  # last_known_city filter temporarily disabled
 ]
 
+# --- Household type (dashboard_flow_monthly "household_type_*" dimensions) ---
+# One independent binary ("Included"/"Not Included") dimension per HUD
+# household type, same pattern as PROJECT_ENGAGEMENT_GROUPS: a person is
+# Included if ANY of their episode_systemwide rows in the period being built
+# has that EpisodeHouseholdType (the most common HUD HouseholdType across
+# the episode's events). Categories overlap: someone in a family episode in
+# March and an adults-only episode in September is Included in both for
+# that year. Chosen by the dashboard owner (2026-11-16) over "latest episode
+# wins" so that "Adults and Children" for All population matches the
+# Families with Children population total. Rows with any other value
+# (null/unknown) simply aren't Included anywhere, so there's no unknown
+# bucket to hide. See period_dimensions.py's _household_type_category.
+HOUSEHOLD_TYPE_GROUPS = {
+    "household_type_adults_children": "Household with Children and Adults",
+    "household_type_adults_only": "Household without Children",
+    "household_type_children_only": "Household with Only Children",
+}
+HOUSEHOLD_TYPE_DIMENSIONS = list(HOUSEHOLD_TYPE_GROUPS)
+
+# Dimensions never built for a population segment because the dashboard
+# doesn't offer them there — keep in sync with App.jsx's
+# HOUSEHOLD_TYPE_HIDDEN_SEGMENTS/RESTRICTED_HOUSEHOLD_TYPES. Single Adults and
+# Families are themselves defined by household composition, so household
+# type would only restate the segment; seniors and veterans are adults, so
+# they can't be in a children-only household. Every build_*.py per-segment
+# dimension loop goes through dimensions_for_segment, so these rows are
+# never computed or published.
+SEGMENT_SKIPPED_DIMENSIONS = {
+    "single_adults": frozenset(HOUSEHOLD_TYPE_DIMENSIONS),
+    "family": frozenset(HOUSEHOLD_TYPE_DIMENSIONS),
+    "seniors": frozenset({"household_type_children_only"}),
+    "veterans": frozenset({"household_type_children_only"}),
+}
+
+
+def dimensions_for_segment(segment_key: str, dimensions: list) -> list:
+    """`dimensions` minus whatever SEGMENT_SKIPPED_DIMENSIONS skips for this segment."""
+    skipped = SEGMENT_SKIPPED_DIMENSIONS.get(segment_key, frozenset())
+    return [d for d in dimensions if d not in skipped]
+
 # last_known_city filter temporarily disabled — commented out along with
 # DIMENSIONS/DIMENSION_COLUMNS' own entries, export.py's LastKnownCity
 # handling, and build_flow.py's enrollment merge column.
@@ -323,6 +363,12 @@ DIMENSION_COLUMNS = {
     "engaged_in_subregion_snoqualmie": "EngagedInSubregionSnoqualmieValley",
     "engaged_in_subregion_south": "EngagedInSubregionSouthKingCounty",
     "engaged_in_subregion_southeast": "EngagedInSubregionSoutheastKingCounty",
+    # Same story again, one synthetic column per HOUSEHOLD_TYPE_GROUPS entry
+    # — computed fresh per period in period_dimensions.py's
+    # _household_type_category from episode_systemwide rows.
+    "household_type_adults_children": "HouseholdTypeAdultsAndChildren",
+    "household_type_adults_only": "HouseholdTypeAdultsOnly",
+    "household_type_children_only": "HouseholdTypeChildrenOnly",
 }
 
 # --- Inflow / outflow / active flow_type values (dashboard_flow_monthly) ---

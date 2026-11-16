@@ -33980,7 +33980,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 63.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -33989,8 +33989,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 28.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2024-04-01",
@@ -33998,8 +33998,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 30.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2024-04-01",
@@ -34025,7 +34025,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 37.0,
+    "count": 34.0,
     "suppression_marker": null
   },
   {
@@ -35555,7 +35555,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 63.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -35564,7 +35564,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 37.0,
+    "count": 34.0,
     "suppression_marker": null
   },
   {
@@ -35645,8 +35645,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 16.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2024-07-01",
@@ -35663,8 +35663,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 14.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2024-07-01",
@@ -35699,8 +35699,8 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 11.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2024-07-01",
@@ -41855,7 +41855,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 66.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -41873,7 +41873,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -43430,7 +43430,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 75.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -43448,7 +43448,7 @@
     "dimension": "race_mena",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {

@@ -6,6 +6,7 @@ outflow, active/status). CE engagement is the project_engaged_ce dimension
 import pandas as pd
 
 from .config import (
+    dimensions_for_segment,
     DIMENSION_COLUMNS,
     DECEASED_HUD_VALUE,
     DECEASED_IN_INACTIVE_FLOW_TYPE,
@@ -24,6 +25,7 @@ from .period_dimensions import (
     _project_engagement_category,
     _subregion_engagement_category,
     _unsheltered_in_period_category,
+    household_type_categories,
 )
 from .population import filter_population
 
@@ -741,6 +743,7 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
             **person_category,
             **{dim: _person_category_for_period(month_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
             "unsheltered_in_period": _unsheltered_in_period_category(month_df),
+            **household_type_categories(month_df),
             **{
                 dim: _project_engagement_category(month_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -778,7 +781,7 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
             outflow_df = pop_df[pop_df["_is_outflow_row"]]
             active_df = pop_df[~pop_df["_is_outflow_row"]]
 
-            for dimension in FLOW_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, FLOW_DIMENSIONS):
                 categories = all_categories[dimension]
                 for hud_value, flow_type in INFLOW_TYPE_MAP.items():
                     matched = inflow_df[inflow_df["EpisodeInflowType"] == hud_value]
@@ -849,7 +852,7 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
             # lets the sankey/KPI cards scope to a demographic slice, same
             # as the dimension loop above already lets the rest of the
             # dashboard do.
-            for dimension in PARTITION_CATEGORY_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, PARTITION_CATEGORY_DIMENSIONS):
                 categories = all_categories[dimension]
                 bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():
@@ -876,7 +879,15 @@ def build_flow_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: p
     return pd.DataFrame(rows)
 
 
-def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, events: pd.DataFrame, month_pop_cache: dict, window_start=None) -> pd.DataFrame:
+def build_flow_yearly_rows(
+    episodes: pd.DataFrame,
+    enrollments: pd.DataFrame,
+    events: pd.DataFrame,
+    month_pop_cache: dict,
+    window_start=None,
+    only_year: int | None = None,
+    through_month: int | None = None,
+) -> pd.DataFrame:
     """Builds dashboard_flow_yearly: one row per (year, population_segment,
     dimension, category, flow_type) — same shape as dashboard_flow_monthly
     (month -> year), carrying:
@@ -898,6 +909,15 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
     year's prior_month. Grouping into years is restricted to window_start
     onward so that lookback month never becomes its own (partial,
     unpublished-elsewhere) year on its own.
+
+    only_year/through_month: when given, emit just `only_year`, capped to
+    its months 1..through_month — the prior year's same-period-to-date
+    comparison for the current, partial year (dashboard_flow_ytd_prior; see
+    export.py). Every per-period computation below already derives its
+    bounds from the year's own `months` list, so capping `published` is all
+    it takes for the partition, categories and engagement windows to cover
+    exactly that span. prior_month still resolves from the full episode
+    list, so "already active" means the same thing as in the full-year row.
 
     - experienced_homelessness: the count of *distinct* PersonalIDs with
       any row (active or exiting) at some point that calendar year. NOT
@@ -934,13 +954,20 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
     episodes["_year"] = episodes["TimePeriodStartDate"].dt.year
     all_months = sorted(episodes["TimePeriodStartDate"].unique())
     month_index = {m: i for i, m in enumerate(all_months)}
-    published = episodes if window_start is None else episodes[episodes["TimePeriodStartDate"] >= window_start]
+    window_published = episodes if window_start is None else episodes[episodes["TimePeriodStartDate"] >= window_start]
+    published = window_published
+    if only_year is not None:
+        published = published[published["_year"] == only_year]
+    if through_month is not None:
+        published = published[published["TimePeriodStartDate"].dt.month <= through_month]
 
     # Same rationale as build_flow_rows's identical precompute — stable
     # across the whole window, not per-year, and these columns are constant
-    # per person regardless of which year/episode they're read from.
+    # per person regardless of which year/episode they're read from. Read
+    # from the uncapped window so a capped run emits the same category rows
+    # as the full yearly table.
     all_categories = {
-        dimension: _all_categories(published, dimension, DIMENSION_COLUMNS) for dimension in FLOW_DIMENSIONS
+        dimension: _all_categories(window_published, dimension, DIMENSION_COLUMNS) for dimension in FLOW_DIMENSIONS
     }
     # EPISODE_SCOPED_CATEGORY_DIMENSIONS deliberately left out of this
     # one-time snapshot — resolved fresh per year below instead (see
@@ -974,6 +1001,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
             **person_category,
             **{dim: _person_category_for_period(year_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
             "unsheltered_in_period": _unsheltered_in_period_category(year_df),
+            **household_type_categories(year_df),
             **{
                 dim: _project_engagement_category(year_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -1019,7 +1047,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
             # any non-overall dimension/category the frontend's demographic
             # filter selects, and a missing row silently resolves to 0 (not a
             # suppression marker) rather than surfacing as an error.
-            for dimension in PARTITION_CATEGORY_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, PARTITION_CATEGORY_DIMENSIONS):
                 categories = all_categories[dimension]
                 counts = (
                     segment_category[dimension]
@@ -1047,7 +1075,7 @@ def build_flow_yearly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame, ev
             # Same per-category breakdown as build_flow_rows — see its own
             # comment on why this lets the sankey/KPI cards scope to a
             # demographic slice.
-            for dimension in PARTITION_CATEGORY_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, PARTITION_CATEGORY_DIMENSIONS):
                 categories = all_categories[dimension]
                 bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():
@@ -1133,6 +1161,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
             **person_category,
             **{dim: _person_category_for_period(quarter_df, dim) for dim in EPISODE_SCOPED_CATEGORY_DIMENSIONS},
             "unsheltered_in_period": _unsheltered_in_period_category(quarter_df),
+            **household_type_categories(quarter_df),
             **{
                 dim: _project_engagement_category(quarter_df, group_enrollments[dim], period_start, period_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -1173,7 +1202,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
                 rows.append(row)
 
             _add("experienced_homelessness", len(person_ids))
-            for dimension in PARTITION_CATEGORY_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, PARTITION_CATEGORY_DIMENSIONS):
                 categories = all_categories[dimension]
                 counts = (
                     segment_category[dimension]
@@ -1196,7 +1225,7 @@ def build_flow_quarterly_rows(episodes: pd.DataFrame, enrollments: pd.DataFrame,
                     extra={"inflow_bucket": inflow_key, "outflow_bucket": outflow_key},
                 )
 
-            for dimension in PARTITION_CATEGORY_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, PARTITION_CATEGORY_DIMENSIONS):
                 categories = all_categories[dimension]
                 bucket_counts, pair_counts = _partition_counts_by_category(partition, segment_category[dimension], categories)
                 for key, counts in bucket_counts.items():

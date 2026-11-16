@@ -905,7 +905,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1435.0,
+    "count": 1447.0,
     "suppression_marker": null
   },
   {
@@ -914,7 +914,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 771.0,
+    "count": 785.0,
     "suppression_marker": null
   },
   {
@@ -923,7 +923,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 320.0,
+    "count": 321.0,
     "suppression_marker": null
   },
   {
@@ -941,7 +941,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 266.0,
+    "count": 263.0,
     "suppression_marker": null
   },
   {
@@ -950,7 +950,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 891.0,
+    "count": 897.0,
     "suppression_marker": null
   },
   {
@@ -968,7 +968,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 92.0,
+    "count": 95.0,
     "suppression_marker": null
   },
   {
@@ -977,7 +977,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 452.0,
+    "count": 455.0,
     "suppression_marker": null
   },
   {
@@ -995,7 +995,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 180.0,
+    "count": 183.0,
     "suppression_marker": null
   },
   {
@@ -1004,7 +1004,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 50.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -1013,7 +1013,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 541.0,
+    "count": 550.0,
     "suppression_marker": null
   },
   {
@@ -1040,7 +1040,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 21.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -1121,7 +1121,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 157.0,
+    "count": 154.0,
     "suppression_marker": null
   },
   {
@@ -2480,7 +2480,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1410.0,
+    "count": 1422.0,
     "suppression_marker": null
   },
   {
@@ -2489,7 +2489,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 808.0,
+    "count": 815.0,
     "suppression_marker": null
   },
   {
@@ -2498,7 +2498,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 292.0,
+    "count": 293.0,
     "suppression_marker": null
   },
   {
@@ -2507,7 +2507,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 59.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -2525,7 +2525,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 737.0,
+    "count": 747.0,
     "suppression_marker": null
   },
   {
@@ -2543,7 +2543,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 136.0,
+    "count": 142.0,
     "suppression_marker": null
   },
   {
@@ -2552,7 +2552,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 537.0,
+    "count": 533.0,
     "suppression_marker": null
   },
   {
@@ -2570,7 +2570,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 257.0,
+    "count": 253.0,
     "suppression_marker": null
   },
   {
@@ -2579,7 +2579,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 72.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -2588,7 +2588,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 479.0,
+    "count": 485.0,
     "suppression_marker": null
   },
   {
@@ -2624,7 +2624,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 107.0,
+    "count": 108.0,
     "suppression_marker": null
   },
   {
@@ -2642,7 +2642,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 16.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -2651,7 +2651,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 12.0,
+    "count": 13.0,
     "suppression_marker": null
   },
   {
@@ -2660,7 +2660,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 31.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -2678,7 +2678,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 116.0,
+    "count": 115.0,
     "suppression_marker": null
   },
   {
@@ -2696,7 +2696,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 120.0,
+    "count": 121.0,
     "suppression_marker": null
   },
   {
@@ -4055,7 +4055,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1178.0,
+    "count": 1197.0,
     "suppression_marker": null
   },
   {
@@ -4064,7 +4064,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 679.0,
+    "count": 688.0,
     "suppression_marker": null
   },
   {
@@ -4073,7 +4073,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 213.0,
+    "count": 219.0,
     "suppression_marker": null
   },
   {
@@ -4082,7 +4082,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 65.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -4091,7 +4091,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 221.0,
+    "count": 222.0,
     "suppression_marker": null
   },
   {
@@ -4100,7 +4100,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 671.0,
+    "count": 679.0,
     "suppression_marker": null
   },
   {
@@ -4118,7 +4118,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 114.0,
+    "count": 124.0,
     "suppression_marker": null
   },
   {
@@ -4127,7 +4127,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 393.0,
+    "count": 394.0,
     "suppression_marker": null
   },
   {
@@ -4145,7 +4145,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 195.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -4154,7 +4154,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 49.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -4163,7 +4163,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 435.0,
+    "count": 440.0,
     "suppression_marker": null
   },
   {
@@ -4190,7 +4190,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 38.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -4235,7 +4235,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 21.0,
+    "count": 23.0,
     "suppression_marker": null
   },
   {
@@ -4271,7 +4271,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 139.0,
+    "count": 140.0,
     "suppression_marker": null
   },
   {
@@ -5630,7 +5630,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1154.0,
+    "count": 1163.0,
     "suppression_marker": null
   },
   {
@@ -5639,7 +5639,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 616.0,
+    "count": 623.0,
     "suppression_marker": null
   },
   {
@@ -5648,7 +5648,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 185.0,
+    "count": 187.0,
     "suppression_marker": null
   },
   {
@@ -5675,7 +5675,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 726.0,
+    "count": 730.0,
     "suppression_marker": null
   },
   {
@@ -5693,7 +5693,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 97.0,
+    "count": 101.0,
     "suppression_marker": null
   },
   {
@@ -5702,7 +5702,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 331.0,
+    "count": 332.0,
     "suppression_marker": null
   },
   {
@@ -5729,7 +5729,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 45.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -5738,7 +5738,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 417.0,
+    "count": 421.0,
     "suppression_marker": null
   },
   {
@@ -5756,7 +5756,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 58.0,
+    "count": 59.0,
     "suppression_marker": null
   },
   {
@@ -5765,7 +5765,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 27.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -7205,7 +7205,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1211.0,
+    "count": 1219.0,
     "suppression_marker": null
   },
   {
@@ -7214,7 +7214,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 694.0,
+    "count": 696.0,
     "suppression_marker": null
   },
   {
@@ -7223,7 +7223,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 221.0,
+    "count": 226.0,
     "suppression_marker": null
   },
   {
@@ -7241,7 +7241,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 242.0,
+    "count": 243.0,
     "suppression_marker": null
   },
   {
@@ -7250,7 +7250,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 694.0,
+    "count": 698.0,
     "suppression_marker": null
   },
   {
@@ -7268,7 +7268,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 107.0,
+    "count": 108.0,
     "suppression_marker": null
   },
   {
@@ -7277,7 +7277,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 410.0,
+    "count": 413.0,
     "suppression_marker": null
   },
   {
@@ -7295,7 +7295,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 198.0,
+    "count": 197.0,
     "suppression_marker": null
   },
   {
@@ -7313,7 +7313,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 458.0,
+    "count": 461.0,
     "suppression_marker": null
   },
   {
@@ -7331,7 +7331,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 87.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -7349,7 +7349,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 90.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -7412,7 +7412,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 13.0,
+    "count": 14.0,
     "suppression_marker": null
   },
   {
@@ -8780,7 +8780,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 946.0,
+    "count": 952.0,
     "suppression_marker": null
   },
   {
@@ -8789,7 +8789,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 607.0,
+    "count": 612.0,
     "suppression_marker": null
   },
   {
@@ -8816,7 +8816,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 172.0,
+    "count": 173.0,
     "suppression_marker": null
   },
   {
@@ -8825,7 +8825,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 524.0,
+    "count": 527.0,
     "suppression_marker": null
   },
   {
@@ -8852,7 +8852,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 356.0,
+    "count": 359.0,
     "suppression_marker": null
   },
   {
@@ -8870,7 +8870,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 215.0,
+    "count": 220.0,
     "suppression_marker": null
   },
   {
@@ -8906,7 +8906,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 58.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -8924,7 +8924,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 63.0,
+    "count": 64.0,
     "suppression_marker": null
   },
   {
@@ -8996,7 +8996,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 95.0,
+    "count": 97.0,
     "suppression_marker": null
   },
   {
@@ -10355,7 +10355,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 983.0,
+    "count": 993.0,
     "suppression_marker": null
   },
   {
@@ -10364,7 +10364,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 474.0,
+    "count": 480.0,
     "suppression_marker": null
   },
   {
@@ -10373,7 +10373,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 229.0,
+    "count": 231.0,
     "suppression_marker": null
   },
   {
@@ -10382,7 +10382,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 47.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -10391,7 +10391,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 233.0,
+    "count": 234.0,
     "suppression_marker": null
   },
   {
@@ -10400,7 +10400,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 559.0,
+    "count": 564.0,
     "suppression_marker": null
   },
   {
@@ -10418,7 +10418,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 89.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -10427,7 +10427,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 335.0,
+    "count": 337.0,
     "suppression_marker": null
   },
   {
@@ -10445,7 +10445,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 138.0,
+    "count": 140.0,
     "suppression_marker": null
   },
   {
@@ -10454,7 +10454,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 37.0,
+    "count": 39.0,
     "suppression_marker": null
   },
   {
@@ -10463,7 +10463,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 299.0,
+    "count": 301.0,
     "suppression_marker": null
   },
   {
@@ -10490,7 +10490,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 35.0,
+    "count": 36.0,
     "suppression_marker": null
   },
   {
@@ -10499,7 +10499,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 109.0,
+    "count": 110.0,
     "suppression_marker": null
   },
   {
@@ -10517,7 +10517,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 23.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -10553,7 +10553,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 89.0,
+    "count": 88.0,
     "suppression_marker": null
   },
   {
@@ -10571,7 +10571,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 133.0,
+    "count": 135.0,
     "suppression_marker": null
   },
   {
@@ -11930,7 +11930,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1027.0,
+    "count": 1031.0,
     "suppression_marker": null
   },
   {
@@ -11939,7 +11939,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 514.0,
+    "count": 515.0,
     "suppression_marker": null
   },
   {
@@ -11948,7 +11948,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 258.0,
+    "count": 259.0,
     "suppression_marker": null
   },
   {
@@ -11957,7 +11957,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 40.0,
+    "count": 42.0,
     "suppression_marker": null
   },
   {
@@ -11975,7 +11975,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 565.0,
+    "count": 567.0,
     "suppression_marker": null
   },
   {
@@ -11993,7 +11993,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 74.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -12020,7 +12020,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 168.0,
+    "count": 169.0,
     "suppression_marker": null
   },
   {
@@ -12029,7 +12029,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 34.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -12038,7 +12038,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 312.0,
+    "count": 313.0,
     "suppression_marker": null
   },
   {
@@ -12056,7 +12056,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 119.0,
+    "count": 118.0,
     "suppression_marker": null
   },
   {
@@ -12065,7 +12065,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 26.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -12110,7 +12110,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 21.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -13505,7 +13505,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1001.0,
+    "count": 1009.0,
     "suppression_marker": null
   },
   {
@@ -13514,7 +13514,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 498.0,
+    "count": 502.0,
     "suppression_marker": null
   },
   {
@@ -13523,7 +13523,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 245.0,
+    "count": 248.0,
     "suppression_marker": null
   },
   {
@@ -13541,7 +13541,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 212.0,
+    "count": 213.0,
     "suppression_marker": null
   },
   {
@@ -13550,7 +13550,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 572.0,
+    "count": 576.0,
     "suppression_marker": null
   },
   {
@@ -13568,7 +13568,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 87.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -13577,7 +13577,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 342.0,
+    "count": 344.0,
     "suppression_marker": null
   },
   {
@@ -13604,7 +13604,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 42.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -13613,7 +13613,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 328.0,
+    "count": 331.0,
     "suppression_marker": null
   },
   {
@@ -13631,7 +13631,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 110.0,
+    "count": 112.0,
     "suppression_marker": null
   },
   {
@@ -13640,7 +13640,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 19.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -13685,7 +13685,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 19.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -15080,7 +15080,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1252.0,
+    "count": 1266.0,
     "suppression_marker": null
   },
   {
@@ -15089,7 +15089,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 575.0,
+    "count": 581.0,
     "suppression_marker": null
   },
   {
@@ -15098,7 +15098,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 351.0,
+    "count": 353.0,
     "suppression_marker": null
   },
   {
@@ -15107,7 +15107,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 47.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -15116,7 +15116,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 279.0,
+    "count": 282.0,
     "suppression_marker": null
   },
   {
@@ -15125,7 +15125,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 723.0,
+    "count": 734.0,
     "suppression_marker": null
   },
   {
@@ -15143,7 +15143,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 78.0,
+    "count": 81.0,
     "suppression_marker": null
   },
   {
@@ -15170,7 +15170,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 173.0,
+    "count": 172.0,
     "suppression_marker": null
   },
   {
@@ -15179,7 +15179,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 34.0,
+    "count": 35.0,
     "suppression_marker": null
   },
   {
@@ -15188,7 +15188,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 368.0,
+    "count": 374.0,
     "suppression_marker": null
   },
   {
@@ -15224,7 +15224,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 171.0,
+    "count": 173.0,
     "suppression_marker": null
   },
   {
@@ -15260,7 +15260,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -15296,7 +15296,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 164.0,
+    "count": 166.0,
     "suppression_marker": null
   },
   {
@@ -16655,7 +16655,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1569.0,
+    "count": 1588.0,
     "suppression_marker": null
   },
   {
@@ -16664,7 +16664,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 696.0,
+    "count": 707.0,
     "suppression_marker": null
   },
   {
@@ -16673,7 +16673,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 519.0,
+    "count": 525.0,
     "suppression_marker": null
   },
   {
@@ -16691,7 +16691,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 285.0,
+    "count": 287.0,
     "suppression_marker": null
   },
   {
@@ -16700,7 +16700,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 906.0,
+    "count": 917.0,
     "suppression_marker": null
   },
   {
@@ -16718,7 +16718,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 76.0,
+    "count": 83.0,
     "suppression_marker": null
   },
   {
@@ -16727,7 +16727,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 587.0,
+    "count": 588.0,
     "suppression_marker": null
   },
   {
@@ -16745,7 +16745,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 216.0,
+    "count": 217.0,
     "suppression_marker": null
   },
   {
@@ -16754,7 +16754,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 43.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -16763,7 +16763,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 437.0,
+    "count": 441.0,
     "suppression_marker": null
   },
   {
@@ -16799,7 +16799,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 252.0,
+    "count": 258.0,
     "suppression_marker": null
   },
   {
@@ -16871,7 +16871,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 180.0,
+    "count": 181.0,
     "suppression_marker": null
   },
   {
@@ -18230,7 +18230,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1385.0,
+    "count": 1398.0,
     "suppression_marker": null
   },
   {
@@ -18239,7 +18239,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 708.0,
+    "count": 716.0,
     "suppression_marker": null
   },
   {
@@ -18248,7 +18248,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 335.0,
+    "count": 338.0,
     "suppression_marker": null
   },
   {
@@ -18257,7 +18257,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 56.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -18266,7 +18266,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 286.0,
+    "count": 287.0,
     "suppression_marker": null
   },
   {
@@ -18275,7 +18275,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 786.0,
+    "count": 795.0,
     "suppression_marker": null
   },
   {
@@ -18293,7 +18293,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 107.0,
+    "count": 108.0,
     "suppression_marker": null
   },
   {
@@ -18302,7 +18302,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 492.0,
+    "count": 495.0,
     "suppression_marker": null
   },
   {
@@ -18320,7 +18320,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 227.0,
+    "count": 230.0,
     "suppression_marker": null
   },
   {
@@ -18338,7 +18338,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 423.0,
+    "count": 428.0,
     "suppression_marker": null
   },
   {
@@ -18374,7 +18374,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 164.0,
+    "count": 167.0,
     "suppression_marker": null
   },
   {
@@ -18446,7 +18446,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 170.0,
+    "count": 171.0,
     "suppression_marker": null
   },
   {
@@ -19805,7 +19805,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1244.0,
+    "count": 1253.0,
     "suppression_marker": null
   },
   {
@@ -19814,7 +19814,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 656.0,
+    "count": 663.0,
     "suppression_marker": null
   },
   {
@@ -19823,7 +19823,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 329.0,
+    "count": 332.0,
     "suppression_marker": null
   },
   {
@@ -19841,7 +19841,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 225.0,
+    "count": 224.0,
     "suppression_marker": null
   },
   {
@@ -19850,7 +19850,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 707.0,
+    "count": 711.0,
     "suppression_marker": null
   },
   {
@@ -19868,7 +19868,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 148.0,
+    "count": 152.0,
     "suppression_marker": null
   },
   {
@@ -19877,7 +19877,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 389.0,
+    "count": 390.0,
     "suppression_marker": null
   },
   {
@@ -19895,7 +19895,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 135.0,
+    "count": 137.0,
     "suppression_marker": null
   },
   {
@@ -19904,7 +19904,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 97.0,
+    "count": 101.0,
     "suppression_marker": null
   },
   {
@@ -19913,7 +19913,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 424.0,
+    "count": 425.0,
     "suppression_marker": null
   },
   {
@@ -19949,7 +19949,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 159.0,
+    "count": 162.0,
     "suppression_marker": null
   },
   {
@@ -20003,7 +20003,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 104.0,
+    "count": 103.0,
     "suppression_marker": null
   },
   {
@@ -20507,7 +20507,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 130.0,
+    "count": 129.0,
     "suppression_marker": null
   },
   {
@@ -20516,7 +20516,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 255.0,
+    "count": 256.0,
     "suppression_marker": null
   },
   {
@@ -20660,7 +20660,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 84.0,
+    "count": 83.0,
     "suppression_marker": null
   },
   {
@@ -20696,7 +20696,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 125.0,
+    "count": 126.0,
     "suppression_marker": null
   },
   {
@@ -21380,7 +21380,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1294.0,
+    "count": 1297.0,
     "suppression_marker": null
   },
   {
@@ -21389,7 +21389,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 610.0,
+    "count": 614.0,
     "suppression_marker": null
   },
   {
@@ -21398,7 +21398,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 448.0,
+    "count": 445.0,
     "suppression_marker": null
   },
   {
@@ -21416,7 +21416,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 173.0,
+    "count": 175.0,
     "suppression_marker": null
   },
   {
@@ -21425,7 +21425,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 679.0,
+    "count": 678.0,
     "suppression_marker": null
   },
   {
@@ -21443,7 +21443,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 120.0,
+    "count": 122.0,
     "suppression_marker": null
   },
   {
@@ -21452,7 +21452,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 495.0,
+    "count": 497.0,
     "suppression_marker": null
   },
   {
@@ -21470,7 +21470,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 182.0,
+    "count": 184.0,
     "suppression_marker": null
   },
   {
@@ -21479,7 +21479,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 58.0,
+    "count": 59.0,
     "suppression_marker": null
   },
   {
@@ -21488,7 +21488,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 370.0,
+    "count": 371.0,
     "suppression_marker": null
   },
   {
@@ -21506,7 +21506,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 223.0,
+    "count": 222.0,
     "suppression_marker": null
   },
   {
@@ -21515,7 +21515,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 51.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -21524,7 +21524,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 174.0,
+    "count": 171.0,
     "suppression_marker": null
   },
   {
@@ -21560,7 +21560,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 39.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {
@@ -21596,7 +21596,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 96.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -22955,7 +22955,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1521.0,
+    "count": 1530.0,
     "suppression_marker": null
   },
   {
@@ -22964,7 +22964,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 620.0,
+    "count": 619.0,
     "suppression_marker": null
   },
   {
@@ -22973,7 +22973,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 568.0,
+    "count": 571.0,
     "suppression_marker": null
   },
   {
@@ -22991,7 +22991,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 269.0,
+    "count": 276.0,
     "suppression_marker": null
   },
   {
@@ -23000,7 +23000,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 855.0,
+    "count": 868.0,
     "suppression_marker": null
   },
   {
@@ -23018,7 +23018,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 125.0,
+    "count": 128.0,
     "suppression_marker": null
   },
   {
@@ -23027,7 +23027,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 541.0,
+    "count": 534.0,
     "suppression_marker": null
   },
   {
@@ -23045,7 +23045,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 167.0,
+    "count": 160.0,
     "suppression_marker": null
   },
   {
@@ -23063,7 +23063,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 386.0,
+    "count": 392.0,
     "suppression_marker": null
   },
   {
@@ -23081,7 +23081,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 265.0,
+    "count": 264.0,
     "suppression_marker": null
   },
   {
@@ -23090,7 +23090,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 37.0,
+    "count": 39.0,
     "suppression_marker": null
   },
   {
@@ -23099,7 +23099,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 266.0,
+    "count": 268.0,
     "suppression_marker": null
   },
   {
@@ -23153,7 +23153,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 91.0,
+    "count": 92.0,
     "suppression_marker": null
   },
   {
@@ -23171,7 +23171,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 167.0,
+    "count": 172.0,
     "suppression_marker": null
   },
   {
@@ -24530,7 +24530,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1652.0,
+    "count": 1666.0,
     "suppression_marker": null
   },
   {
@@ -24539,7 +24539,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 809.0,
+    "count": 825.0,
     "suppression_marker": null
   },
   {
@@ -24548,7 +24548,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 483.0,
+    "count": 480.0,
     "suppression_marker": null
   },
   {
@@ -24566,7 +24566,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 288.0,
+    "count": 289.0,
     "suppression_marker": null
   },
   {
@@ -24575,7 +24575,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 807.0,
+    "count": 822.0,
     "suppression_marker": null
   },
   {
@@ -24593,7 +24593,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 187.0,
+    "count": 192.0,
     "suppression_marker": null
   },
   {
@@ -24602,7 +24602,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 658.0,
+    "count": 652.0,
     "suppression_marker": null
   },
   {
@@ -24620,7 +24620,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 275.0,
+    "count": 276.0,
     "suppression_marker": null
   },
   {
@@ -24629,7 +24629,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 72.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -24638,7 +24638,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 462.0,
+    "count": 473.0,
     "suppression_marker": null
   },
   {
@@ -24656,7 +24656,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 221.0,
+    "count": 215.0,
     "suppression_marker": null
   },
   {
@@ -24665,7 +24665,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 85.0,
+    "count": 86.0,
     "suppression_marker": null
   },
   {
@@ -24674,7 +24674,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 177.0,
+    "count": 179.0,
     "suppression_marker": null
   },
   {
@@ -24728,7 +24728,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 131.0,
+    "count": 130.0,
     "suppression_marker": null
   },
   {
@@ -24746,7 +24746,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 137.0,
+    "count": 139.0,
     "suppression_marker": null
   },
   {
@@ -26105,7 +26105,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 2484.0,
+    "count": 2505.0,
     "suppression_marker": null
   },
   {
@@ -26114,7 +26114,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 836.0,
+    "count": 848.0,
     "suppression_marker": null
   },
   {
@@ -26123,7 +26123,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 991.0,
+    "count": 992.0,
     "suppression_marker": null
   },
   {
@@ -26132,7 +26132,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 96.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -26141,7 +26141,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 561.0,
+    "count": 567.0,
     "suppression_marker": null
   },
   {
@@ -26150,7 +26150,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 1254.0,
+    "count": 1275.0,
     "suppression_marker": null
   },
   {
@@ -26168,7 +26168,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 238.0,
+    "count": 243.0,
     "suppression_marker": null
   },
   {
@@ -26177,7 +26177,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 992.0,
+    "count": 987.0,
     "suppression_marker": null
   },
   {
@@ -26204,7 +26204,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 103.0,
+    "count": 105.0,
     "suppression_marker": null
   },
   {
@@ -26213,7 +26213,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 507.0,
+    "count": 517.0,
     "suppression_marker": null
   },
   {
@@ -26231,7 +26231,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 512.0,
+    "count": 507.0,
     "suppression_marker": null
   },
   {
@@ -26240,7 +26240,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 87.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -26249,7 +26249,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 392.0,
+    "count": 396.0,
     "suppression_marker": null
   },
   {
@@ -26285,7 +26285,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 42.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -26312,7 +26312,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 35.0,
+    "count": 36.0,
     "suppression_marker": null
   },
   {
@@ -26321,7 +26321,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 313.0,
+    "count": 318.0,
     "suppression_marker": null
   },
   {
@@ -26330,7 +26330,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 114.0,
+    "count": 113.0,
     "suppression_marker": null
   },
   {
@@ -26375,7 +26375,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 49.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -26546,7 +26546,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 13.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -27680,7 +27680,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 2149.0,
+    "count": 2186.0,
     "suppression_marker": null
   },
   {
@@ -27689,7 +27689,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 1112.0,
+    "count": 1132.0,
     "suppression_marker": null
   },
   {
@@ -27698,7 +27698,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 533.0,
+    "count": 543.0,
     "suppression_marker": null
   },
   {
@@ -27707,7 +27707,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 108.0,
+    "count": 114.0,
     "suppression_marker": null
   },
   {
@@ -27716,7 +27716,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 396.0,
+    "count": 397.0,
     "suppression_marker": null
   },
   {
@@ -27725,7 +27725,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 1036.0,
+    "count": 1069.0,
     "suppression_marker": null
   },
   {
@@ -27743,7 +27743,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 197.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -27752,7 +27752,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 916.0,
+    "count": 915.0,
     "suppression_marker": null
   },
   {
@@ -27770,7 +27770,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 391.0,
+    "count": 393.0,
     "suppression_marker": null
   },
   {
@@ -27779,7 +27779,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 118.0,
+    "count": 121.0,
     "suppression_marker": null
   },
   {
@@ -27788,7 +27788,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 603.0,
+    "count": 618.0,
     "suppression_marker": null
   },
   {
@@ -27815,7 +27815,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 36.0,
+    "count": 37.0,
     "suppression_marker": null
   },
   {
@@ -27824,7 +27824,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 199.0,
+    "count": 208.0,
     "suppression_marker": null
   },
   {
@@ -27842,7 +27842,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 40.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -27860,7 +27860,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 45.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -27878,7 +27878,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 187.0,
+    "count": 181.0,
     "suppression_marker": null
   },
   {
@@ -27887,7 +27887,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -27896,7 +27896,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 189.0,
+    "count": 195.0,
     "suppression_marker": null
   },
   {
@@ -27905,7 +27905,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 92.0,
+    "count": 91.0,
     "suppression_marker": null
   },
   {
@@ -27914,7 +27914,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 45.0,
+    "count": 44.0,
     "suppression_marker": null
   },
   {
@@ -29255,7 +29255,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 2024.0,
+    "count": 2055.0,
     "suppression_marker": null
   },
   {
@@ -29264,7 +29264,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 935.0,
+    "count": 962.0,
     "suppression_marker": null
   },
   {
@@ -29282,7 +29282,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 81.0,
+    "count": 82.0,
     "suppression_marker": null
   },
   {
@@ -29291,7 +29291,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 421.0,
+    "count": 424.0,
     "suppression_marker": null
   },
   {
@@ -29300,7 +29300,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 1022.0,
+    "count": 1034.0,
     "suppression_marker": null
   },
   {
@@ -29318,7 +29318,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 185.0,
+    "count": 193.0,
     "suppression_marker": null
   },
   {
@@ -29327,7 +29327,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 817.0,
+    "count": 828.0,
     "suppression_marker": null
   },
   {
@@ -29345,7 +29345,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 339.0,
+    "count": 349.0,
     "suppression_marker": null
   },
   {
@@ -29354,7 +29354,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 106.0,
+    "count": 113.0,
     "suppression_marker": null
   },
   {
@@ -29363,7 +29363,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 490.0,
+    "count": 500.0,
     "suppression_marker": null
   },
   {
@@ -29381,7 +29381,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 262.0,
+    "count": 263.0,
     "suppression_marker": null
   },
   {
@@ -29399,7 +29399,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 278.0,
+    "count": 277.0,
     "suppression_marker": null
   },
   {
@@ -29426,7 +29426,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 11.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -29471,7 +29471,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 221.0,
+    "count": 224.0,
     "suppression_marker": null
   },
   {
@@ -30380,7 +30380,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 334.0,
+    "count": 333.0,
     "suppression_marker": null
   },
   {
@@ -30407,7 +30407,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 19.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -30425,7 +30425,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 189.0,
+    "count": 188.0,
     "suppression_marker": null
   },
   {
@@ -30830,7 +30830,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1741.0,
+    "count": 1765.0,
     "suppression_marker": null
   },
   {
@@ -30839,7 +30839,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 898.0,
+    "count": 916.0,
     "suppression_marker": null
   },
   {
@@ -30857,7 +30857,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 69.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -30866,7 +30866,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 373.0,
+    "count": 378.0,
     "suppression_marker": null
   },
   {
@@ -30875,7 +30875,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 844.0,
+    "count": 860.0,
     "suppression_marker": null
   },
   {
@@ -30893,7 +30893,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 162.0,
+    "count": 167.0,
     "suppression_marker": null
   },
   {
@@ -30902,7 +30902,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 735.0,
+    "count": 738.0,
     "suppression_marker": null
   },
   {
@@ -30920,7 +30920,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 333.0,
+    "count": 334.0,
     "suppression_marker": null
   },
   {
@@ -30929,7 +30929,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 105.0,
+    "count": 110.0,
     "suppression_marker": null
   },
   {
@@ -30938,7 +30938,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 460.0,
+    "count": 472.0,
     "suppression_marker": null
   },
   {
@@ -30956,7 +30956,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 201.0,
+    "count": 200.0,
     "suppression_marker": null
   },
   {
@@ -30974,7 +30974,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 171.0,
+    "count": 172.0,
     "suppression_marker": null
   },
   {
@@ -31028,7 +31028,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 168.0,
+    "count": 171.0,
     "suppression_marker": null
   },
   {
@@ -31046,7 +31046,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 185.0,
+    "count": 187.0,
     "suppression_marker": null
   },
   {
@@ -31505,7 +31505,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 2890.0,
+    "count": 2889.0,
     "suppression_marker": null
   },
   {
@@ -31523,7 +31523,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 891.0,
+    "count": 890.0,
     "suppression_marker": null
   },
   {
@@ -31577,7 +31577,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 1197.0,
+    "count": 1196.0,
     "suppression_marker": null
   },
   {
@@ -31631,7 +31631,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 409.0,
+    "count": 408.0,
     "suppression_marker": null
   },
   {
@@ -32405,7 +32405,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1866.0,
+    "count": 1890.0,
     "suppression_marker": null
   },
   {
@@ -32414,7 +32414,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 773.0,
+    "count": 788.0,
     "suppression_marker": null
   },
   {
@@ -32423,7 +32423,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 481.0,
+    "count": 489.0,
     "suppression_marker": null
   },
   {
@@ -32432,7 +32432,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 98.0,
+    "count": 99.0,
     "suppression_marker": null
   },
   {
@@ -32450,7 +32450,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 945.0,
+    "count": 961.0,
     "suppression_marker": null
   },
   {
@@ -32468,7 +32468,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 162.0,
+    "count": 167.0,
     "suppression_marker": null
   },
   {
@@ -32477,7 +32477,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 759.0,
+    "count": 762.0,
     "suppression_marker": null
   },
   {
@@ -32495,7 +32495,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 289.0,
+    "count": 291.0,
     "suppression_marker": null
   },
   {
@@ -32504,7 +32504,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 74.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -32513,7 +32513,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 410.0,
+    "count": 421.0,
     "suppression_marker": null
   },
   {
@@ -32531,7 +32531,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 241.0,
+    "count": 242.0,
     "suppression_marker": null
   },
   {
@@ -32540,7 +32540,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 38.0,
+    "count": 40.0,
     "suppression_marker": null
   },
   {
@@ -32549,7 +32549,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 202.0,
+    "count": 207.0,
     "suppression_marker": null
   },
   {
@@ -32576,7 +32576,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 16.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -32630,7 +32630,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 82.0,
+    "count": 81.0,
     "suppression_marker": null
   },
   {
@@ -32666,7 +32666,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 27.0,
+    "count": 26.0,
     "suppression_marker": null
   },
   {
@@ -32702,7 +32702,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 30.0,
+    "count": 29.0,
     "suppression_marker": null
   },
   {
@@ -33125,7 +33125,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 1457.0,
+    "count": 1458.0,
     "suppression_marker": null
   },
   {
@@ -33152,7 +33152,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 1155.0,
+    "count": 1154.0,
     "suppression_marker": null
   },
   {
@@ -33278,7 +33278,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 252.0,
+    "count": 251.0,
     "suppression_marker": null
   },
   {
@@ -33296,7 +33296,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 308.0,
+    "count": 309.0,
     "suppression_marker": null
   },
   {
@@ -33575,7 +33575,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 174.0,
+    "count": 175.0,
     "suppression_marker": null
   },
   {
@@ -33602,7 +33602,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 110.0,
+    "count": 109.0,
     "suppression_marker": null
   },
   {
@@ -33746,7 +33746,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 35.0,
+    "count": 36.0,
     "suppression_marker": null
   },
   {
@@ -33755,7 +33755,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1129.0,
+    "count": 1130.0,
     "suppression_marker": null
   },
   {
@@ -33791,7 +33791,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 279.0,
+    "count": 280.0,
     "suppression_marker": null
   },
   {
@@ -33800,7 +33800,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 642.0,
+    "count": 643.0,
     "suppression_marker": null
   },
   {
@@ -33971,7 +33971,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 175.0,
+    "count": 176.0,
     "suppression_marker": null
   },
   {
@@ -33980,7 +33980,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1811.0,
+    "count": 1844.0,
     "suppression_marker": null
   },
   {
@@ -33989,7 +33989,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 789.0,
+    "count": 808.0,
     "suppression_marker": null
   },
   {
@@ -33998,7 +33998,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 492.0,
+    "count": 504.0,
     "suppression_marker": null
   },
   {
@@ -34007,7 +34007,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 72.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -34016,7 +34016,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 458.0,
+    "count": 459.0,
     "suppression_marker": null
   },
   {
@@ -34025,7 +34025,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 978.0,
+    "count": 1000.0,
     "suppression_marker": null
   },
   {
@@ -34043,7 +34043,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 132.0,
+    "count": 137.0,
     "suppression_marker": null
   },
   {
@@ -34052,7 +34052,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 701.0,
+    "count": 707.0,
     "suppression_marker": null
   },
   {
@@ -34070,7 +34070,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 283.0,
+    "count": 288.0,
     "suppression_marker": null
   },
   {
@@ -34079,7 +34079,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 84.0,
+    "count": 87.0,
     "suppression_marker": null
   },
   {
@@ -34088,7 +34088,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 422.0,
+    "count": 433.0,
     "suppression_marker": null
   },
   {
@@ -34106,7 +34106,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 198.0,
+    "count": 201.0,
     "suppression_marker": null
   },
   {
@@ -34115,7 +34115,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 28.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -34124,7 +34124,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 266.0,
+    "count": 273.0,
     "suppression_marker": null
   },
   {
@@ -34160,7 +34160,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 36.0,
+    "count": 37.0,
     "suppression_marker": null
   },
   {
@@ -34178,7 +34178,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 190.0,
+    "count": 188.0,
     "suppression_marker": null
   },
   {
@@ -34196,7 +34196,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 254.0,
+    "count": 257.0,
     "suppression_marker": null
   },
   {
@@ -35555,7 +35555,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1937.0,
+    "count": 1968.0,
     "suppression_marker": null
   },
   {
@@ -35564,7 +35564,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 879.0,
+    "count": 900.0,
     "suppression_marker": null
   },
   {
@@ -35573,7 +35573,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 534.0,
+    "count": 536.0,
     "suppression_marker": null
   },
   {
@@ -35582,7 +35582,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 58.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -35591,7 +35591,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 466.0,
+    "count": 472.0,
     "suppression_marker": null
   },
   {
@@ -35600,7 +35600,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 1016.0,
+    "count": 1037.0,
     "suppression_marker": null
   },
   {
@@ -35618,7 +35618,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 157.0,
+    "count": 163.0,
     "suppression_marker": null
   },
   {
@@ -35627,7 +35627,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 764.0,
+    "count": 768.0,
     "suppression_marker": null
   },
   {
@@ -35645,7 +35645,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 311.0,
+    "count": 316.0,
     "suppression_marker": null
   },
   {
@@ -35654,7 +35654,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 89.0,
+    "count": 93.0,
     "suppression_marker": null
   },
   {
@@ -35663,7 +35663,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 479.0,
+    "count": 491.0,
     "suppression_marker": null
   },
   {
@@ -35681,7 +35681,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 243.0,
+    "count": 242.0,
     "suppression_marker": null
   },
   {
@@ -35699,7 +35699,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 253.0,
+    "count": 256.0,
     "suppression_marker": null
   },
   {
@@ -35735,7 +35735,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 26.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -35762,7 +35762,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": 18.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -35771,7 +35771,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 258.0,
+    "count": 262.0,
     "suppression_marker": null
   },
   {
@@ -37130,7 +37130,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1737.0,
+    "count": 1759.0,
     "suppression_marker": null
   },
   {
@@ -37139,7 +37139,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 904.0,
+    "count": 922.0,
     "suppression_marker": null
   },
   {
@@ -37148,7 +37148,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 360.0,
+    "count": 361.0,
     "suppression_marker": null
   },
   {
@@ -37157,7 +37157,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 60.0,
+    "count": 61.0,
     "suppression_marker": null
   },
   {
@@ -37166,7 +37166,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 413.0,
+    "count": 415.0,
     "suppression_marker": null
   },
   {
@@ -37175,7 +37175,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 828.0,
+    "count": 839.0,
     "suppression_marker": null
   },
   {
@@ -37193,7 +37193,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 153.0,
+    "count": 155.0,
     "suppression_marker": null
   },
   {
@@ -37202,7 +37202,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 756.0,
+    "count": 765.0,
     "suppression_marker": null
   },
   {
@@ -37220,7 +37220,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 369.0,
+    "count": 376.0,
     "suppression_marker": null
   },
   {
@@ -37229,7 +37229,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 88.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -37238,7 +37238,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 447.0,
+    "count": 457.0,
     "suppression_marker": null
   },
   {
@@ -37256,7 +37256,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 175.0,
+    "count": 176.0,
     "suppression_marker": null
   },
   {
@@ -37310,7 +37310,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 31.0,
+    "count": 32.0,
     "suppression_marker": null
   },
   {
@@ -37328,7 +37328,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 192.0,
+    "count": 193.0,
     "suppression_marker": null
   },
   {
@@ -37355,7 +37355,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 61.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -37391,7 +37391,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 19.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -38705,7 +38705,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1356.0,
+    "count": 1376.0,
     "suppression_marker": null
   },
   {
@@ -38714,7 +38714,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 524.0,
+    "count": 534.0,
     "suppression_marker": null
   },
   {
@@ -38723,7 +38723,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 327.0,
+    "count": 331.0,
     "suppression_marker": null
   },
   {
@@ -38732,7 +38732,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 72.0,
+    "count": 73.0,
     "suppression_marker": null
   },
   {
@@ -38741,7 +38741,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 433.0,
+    "count": 438.0,
     "suppression_marker": null
   },
   {
@@ -38750,7 +38750,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 778.0,
+    "count": 789.0,
     "suppression_marker": null
   },
   {
@@ -38768,7 +38768,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 99.0,
+    "count": 104.0,
     "suppression_marker": null
   },
   {
@@ -38777,7 +38777,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 479.0,
+    "count": 483.0,
     "suppression_marker": null
   },
   {
@@ -38795,7 +38795,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 172.0,
+    "count": 173.0,
     "suppression_marker": null
   },
   {
@@ -38804,7 +38804,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 56.0,
+    "count": 58.0,
     "suppression_marker": null
   },
   {
@@ -38813,7 +38813,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 296.0,
+    "count": 303.0,
     "suppression_marker": null
   },
   {
@@ -38831,7 +38831,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 121.0,
+    "count": 123.0,
     "suppression_marker": null
   },
   {
@@ -38840,7 +38840,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 20.0,
+    "count": 22.0,
     "suppression_marker": null
   },
   {
@@ -38885,7 +38885,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 34.0,
+    "count": 35.0,
     "suppression_marker": null
   },
   {
@@ -38903,7 +38903,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 158.0,
+    "count": 159.0,
     "suppression_marker": null
   },
   {
@@ -38921,7 +38921,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 262.0,
+    "count": 265.0,
     "suppression_marker": null
   },
   {
@@ -38930,7 +38930,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 51.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -40280,7 +40280,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1828.0,
+    "count": 1851.0,
     "suppression_marker": null
   },
   {
@@ -40289,7 +40289,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 701.0,
+    "count": 718.0,
     "suppression_marker": null
   },
   {
@@ -40298,7 +40298,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 498.0,
+    "count": 500.0,
     "suppression_marker": null
   },
   {
@@ -40307,7 +40307,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 101.0,
+    "count": 102.0,
     "suppression_marker": null
   },
   {
@@ -40316,7 +40316,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 528.0,
+    "count": 531.0,
     "suppression_marker": null
   },
   {
@@ -40325,7 +40325,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 831.0,
+    "count": 849.0,
     "suppression_marker": null
   },
   {
@@ -40343,7 +40343,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 158.0,
+    "count": 163.0,
     "suppression_marker": null
   },
   {
@@ -40370,7 +40370,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 260.0,
+    "count": 262.0,
     "suppression_marker": null
   },
   {
@@ -40379,7 +40379,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 75.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -40388,7 +40388,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 366.0,
+    "count": 379.0,
     "suppression_marker": null
   },
   {
@@ -40406,7 +40406,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 236.0,
+    "count": 234.0,
     "suppression_marker": null
   },
   {
@@ -40415,7 +40415,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 50.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -40424,7 +40424,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 212.0,
+    "count": 214.0,
     "suppression_marker": null
   },
   {
@@ -40451,7 +40451,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 13.0,
+    "count": 14.0,
     "suppression_marker": null
   },
   {
@@ -40496,7 +40496,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 229.0,
+    "count": 232.0,
     "suppression_marker": null
   },
   {
@@ -40505,7 +40505,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 55.0,
+    "count": 54.0,
     "suppression_marker": null
   },
   {
@@ -40514,7 +40514,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 20.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -40550,8 +40550,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 24.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2025-04-01",
@@ -40577,8 +40577,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 23.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2025-04-01",
@@ -41855,7 +41855,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1690.0,
+    "count": 1709.0,
     "suppression_marker": null
   },
   {
@@ -41864,7 +41864,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 769.0,
+    "count": 782.0,
     "suppression_marker": null
   },
   {
@@ -41873,7 +41873,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 359.0,
+    "count": 361.0,
     "suppression_marker": null
   },
   {
@@ -41882,7 +41882,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 65.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -41891,7 +41891,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 497.0,
+    "count": 499.0,
     "suppression_marker": null
   },
   {
@@ -41900,7 +41900,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 888.0,
+    "count": 904.0,
     "suppression_marker": null
   },
   {
@@ -41918,7 +41918,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 98.0,
+    "count": 102.0,
     "suppression_marker": null
   },
   {
@@ -41927,7 +41927,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 704.0,
+    "count": 703.0,
     "suppression_marker": null
   },
   {
@@ -41945,7 +41945,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 317.0,
+    "count": 318.0,
     "suppression_marker": null
   },
   {
@@ -41954,7 +41954,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 47.0,
+    "count": 46.0,
     "suppression_marker": null
   },
   {
@@ -41963,7 +41963,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 405.0,
+    "count": 418.0,
     "suppression_marker": null
   },
   {
@@ -41981,7 +41981,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 140.0,
+    "count": 139.0,
     "suppression_marker": null
   },
   {
@@ -41990,7 +41990,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 33.0,
+    "count": 38.0,
     "suppression_marker": null
   },
   {
@@ -41999,7 +41999,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 186.0,
+    "count": 184.0,
     "suppression_marker": null
   },
   {
@@ -42035,7 +42035,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 29.0,
+    "count": 31.0,
     "suppression_marker": null
   },
   {
@@ -42071,7 +42071,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 268.0,
+    "count": 271.0,
     "suppression_marker": null
   },
   {
@@ -43430,7 +43430,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1592.0,
+    "count": 1607.0,
     "suppression_marker": null
   },
   {
@@ -43439,7 +43439,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 781.0,
+    "count": 794.0,
     "suppression_marker": null
   },
   {
@@ -43448,7 +43448,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 309.0,
+    "count": 305.0,
     "suppression_marker": null
   },
   {
@@ -43457,7 +43457,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 40.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -43466,7 +43466,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 462.0,
+    "count": 467.0,
     "suppression_marker": null
   },
   {
@@ -43475,7 +43475,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 804.0,
+    "count": 820.0,
     "suppression_marker": null
   },
   {
@@ -43493,7 +43493,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 112.0,
+    "count": 118.0,
     "suppression_marker": null
   },
   {
@@ -43502,7 +43502,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 676.0,
+    "count": 669.0,
     "suppression_marker": null
   },
   {
@@ -43529,7 +43529,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 71.0,
+    "count": 74.0,
     "suppression_marker": null
   },
   {
@@ -43538,7 +43538,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 396.0,
+    "count": 406.0,
     "suppression_marker": null
   },
   {
@@ -43556,7 +43556,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 132.0,
+    "count": 125.0,
     "suppression_marker": null
   },
   {
@@ -43565,7 +43565,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_permanently_housed",
-    "count": 23.0,
+    "count": 25.0,
     "suppression_marker": null
   },
   {
@@ -43574,7 +43574,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 154.0,
+    "count": 155.0,
     "suppression_marker": null
   },
   {
@@ -43646,7 +43646,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 239.0,
+    "count": 244.0,
     "suppression_marker": null
   },
   {
@@ -45005,7 +45005,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1565.0,
+    "count": 1579.0,
     "suppression_marker": null
   },
   {
@@ -45014,7 +45014,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 716.0,
+    "count": 732.0,
     "suppression_marker": null
   },
   {
@@ -45023,7 +45023,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 300.0,
+    "count": 297.0,
     "suppression_marker": null
   },
   {
@@ -45041,7 +45041,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 506.0,
+    "count": 507.0,
     "suppression_marker": null
   },
   {
@@ -45050,7 +45050,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 869.0,
+    "count": 880.0,
     "suppression_marker": null
   },
   {
@@ -45068,7 +45068,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 116.0,
+    "count": 119.0,
     "suppression_marker": null
   },
   {
@@ -45095,7 +45095,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 243.0,
+    "count": 247.0,
     "suppression_marker": null
   },
   {
@@ -45104,7 +45104,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 65.0,
+    "count": 68.0,
     "suppression_marker": null
   },
   {
@@ -45113,7 +45113,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 408.0,
+    "count": 417.0,
     "suppression_marker": null
   },
   {
@@ -45131,7 +45131,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 134.0,
+    "count": 130.0,
     "suppression_marker": null
   },
   {
@@ -45149,7 +45149,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 146.0,
+    "count": 147.0,
     "suppression_marker": null
   },
   {
@@ -45221,7 +45221,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 302.0,
+    "count": 303.0,
     "suppression_marker": null
   },
   {
@@ -45680,7 +45680,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 2150.0,
+    "count": 2152.0,
     "suppression_marker": null
   },
   {
@@ -45689,7 +45689,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 1040.0,
+    "count": 1041.0,
     "suppression_marker": null
   },
   {
@@ -45698,7 +45698,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 479.0,
+    "count": 480.0,
     "suppression_marker": null
   },
   {
@@ -45752,7 +45752,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 758.0,
+    "count": 760.0,
     "suppression_marker": null
   },
   {
@@ -45770,7 +45770,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 320.0,
+    "count": 321.0,
     "suppression_marker": null
   },
   {
@@ -45806,7 +45806,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 170.0,
+    "count": 171.0,
     "suppression_marker": null
   },
   {
@@ -46130,7 +46130,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 330.0,
+    "count": 331.0,
     "suppression_marker": null
   },
   {
@@ -46139,7 +46139,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 182.0,
+    "count": 183.0,
     "suppression_marker": null
   },
   {
@@ -46202,7 +46202,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 114.0,
+    "count": 115.0,
     "suppression_marker": null
   },
   {
@@ -46220,7 +46220,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 49.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -46355,7 +46355,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1207.0,
+    "count": 1209.0,
     "suppression_marker": null
   },
   {
@@ -46364,7 +46364,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 665.0,
+    "count": 667.0,
     "suppression_marker": null
   },
   {
@@ -46400,7 +46400,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 685.0,
+    "count": 686.0,
     "suppression_marker": null
   },
   {
@@ -46427,7 +46427,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 432.0,
+    "count": 433.0,
     "suppression_marker": null
   },
   {
@@ -46445,7 +46445,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 198.0,
+    "count": 199.0,
     "suppression_marker": null
   },
   {
@@ -46463,7 +46463,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 392.0,
+    "count": 393.0,
     "suppression_marker": null
   },
   {
@@ -46580,7 +46580,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1628.0,
+    "count": 1638.0,
     "suppression_marker": null
   },
   {
@@ -46589,7 +46589,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 786.0,
+    "count": 797.0,
     "suppression_marker": null
   },
   {
@@ -46598,7 +46598,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 326.0,
+    "count": 323.0,
     "suppression_marker": null
   },
   {
@@ -46607,7 +46607,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 59.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -46616,7 +46616,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 457.0,
+    "count": 456.0,
     "suppression_marker": null
   },
   {
@@ -46625,7 +46625,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 889.0,
+    "count": 899.0,
     "suppression_marker": null
   },
   {
@@ -46643,7 +46643,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 102.0,
+    "count": 104.0,
     "suppression_marker": null
   },
   {
@@ -46652,7 +46652,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 637.0,
+    "count": 635.0,
     "suppression_marker": null
   },
   {
@@ -46679,7 +46679,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 69.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -46688,7 +46688,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 446.0,
+    "count": 456.0,
     "suppression_marker": null
   },
   {
@@ -46706,7 +46706,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 135.0,
+    "count": 134.0,
     "suppression_marker": null
   },
   {
@@ -46724,7 +46724,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 174.0,
+    "count": 172.0,
     "suppression_marker": null
   },
   {
@@ -46760,7 +46760,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 28.0,
+    "count": 30.0,
     "suppression_marker": null
   },
   {
@@ -47255,7 +47255,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1933.0,
+    "count": 1936.0,
     "suppression_marker": null
   },
   {
@@ -47264,7 +47264,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 994.0,
+    "count": 996.0,
     "suppression_marker": null
   },
   {
@@ -47282,7 +47282,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 97.0,
+    "count": 98.0,
     "suppression_marker": null
   },
   {
@@ -47300,7 +47300,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 965.0,
+    "count": 968.0,
     "suppression_marker": null
   },
   {
@@ -47318,7 +47318,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 206.0,
+    "count": 207.0,
     "suppression_marker": null
   },
   {
@@ -47327,7 +47327,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 762.0,
+    "count": 761.0,
     "suppression_marker": null
   },
   {
@@ -47354,7 +47354,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 108.0,
+    "count": 109.0,
     "suppression_marker": null
   },
   {
@@ -47363,7 +47363,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 507.0,
+    "count": 508.0,
     "suppression_marker": null
   },
   {
@@ -47381,7 +47381,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 157.0,
+    "count": 156.0,
     "suppression_marker": null
   },
   {
@@ -47399,7 +47399,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 199.0,
+    "count": 200.0,
     "suppression_marker": null
   },
   {
@@ -47417,7 +47417,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": 23.0,
+    "count": 24.0,
     "suppression_marker": null
   },
   {
@@ -47453,7 +47453,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_inactive",
-    "count": 203.0,
+    "count": 202.0,
     "suppression_marker": null
   },
   {
@@ -47471,7 +47471,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 208.0,
+    "count": 209.0,
     "suppression_marker": null
   },
   {
@@ -47480,7 +47480,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 105.0,
+    "count": 106.0,
     "suppression_marker": null
   },
   {
@@ -47489,7 +47489,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 50.0,
+    "count": 51.0,
     "suppression_marker": null
   },
   {
@@ -47525,7 +47525,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 48.0,
+    "count": 49.0,
     "suppression_marker": null
   },
   {
@@ -47588,7 +47588,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -47714,7 +47714,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 150.0,
+    "count": 151.0,
     "suppression_marker": null
   },
   {
@@ -47723,7 +47723,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 62.0,
+    "count": 60.0,
     "suppression_marker": null
   },
   {
@@ -47741,7 +47741,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 58.0,
+    "count": 59.0,
     "suppression_marker": null
   },
   {
@@ -47795,7 +47795,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 57.0,
+    "count": 58.0,
     "suppression_marker": null
   },
   {
@@ -47849,7 +47849,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 35.0,
+    "count": 34.0,
     "suppression_marker": null
   },
   {
@@ -47930,7 +47930,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1028.0,
+    "count": 1031.0,
     "suppression_marker": null
   },
   {
@@ -47939,7 +47939,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 601.0,
+    "count": 604.0,
     "suppression_marker": null
   },
   {
@@ -47948,7 +47948,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 140.0,
+    "count": 142.0,
     "suppression_marker": null
   },
   {
@@ -47966,7 +47966,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 268.0,
+    "count": 266.0,
     "suppression_marker": null
   },
   {
@@ -47975,7 +47975,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 537.0,
+    "count": 541.0,
     "suppression_marker": null
   },
   {
@@ -48002,7 +48002,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 410.0,
+    "count": 409.0,
     "suppression_marker": null
   },
   {
@@ -48020,7 +48020,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 216.0,
+    "count": 217.0,
     "suppression_marker": null
   },
   {
@@ -48038,7 +48038,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 318.0,
+    "count": 320.0,
     "suppression_marker": null
   },
   {
@@ -48155,7 +48155,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 1458.0,
+    "count": 1453.0,
     "suppression_marker": null
   },
   {
@@ -48164,7 +48164,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 747.0,
+    "count": 753.0,
     "suppression_marker": null
   },
   {
@@ -48173,7 +48173,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 299.0,
+    "count": 288.0,
     "suppression_marker": null
   },
   {
@@ -48182,7 +48182,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 33.0,
+    "count": 34.0,
     "suppression_marker": null
   },
   {
@@ -48191,7 +48191,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 379.0,
+    "count": 378.0,
     "suppression_marker": null
   },
   {
@@ -48200,7 +48200,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 743.0,
+    "count": 747.0,
     "suppression_marker": null
   },
   {
@@ -48218,7 +48218,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 76.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -48227,7 +48227,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 639.0,
+    "count": 629.0,
     "suppression_marker": null
   },
   {
@@ -48245,7 +48245,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 300.0,
+    "count": 301.0,
     "suppression_marker": null
   },
   {
@@ -48254,7 +48254,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 55.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -48263,7 +48263,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 392.0,
+    "count": 396.0,
     "suppression_marker": null
   },
   {
@@ -48281,8 +48281,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 145.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2026-07-01",
@@ -48299,8 +48299,8 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 143.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2026-07-01",
@@ -48371,7 +48371,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 191.0,
+    "count": 192.0,
     "suppression_marker": null
   },
   {
@@ -48668,7 +48668,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 129.0,
+    "count": 130.0,
     "suppression_marker": null
   },
   {
@@ -48677,7 +48677,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 125.0,
+    "count": 124.0,
     "suppression_marker": null
   },
   {
@@ -48695,7 +48695,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 80.0,
+    "count": 79.0,
     "suppression_marker": null
   },
   {
@@ -48704,7 +48704,7 @@
     "dimension": "project_engaged_so",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
-    "count": 52.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {

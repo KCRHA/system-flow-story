@@ -54,6 +54,10 @@ Same shape as `dashboard_flow_monthly.json` (`year`/`quarter` in place of `month
 
 These exist because `experienced_homelessness` and the `indiv_*`/`indiv_flow_*` partition **can't** be reconstructed by summing monthly cells: a person with more than one distinct episode in the same year (newly homeless in February, exits to housing, returns from housed in October) would be double-counted if each month's partition were just added together. Both builders instead union/partition over the whole period's episodes at once, the same way the monthly builder does for a single month. `dashboard_flow_quarterly.json` powers `OutflowSection`'s quarter-drill-down pills; a quarter whose three calendar months aren't all complete is omitted entirely rather than emitted as a partial quarter.
 
+### `dashboard_flow_ytd_prior.json` / `dashboard_length_headline_ytd_prior.json`
+
+Same shape as `dashboard_flow_yearly.json` / `dashboard_length_headline_yearly.json`, plus a `through_month` column, holding only the **prior year capped to the current partial year's months** (e.g. Jan-Oct 2025 while the export window runs through October 2026). They power the trend pills in the full-year view of the in-progress year, so it's compared like-for-like instead of against a full prior year. Same suppression chain as the yearly tables. Both are `[]` when the current year is complete (a December export end) or the prior year is outside the window.
+
 ### `dashboard_length_monthly.json`
 
 One row per `(month, population_segment, dimension, category)` — length-of-time-homeless distribution stats among people active that month: `median_days`, `p25_days`, `p75_days`, `mean_days`. None of the `dashboard_length_*` tables go through small-cell suppression or publish `n`: a median never says how many people are in a group, so every group with at least one person gets one. A group of three or fewer people (under `config.LENGTH_FULL_STATS_MIN_N` = 4) gets only `median_days`, since its percentiles and mean would give away each person's exact duration. The by-exit table's `inactive` excludes people who died, unlike the flow tables.

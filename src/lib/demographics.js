@@ -28,6 +28,14 @@ const POPULATION_NOUNS = {
   family: "families with children",
 };
 
+// household_type categories (App.jsx's HOUSEHOLD_TYPE_CATEGORY_DIMENSIONS) -> the clause
+// that follows the population noun.
+const HOUSEHOLD_TYPE_SUBJECTS = {
+  "Adults and Children": "in households with adults and children",
+  "Adults Only": "in adult-only households",
+  "Children Only": "in child-only households",
+};
+
 // Shared between any blurb/tooltip text that names who's being measured
 // (LengthSection's chart blurbs, HomelessnessTrendChart's hover panel via
 // OutflowSection) — a reader scoped to a population segment and/or a
@@ -54,6 +62,12 @@ export function subjectFor(populationSegment, demographicType, demographicCatego
   // last_known_city filter temporarily disabled — was: `demographicType === "last_known_subregion" || demographicType === "last_known_city"`
   if (demographicType === "last_known_subregion") {
     return `${noun} last known to live in ${demographicCategory}`;
+  }
+  if (demographicType === "household_type") {
+    // A household composition, not an identity — same reasoning as the
+    // other situational branches.
+    const phrase = HOUSEHOLD_TYPE_SUBJECTS[demographicCategory];
+    if (phrase) return `${noun} ${phrase}`;
   }
   if (demographicType === "age_category") {
     // Age tiers ("0 to 11", "65 or Above") are a range, not an identity —

@@ -905,8 +905,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 13.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-01-01",
@@ -951,7 +951,7 @@
     "category": "Included",
     "flow_type": "indiv_still_active",
     "count": null,
-    "suppression_marker": "*"
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-01-01",
@@ -986,8 +986,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-01-01",
@@ -1022,8 +1022,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-01-01",
@@ -1112,8 +1112,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_permanently_housed",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-01-01",
@@ -1121,8 +1121,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-01-01",
@@ -2507,8 +2507,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-04-01",
@@ -2552,8 +2552,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-04-01",
@@ -2570,8 +2570,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-04-01",
@@ -2606,8 +2606,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-04-01",
@@ -2624,8 +2624,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-04-01",
@@ -2633,8 +2633,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-04-01",
@@ -2660,8 +2660,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-04-01",
@@ -4082,8 +4082,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_housed",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-07-01",
@@ -4136,8 +4136,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2019-07-01",
@@ -4208,8 +4208,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-07-01",
@@ -4236,7 +4236,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-07-01",
@@ -5639,8 +5639,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-10-01",
@@ -5711,8 +5711,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2019-10-01",
@@ -5739,7 +5739,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "quarter": "2019-10-01",
@@ -7241,8 +7241,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2020-01-01",
@@ -7296,7 +7296,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_inactive",
     "count": null,
-    "suppression_marker": "*"
+    "suppression_marker": "**"
   },
   {
     "quarter": "2020-01-01",
@@ -7314,7 +7314,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "quarter": "2020-01-01",
@@ -7322,8 +7322,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2020-01-01",
@@ -7367,8 +7367,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2020-01-01",
@@ -7394,8 +7394,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_aged_out",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2020-01-01",
@@ -7421,8 +7421,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2020-01-01",
@@ -8780,8 +8780,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": null,
-    "suppression_marker": "*"
+    "count": 11.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2020-04-01",
@@ -8861,8 +8861,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2020-04-01",
@@ -8880,7 +8880,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_permanently_housed",
     "count": null,
-    "suppression_marker": "**"
+    "suppression_marker": "*"
   },
   {
     "quarter": "2020-04-01",
@@ -8933,8 +8933,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2020-04-01",
@@ -8951,8 +8951,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_permanently_housed",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2020-04-01",
@@ -15080,7 +15080,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 48.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -15089,7 +15089,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 31.0,
+    "count": 33.0,
     "suppression_marker": null
   },
   {
@@ -15125,7 +15125,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 43.0,
+    "count": 45.0,
     "suppression_marker": null
   },
   {
@@ -15188,7 +15188,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 26.0,
+    "count": 28.0,
     "suppression_marker": null
   },
   {
@@ -16655,7 +16655,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 86.0,
+    "count": 88.0,
     "suppression_marker": null
   },
   {
@@ -16664,7 +16664,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 49.0,
+    "count": 50.0,
     "suppression_marker": null
   },
   {
@@ -16673,7 +16673,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 22.0,
+    "count": 23.0,
     "suppression_marker": null
   },
   {
@@ -16700,7 +16700,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 73.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -16763,7 +16763,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 41.0,
+    "count": 43.0,
     "suppression_marker": null
   },
   {
@@ -18230,7 +18230,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 75.0,
+    "count": 76.0,
     "suppression_marker": null
   },
   {
@@ -18239,7 +18239,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 63.0,
+    "count": 65.0,
     "suppression_marker": null
   },
   {
@@ -18275,7 +18275,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 61.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -18338,7 +18338,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 50.0,
+    "count": 52.0,
     "suppression_marker": null
   },
   {
@@ -19805,7 +19805,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 68.0,
+    "count": 71.0,
     "suppression_marker": null
   },
   {
@@ -19814,7 +19814,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 51.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -19823,7 +19823,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 11.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -19850,7 +19850,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 54.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -19913,7 +19913,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 40.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -19950,7 +19950,7 @@
     "category": "Included",
     "flow_type": "indiv_flow_newly_homeless_to_still_active",
     "count": null,
-    "suppression_marker": "*"
+    "suppression_marker": "**"
   },
   {
     "quarter": "2022-01-01",
@@ -21380,7 +21380,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 68.0,
+    "count": 71.0,
     "suppression_marker": null
   },
   {
@@ -21389,7 +21389,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 51.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -21398,7 +21398,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 14.0,
+    "count": 15.0,
     "suppression_marker": null
   },
   {
@@ -21425,7 +21425,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 53.0,
+    "count": 56.0,
     "suppression_marker": null
   },
   {
@@ -21488,7 +21488,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 38.0,
+    "count": 40.0,
     "suppression_marker": null
   },
   {
@@ -22955,7 +22955,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 74.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -22964,7 +22964,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 54.0,
+    "count": 57.0,
     "suppression_marker": null
   },
   {
@@ -23000,7 +23000,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 60.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -23063,7 +23063,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 44.0,
+    "count": 47.0,
     "suppression_marker": null
   },
   {
@@ -24530,7 +24530,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 86.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -24539,7 +24539,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 61.0,
+    "count": 64.0,
     "suppression_marker": null
   },
   {
@@ -24575,7 +24575,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 75.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -24638,7 +24638,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 53.0,
+    "count": 55.0,
     "suppression_marker": null
   },
   {
@@ -26105,7 +26105,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 75.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -26114,7 +26114,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 67.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -26150,7 +26150,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 69.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -26213,7 +26213,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 61.0,
+    "count": 62.0,
     "suppression_marker": null
   },
   {
@@ -30830,7 +30830,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 96.0,
+    "count": 97.0,
     "suppression_marker": null
   },
   {
@@ -30848,8 +30848,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 13.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2023-10-01",
@@ -30866,8 +30866,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 12.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2023-10-01",
@@ -30875,7 +30875,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 66.0,
+    "count": 67.0,
     "suppression_marker": null
   },
   {
@@ -32405,7 +32405,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 87.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -32414,7 +32414,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 67.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -35555,7 +35555,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 101.0,
+    "count": 104.0,
     "suppression_marker": null
   },
   {
@@ -35564,7 +35564,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 69.0,
+    "count": 70.0,
     "suppression_marker": null
   },
   {
@@ -35591,7 +35591,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 16.0,
+    "count": 18.0,
     "suppression_marker": null
   },
   {
@@ -35600,7 +35600,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 76.0,
+    "count": 79.0,
     "suppression_marker": null
   },
   {
@@ -35663,7 +35663,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 47.0,
+    "count": 48.0,
     "suppression_marker": null
   },
   {
@@ -37130,7 +37130,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 117.0,
+    "count": 120.0,
     "suppression_marker": null
   },
   {
@@ -37139,7 +37139,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 66.0,
+    "count": 69.0,
     "suppression_marker": null
   },
   {
@@ -37175,7 +37175,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 81.0,
+    "count": 84.0,
     "suppression_marker": null
   },
   {
@@ -37238,7 +37238,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 38.0,
+    "count": 41.0,
     "suppression_marker": null
   },
   {
@@ -38705,7 +38705,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 120.0,
+    "count": 123.0,
     "suppression_marker": null
   },
   {
@@ -38714,7 +38714,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 75.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -38750,7 +38750,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 93.0,
+    "count": 94.0,
     "suppression_marker": null
   },
   {
@@ -38768,7 +38768,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_permanently_housed",
-    "count": 16.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -38777,7 +38777,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_inactive",
-    "count": 11.0,
+    "count": 12.0,
     "suppression_marker": null
   },
   {
@@ -38813,7 +38813,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 53.0,
+    "count": 54.0,
     "suppression_marker": null
   },
   {
@@ -42539,7 +42539,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 163.0,
+    "count": 162.0,
     "suppression_marker": null
   },
   {
@@ -42548,8 +42548,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_newly_homeless",
-    "count": 24.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "**"
   },
   {
     "quarter": "2025-10-01",
@@ -42566,8 +42566,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 24.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2025-10-01",
@@ -42638,7 +42638,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 134.0,
+    "count": 133.0,
     "suppression_marker": null
   },
   {
@@ -42746,7 +42746,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 19.0,
+    "count": 20.0,
     "suppression_marker": null
   },
   {
@@ -43214,7 +43214,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 90.0,
+    "count": 89.0,
     "suppression_marker": null
   },
   {
@@ -43241,7 +43241,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 18.0,
+    "count": 19.0,
     "suppression_marker": null
   },
   {
@@ -43313,7 +43313,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 66.0,
+    "count": 65.0,
     "suppression_marker": null
   },
   {
@@ -43439,7 +43439,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 110.0,
+    "count": 109.0,
     "suppression_marker": null
   },
   {
@@ -43466,7 +43466,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_return_from_inactive",
-    "count": 20.0,
+    "count": 21.0,
     "suppression_marker": null
   },
   {
@@ -43538,7 +43538,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 81.0,
+    "count": 80.0,
     "suppression_marker": null
   },
   {
@@ -43646,7 +43646,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_inactive_to_still_active",
-    "count": 16.0,
+    "count": 17.0,
     "suppression_marker": null
   },
   {
@@ -46355,7 +46355,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 92.0,
+    "count": 93.0,
     "suppression_marker": null
   },
   {
@@ -46400,7 +46400,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 70.0,
+    "count": 71.0,
     "suppression_marker": null
   },
   {
@@ -46508,8 +46508,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_aged_out",
-    "count": null,
-    "suppression_marker": "**"
+    "count": 0.0,
+    "suppression_marker": null
   },
   {
     "quarter": "2026-04-01",
@@ -46535,8 +46535,8 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_return_from_housed_to_still_active",
-    "count": 0.0,
-    "suppression_marker": null
+    "count": null,
+    "suppression_marker": "*"
   },
   {
     "quarter": "2026-04-01",
@@ -47930,7 +47930,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 76.0,
+    "count": 77.0,
     "suppression_marker": null
   },
   {
@@ -47939,7 +47939,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 62.0,
+    "count": 63.0,
     "suppression_marker": null
   },
   {
@@ -47975,7 +47975,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 65.0,
+    "count": 66.0,
     "suppression_marker": null
   },
   {
@@ -48038,7 +48038,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 52.0,
+    "count": 53.0,
     "suppression_marker": null
   },
   {
@@ -48155,7 +48155,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "experienced_homelessness",
-    "count": 116.0,
+    "count": 117.0,
     "suppression_marker": null
   },
   {
@@ -48164,7 +48164,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_already_active",
-    "count": 95.0,
+    "count": 96.0,
     "suppression_marker": null
   },
   {
@@ -48200,7 +48200,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_still_active",
-    "count": 104.0,
+    "count": 105.0,
     "suppression_marker": null
   },
   {
@@ -48263,7 +48263,7 @@
     "dimension": "engaged_in_subregion_north",
     "category": "Included",
     "flow_type": "indiv_flow_already_active_to_still_active",
-    "count": 84.0,
+    "count": 85.0,
     "suppression_marker": null
   },
   {

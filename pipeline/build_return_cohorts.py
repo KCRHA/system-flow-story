@@ -13,6 +13,7 @@ from datetime import timedelta
 import pandas as pd
 
 from .config import (
+    dimensions_for_segment,
     DIMENSION_COLUMNS,
     POPULATION_SEGMENTS,
     PROJECT_ENGAGEMENT_DIMENSIONS,
@@ -28,6 +29,7 @@ from .period_dimensions import (
     _project_engagement_category,
     _subregion_engagement_category,
     _unsheltered_in_period_category,
+    household_type_categories,
 )
 from .population import filter_population
 
@@ -130,6 +132,7 @@ def build_return_cohort_rows(
         ]
         period_category = {
             "unsheltered_in_period": _unsheltered_in_period_category(quarter_person_rows),
+            **household_type_categories(quarter_person_rows),
             **{
                 dim: _project_engagement_category(quarter_person_rows, group_enrollments[dim], quarter_start, quarter_end)
                 for dim in PROJECT_ENGAGEMENT_DIMENSIONS
@@ -162,7 +165,7 @@ def build_return_cohort_rows(
                 ]
             )
 
-            for dimension in EXTENDED_DIMENSIONS:
+            for dimension in dimensions_for_segment(segment_key, EXTENDED_DIMENSIONS):
                 if dimension == "overall":
                     groups = {"Overall": pop_df}
                 else:
