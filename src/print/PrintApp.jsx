@@ -13,7 +13,8 @@ import ReturnCohortChart from "../components/charts/ReturnCohortChart.jsx";
 import { MEASURES } from "../components/FilterBar.jsx";
 import { filterRows, distinctValues, resolveCell } from "../lib/loadData.js";
 import { buildFlowPeriod, sumCellsForQuarter } from "../lib/sankeyData.js";
-import { formatMonthLabel, formatQuarterLabel } from "../lib/periodLabels.js";
+import { formatMonthLabel, formatQuarterLabel, formatYtdPriorLabel } from "../lib/periodLabels.js";
+import { trendDirectionFor, trendPillText } from "../lib/trend.js";
 
 const BASE = import.meta.env.BASE_URL;
 const YEAR = 2026;
@@ -138,56 +139,78 @@ function PageFooter({ station, through }) {
   );
 }
 
-function OverviewBody({ population, period, quarterly }) {
+// Same "Arrows compare to..." key the dashboard shows above its KPI cards.
+function ArrowLegend({ priorLabel }) {
+  if (!priorLabel) return null;
+  return (
+    <div className="arrow-legend print-arrow-legend">
+      <span>Arrows compare to {priorLabel}:</span>
+      <span className="legend-chip positive">Positive change</span>
+      <span className="legend-chip concerning">Concerning change</span>
+      <span className="legend-chip neutral">Neutral</span>
+    </div>
+  );
+}
+
+function OverviewBody({ population, period, prior, priorLabel, sankeyTitle, quarterly }) {
   const isYya = population.key === "yya";
+  // Same good/bad directions as OutflowSection's KPI cards.
+  const pill = (cell, priorCell, goodDirection) => ({
+    trendDirection: trendDirectionFor(cell, priorCell),
+    trendText: trendPillText(cell, priorCell, priorLabel),
+    goodDirection,
+  });
   const entries = sumValues([period.inflow.newly_homeless, period.inflow.return_from_housed, period.inflow.return_from_inactive]);
   const exits = sumValues([period.outflow.inactive, period.outflow.permanently_housed, period.outflow.aged_out]);
-  const card = (label, cell, total, percentLabel) => (
+  const card = (label, cell, priorCell, goodDirection, total, percentLabel) => (
     <KpiCard
       label={label}
       value={cell.value?.toLocaleString()}
       marker={cell.marker}
       percent={percentOf(cell, total)}
       percentLabel={percentLabel}
+      {...pill(cell, priorCell, goodDirection)}
     />
   );
   return (
     <>
       <div className="print-tiles">
+        <ArrowLegend priorLabel={priorLabel} />
         <div className="kpi-row kpi-row-hero">
           <KpiCard
             label={`Active in our system at any point in ${YEAR} so far`}
             value={period.experiencedHomelessness.value?.toLocaleString()}
             marker={period.experiencedHomelessness.marker}
+            {...pill(period.experiencedHomelessness, prior?.experiencedHomelessness, "down")}
           />
         </div>
         <h3 className="kpi-group-heading">Entered the system</h3>
         <div className="kpi-row print-row-3">
-          {card("Newly experiencing homelessness", period.inflow.newly_homeless, entries, "of total entries")}
-          {card("Returned from housed", period.inflow.return_from_housed, entries, "of total entries")}
-          {card("Returned from inactive", period.inflow.return_from_inactive, entries, "of total entries")}
+          {card("Newly experiencing homelessness", period.inflow.newly_homeless, prior?.inflow.newly_homeless, "down", entries, "of total entries")}
+          {card("Returned from housed", period.inflow.return_from_housed, prior?.inflow.return_from_housed, "down", entries, "of total entries")}
+          {card("Returned from inactive", period.inflow.return_from_inactive, prior?.inflow.return_from_inactive, "down", entries, "of total entries")}
         </div>
         <h3 className="kpi-group-heading">Exited the system</h3>
         <div className="kpi-row print-row-3">
-          {card("Inactive", period.outflow.inactive, exits, "of total exits")}
-          {card("Permanently housed", period.outflow.permanently_housed, exits, "of total exits")}
-          {isYya ? card("Aged Out", period.outflow.aged_out, exits, "of total exits") : <div className="print-tile-spacer" />}
+          {card("Inactive", period.outflow.inactive, prior?.outflow.inactive, null, exits, "of total exits")}
+          {card("Permanently housed", period.outflow.permanently_housed, prior?.outflow.permanently_housed, "up", exits, "of total exits")}
+          {isYya ? card("Aged Out", period.outflow.aged_out, prior?.outflow.aged_out, null, exits, "of total exits") : <div className="print-tile-spacer" />}
         </div>
       </div>
       <div className="print-chart-card">
-        <p className="print-chart-title">Status at the start and end of {YEAR} so far</p>
-        <FlowSankeyChart data={period} periodLabel={`${YEAR} so far`} isFullYear populationSegment={population.key} width={900} height={485} />
+        <p className="print-chart-title">{sankeyTitle}</p>
+        <FlowSankeyChart data={period} periodLabel={`${YEAR} so far`} isFullYear populationSegment={population.key} width={900} height={375} />
       </div>
       <TrendCard rows={quarterly} m={measure("experienced_homelessness")} width={760} height={210} />
     </>
   );
 }
 
-function InflowBody({ population, period, quarterly }) {
+function InflowBody({ population, period, sankeyTitle, quarterly }) {
   return (
     <>
       <div className="print-chart-card">
-        <p className="print-chart-title">Status at the start and end of {YEAR} so far</p>
+        <p className="print-chart-title">{sankeyTitle}</p>
         <FlowSankeyChart data={period} periodLabel={`${YEAR} so far`} isFullYear populationSegment={population.key} width={900} height={480} />
       </div>
       <div className="print-grid-2">
@@ -227,15 +250,21 @@ function OutflowBody({ population, quarterly, returns }) {
   );
 }
 
-function LengthBody({ population, headline, panelRows, yMax }) {
+function LengthBody({ population, headline, priorHeadline, priorLabel, panelRows, yMax }) {
   const isYya = population.key === "yya";
+  const headlineCell = headline && { value: headline.median_days, marker: headline.suppression_marker };
+  const priorCell = priorHeadline && { value: priorHeadline.median_days, marker: priorHeadline.suppression_marker };
   return (
     <>
+      <ArrowLegend priorLabel={priorLabel} />
       <div className="kpi-row kpi-row-hero print-length-tile">
         <KpiCard
           label={`Median days experiencing homelessness, ${YEAR} so far`}
           value={headline?.median_days != null ? `${Math.round(headline.median_days).toLocaleString()} days` : undefined}
           marker={headline?.suppression_marker}
+          trendDirection={trendDirectionFor(headlineCell, priorCell)}
+          trendText={trendPillText(headlineCell, priorCell, priorLabel)}
+          goodDirection="down"
         />
       </div>
       <div className="print-chart-card">
@@ -294,10 +323,21 @@ export default function PrintApp() {
       fetchJson("dashboard_length_by_exit_monthly.json"),
       fetchJson("dashboard_length_headline_yearly.json"),
       fetchJson("dashboard_return_cohorts.json"),
+      fetchJson("dashboard_flow_ytd_prior.json"),
+      fetchJson("dashboard_length_headline_ytd_prior.json"),
       Promise.all(dims.map((d) => fetchJson(`dashboard_flow_quarterly_${d}.json`).then((rows) => [d, rows]))),
     ])
-      .then(([flowYearly, length, lengthByExit, lengthHeadline, returnCohorts, quarterlyPairs]) =>
-        setData({ flowYearly, length, lengthByExit, lengthHeadline, returnCohorts, quarterly: Object.fromEntries(quarterlyPairs) })
+      .then(([flowYearly, length, lengthByExit, lengthHeadline, returnCohorts, flowYtdPrior, lengthHeadlineYtdPrior, quarterlyPairs]) =>
+        setData({
+          flowYearly,
+          length,
+          lengthByExit,
+          lengthHeadline,
+          returnCohorts,
+          flowYtdPrior,
+          lengthHeadlineYtdPrior,
+          quarterly: Object.fromEntries(quarterlyPairs),
+        })
       )
       .catch(setError);
   }, []);
@@ -312,10 +352,12 @@ export default function PrintApp() {
       .filter((q) => q <= `${YEAR}-12-31`)
       .sort()
       .at(-1);
+    const monthName = formatMonthLabel(lastMonth).split(" ")[0];
     const through = {
-      monthName: formatMonthLabel(lastMonth).split(" ")[0],
+      monthName,
       lastQuarterLabel: formatQuarterLabel(lastQuarter),
     };
+    const sankeyTitle = `Inflow and Outflow (January-${monthName} ${YEAR})`;
 
     const scope = (rows, pop, sel) => filterRows(rows, { populationSegment: pop.key, dimension: sel.dimension, category: sel.category });
     const lastN = (rows, n) => rows.filter((r) => r.month <= `${YEAR}-12-31`).sort((a, b) => a.month.localeCompare(b.month)).slice(-n);
@@ -352,6 +394,13 @@ export default function PrintApp() {
             .sort((a, b) => a.exit_quarter.localeCompare(b.exit_quarter))
             .slice(-8);
           const headline = scope(data.lengthHeadline, pop, sel).find((r) => r.year === YEAR);
+          // Prior year capped to the same months (Jan-Oct 2025), same as the
+          // dashboard's year-to-date trend pills.
+          const priorRows = scope(data.flowYtdPrior, pop, sel).filter((r) => r.year === YEAR - 1);
+          const prior = priorRows.length ? buildFlowPeriod(priorRows, [], [], { year: YEAR - 1 }) : null;
+          const flowPriorLabel = priorRows.length ? formatYtdPriorLabel(priorRows[0].year, priorRows[0].through_month) : null;
+          const priorHeadline = scope(data.lengthHeadlineYtdPrior, pop, sel).find((r) => r.year === YEAR - 1);
+          const lengthPriorLabel = priorHeadline ? formatYtdPriorLabel(priorHeadline.year, priorHeadline.through_month) : null;
           out.push({
             key: `${st}-${sel.dimension}-${pop.key}`,
             station: st,
@@ -359,13 +408,13 @@ export default function PrintApp() {
             sel,
             body:
               st === "overview" ? (
-                <OverviewBody population={pop} period={period} quarterly={quarterly} />
+                <OverviewBody population={pop} period={period} prior={prior} priorLabel={flowPriorLabel} sankeyTitle={sankeyTitle} quarterly={quarterly} />
               ) : st === "inflow" ? (
-                <InflowBody population={pop} period={period} quarterly={quarterly} />
+                <InflowBody population={pop} period={period} sankeyTitle={sankeyTitle} quarterly={quarterly} />
               ) : st === "outflow" ? (
                 <OutflowBody population={pop} quarterly={quarterly} returns={returns} />
               ) : (
-                <LengthBody population={pop} headline={headline} panelRows={pairLength[pi].panelRows} yMax={pairMax} />
+                <LengthBody population={pop} headline={headline} priorHeadline={priorHeadline} priorLabel={lengthPriorLabel} panelRows={pairLength[pi].panelRows} yMax={pairMax} />
               ),
           });
         });
